@@ -78,10 +78,10 @@ if (URHO3D_HOME)
         if (IS_INTERNAL)
             set (BINARY_DIR ${CMAKE_BINARY_DIR})
         elseif (ANDROID AND CMAKE_HOST_WIN32 AND NOT URHO3D_MKLINK)
-            set (BINARY_DIR ${URHO3D_HOME}/Source/Android)
+            set (BINARY_DIR ${URHO3D_HOME}/${PLATFORM_PREFIX}Build)
         else ()
             set (BINARY_DIR ${URHO3D_HOME}/${PLATFORM_PREFIX}Build)
-        endif () 
+        endif ()
         list (APPEND URHO3D_INCLUDE_DIRS ${BINARY_DIR}/Engine)
         if (ANDROID)
             if (IS_INTERNAL)
@@ -161,7 +161,10 @@ else ()
         message (FATAL_ERROR
             "Could not find Urho3D library in default SDK installation location or Urho3D project root tree. "
             "For searching in a non-default Urho3D SDK installation, use 'CMAKE_PREFIX_PATH' environment variable to specify the prefix path of the installation location. "
-            "For searching in a build tree of Urho3D project, use 'URHO3D_HOME' environment variable to specify the Urho3D project root directory. The Urho3D library itself must already be built successfully.")
+            "For searching in a build tree of Urho3D project, use 'URHO3D_HOME' environment variable to specify the Urho3D project root directory. The Urho3D library itself must already be built successfully."
+            "${URHO3D_HOME}"
+            "${URHO3D_INCLUDE_DIRS}"
+            "${URHO3D_LIBRARIES}")
     endif ()
 endif ()
 

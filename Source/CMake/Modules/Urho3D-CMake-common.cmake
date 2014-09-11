@@ -49,6 +49,11 @@ if (CMAKE_PROJECT_NAME STREQUAL Urho3D)
     cmake_dependent_option (URHO3D_LUAJIT_AMALG "Enable LuaJIT amalgamated build (LuaJIT only)" FALSE "URHO3D_LUAJIT" FALSE)
     cmake_dependent_option (URHO3D_SAFE_LUA "Enable Lua C++ wrapper safety checks (Lua scripting only)" FALSE "URHO3D_LUA OR URHO3D_LUAJIT" FALSE)
     option (URHO3D_SAMPLES "Build sample applications")
+    option (URHO3D_OPENSSL "Enable Open SSL support" TRUE)
+    if (URHO3D_OPENSSL)
+        find_package (OpenSSL)
+        add_definitions (-DURHO3D_OPENSSL)
+    endif ()
     cmake_dependent_option (URHO3D_TOOLS "Build standalone tools (Desktop and RPI only; on Android only build Lua standalone tools)" TRUE "NOT IOS;NOT ANDROID OR URHO3D_LUA OR URHO3D_LUAJIT" FALSE)
     cmake_dependent_option (URHO3D_EXTRAS "Build extras (Desktop and RPI only)" FALSE "NOT IOS AND NOT ANDROID" FALSE)
     option (URHO3D_DOCS "Generate documentation as part of normal build")
@@ -264,7 +269,11 @@ else ()
     if (ANDROID)
         # Most of the flags are already setup in android.toolchain.cmake module
         set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-protector")
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstack-protector")
+        if (CMAKE_PROJECT_NAME STREQUAL Urho3D)
+            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstack-protector")
+        else ()
+            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fstack-protector")
+        endif()
         if (URHO3D_64BIT)
             # TODO: Revisit this again when ARM also support 64bit
             # For now just reference it to suppress "unused variable" warning
@@ -300,7 +309,11 @@ else ()
         # MinGW-specific setup
         if (MINGW)
             set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static -static-libgcc -fno-keep-inline-dllexport")
-            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -fno-keep-inline-dllexport")
+            if (CMAKE_PROJECT_NAME STREQUAL Urho3D)
+                set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -fno-keep-inline-dllexport")
+            else ()
+                set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -std=c++11 -static-libstdc++ -static-libgcc -fno-keep-inline-dllexport")
+            endif ()
             set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static")
             # Additional compiler flags for Windows ports of GCC
             set (CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG")
@@ -503,7 +516,7 @@ macro (setup_executable)
         define_dependency_libs (Urho3D)
     endif ()
     setup_target ()
-    
+
     if (IOS)
         set_target_properties (${TARGET_NAME} PROPERTIES XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2")
     elseif (CMAKE_CROSSCOMPILING AND NOT ANDROID AND URHO3D_SCP_TO_TARGET)
@@ -556,7 +569,7 @@ macro (setup_main_executable)
     endif ()
 
     if (ANDROID)
-        # Add SDL native init function, SDL_Main() entry point must be defined by one of the source files in ${SOURCE_FILES} 
+        # Add SDL native init function, SDL_Main() entry point must be defined by one of the source files in ${SOURCE_FILES}
         add_android_native_init ()
         # Setup shared library output path
         set_output_directories (${ANDROID_LIBRARY_OUTPUT_PATH} LIBRARY)
@@ -597,7 +610,7 @@ macro (setup_main_executable)
             set_target_properties (${TARGET_NAME} PROPERTIES DEBUG_POSTFIX _d)
         endif ()
     endif ()
-    
+
     if (IOS)
         get_target_property (TARGET_LOC ${TARGET_NAME} LOCATION)
         # Define a custom target to check for resource modification
@@ -642,6 +655,25 @@ macro (define_dependency_libs TARGET)
             list (APPEND LINK_LIBS_ONLY ws2_32)
         elseif (NOT ANDROID)
             list (APPEND LINK_LIBS_ONLY pthread)
+        endif ()
+    endif ()
+
+    # ThirdParty/OpenSSL external dependency
+    if (URHO3D_OPENSSL)
+        if (${TARGET} MATCHES OpenSSL|Urho3D)
+            if (SSL_LIB_STATIC)
+                list (APPEND LINK_LIBS_ONLY ${SSL_LIB_STATIC})
+            endif ()
+
+            if (SSL_CRYPTO_LIB_STATIC)
+                list (APPEND LINK_LIBS_ONLY ${SSL_CRYPTO_LIB_STATIC})
+            endif ()
+
+            if (SSL_LIB_STATIC OR SSL_CRYPTO_LIB_STATIC)
+                if (WIN32)
+                    list (APPEND LINK_LIBS_ONLY advapi32 gdi32 user32)
+                endif ()
+            endif ()
         endif ()
     endif ()
 
@@ -747,12 +779,12 @@ macro (define_source_files)
     list (APPEND CPP_FILES ${ARG_EXTRA_CPP_FILES})
     list (APPEND H_FILES ${ARG_EXTRA_H_FILES})
     set (SOURCE_FILES ${CPP_FILES} ${H_FILES})
-    
+
     # Optionally enable PCH
     if (ARG_PCH)
         enable_pch ()
     endif ()
-    
+
     # Optionally accumulate source files at parent scope
     if (ARG_PARENT_SCOPE)
         get_filename_component (DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
