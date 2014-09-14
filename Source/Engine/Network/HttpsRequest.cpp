@@ -187,6 +187,10 @@ void HttpsRequest::ThreadFunction()
         port = ToInt(host.Substring(portStart + 1));
         host = host.Substring(0, portStart);
     }
+    else if (protocol.Compare("http", false))
+    {
+        port = 443; // default port for https
+    }
 
     char errorBuffer[ERROR_BUFFER_SIZE];
     memset(errorBuffer, 0, sizeof(errorBuffer));
