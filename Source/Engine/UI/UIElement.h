@@ -251,6 +251,10 @@ public:
     void SetUseDerivedOpacity(bool enable);
     /// Set whether reacts to input. Default false, but is enabled by subclasses if applicable.
     void SetEnabled(bool enable);
+    /// Set enabled on self and child elements. If recursive, child elements will do the same.
+    void SetDeepEnabled(bool enable, bool recursive);
+    /// Change enabled back to what it was prior to SetDeepEnabled. If recursive, child elements will do the same.
+    void ResetDeepEnabled(bool recursive);
     /// Set whether value is editable through input. Not applicable to all elements. Default true.
     void SetEditable(bool enable);
     /// Set whether is focused. Only one element can be focused at a time.
@@ -511,6 +515,8 @@ protected:
     bool useDerivedOpacity_;
     /// Input enabled flag.
     bool enabled_;
+    /// Inherited Input enabled flag.
+    bool enabledPrev_;
     /// Value editable flag.
     bool editable_;
     /// Selected flag.
