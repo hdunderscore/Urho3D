@@ -68,10 +68,15 @@ public:
     void SetScrollStep(float step);
     /// Set arrow key page step.
     void SetPageStep(float step);
-    /// Return scroll deceleration.
+    /// Set scroll deceleration.
     void SetScrollDeceleration(float deceleration) { scrollDeceleration_ = deceleration; }
-    /// Return scroll snap epsilon
+    /// Set scroll snap epsilon
     void SetScrollSnapEpsilon(float snap) { scrollSnapEpsilon_ = snap; }
+    /// Set whether child elements should be disabled while touch scrolling.
+    void SetAutoDisableChildren(bool disable) { autoDisableChildren_ = disable; };
+    /// Set how much touch movement is needed to trigger child element disabling.
+    void SetAutoDisableThreshold(float amount) { autoDisableThreshold_ = amount; };
+
 
     /// Return view offset from the top-left corner.
     const IntVector2& GetViewPosition() const { return viewPosition_; }
@@ -93,6 +98,10 @@ public:
     float GetScrollDeceleration() const { return scrollDeceleration_; }
     /// Return scroll snap epsilon
     float GetScrollSnapEpsilon() const { return scrollSnapEpsilon_; }
+    /// Return whether child element will be disabled while touch scrolling.
+    bool GetAutoDisableChildren() const { return autoDisableChildren_; }
+    /// Return how much touch movement is needed to trigger child element disabling.
+    float GetAutoDisableThreshold() const { return autoDisableThreshold_; }
 
     /// Set view position attribute.
     void SetViewPositionAttr(const IntVector2& value);
@@ -145,6 +154,12 @@ protected:
     bool scrollTouchDown_;
     /// Used to prevent touch scroll - scroll bar conflict
     bool barScrolling_;
+    /// Used to determine if child elements should be disabled while touch scrolling, to prevent their trigger.
+    bool autoDisableChildren_;
+    /// How much touch movement should trigger child element disabling.
+    float autoDisableThreshold_;
+    /// Used to determine if children have been disabled.
+    bool scrollChildrenDisable_;
 
 private:
     /// Handle scrollbar value changed.

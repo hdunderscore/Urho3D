@@ -53,10 +53,13 @@ ScrollView::ScrollView(Context* context) :
     scrollBarsAutoVisible_(true),
     ignoreEvents_(false),
     resizeContentWidth_(false),
-    barScrolling_(false)
+    barScrolling_(false),
+    scrollChildrenDisable_(false),
+    autoDisableChildren_(false),
+    autoDisableThreshold_(1.0)
 {
     clipChildren_ = true;
-    enabled_ = true;
+    SetEnabled(true);
     focusMode_ = FM_FOCUSABLE_DEFOCUSABLE;
 
     horizontalScrollBar_ = CreateChild<ScrollBar>("SV_HorizontalScrollBar");
@@ -100,6 +103,8 @@ void ScrollView::RegisterObject(Context* context)
     ACCESSOR_ATTRIBUTE(ScrollView, VAR_BOOL, "Auto Show/Hide Scrollbars", GetScrollBarsAutoVisible, SetScrollBarsAutoVisible, bool, true, AM_FILE);
     ACCESSOR_ATTRIBUTE(ScrollView, VAR_FLOAT, "Scroll Deceleration", GetScrollDeceleration, SetScrollDeceleration, float, 30.0f, AM_FILE);
     ACCESSOR_ATTRIBUTE(ScrollView, VAR_FLOAT, "Scroll Snap Epsilon", GetScrollSnapEpsilon, SetScrollSnapEpsilon, float, 1.0f, AM_FILE);
+    ACCESSOR_ATTRIBUTE(ScrollView, VAR_BOOL, "Auto Disable Children", GetAutoDisableChildren, SetAutoDisableChildren, bool, false, AM_FILE);
+    ACCESSOR_ATTRIBUTE(ScrollView, VAR_FLOAT, "Auto Disable Threshold", GetAutoDisableThreshold, SetAutoDisableThreshold, float, 1.0f, AM_FILE);
 }
 
 void ScrollView::Update(float timeStep)
@@ -528,6 +533,13 @@ void ScrollView::HandleTouchMove(StringHash eventType, VariantMap& eventData)
             touchScrollSpeedMax_.x_ = dX;
         if (Abs(dY) > Abs(touchScrollSpeedMax_.y_))
             touchScrollSpeedMax_.y_ = dY;
+
+        // Auto disable children
+        if (visible_ && autoDisableChildren_ && !scrollChildrenDisable_ && (Abs(touchScrollSpeedMax_.x_) > autoDisableThreshold_ || Abs(touchScrollSpeedMax_.y_) > autoDisableThreshold_))
+        {
+            scrollChildrenDisable_ = true;
+            scrollPanel_->SetDeepEnabled(false, true);
+        }
     }
     else if (eventType == E_TOUCHBEGIN)
     {
@@ -549,6 +561,13 @@ void ScrollView::HandleTouchMove(StringHash eventType, VariantMap& eventData)
     else if (eventType == E_TOUCHEND)
     {
         // 'Flick' action
+        // Release any auto disabled children
+        if (scrollChildrenDisable_)
+        {
+            scrollChildrenDisable_ = false;
+            scrollPanel_->ResetDeepEnabled(true);
+        }
+
         barScrolling_ = false;
         scrollTouchDown_ = false;
         if (Abs(touchScrollSpeedMax_.x_) > scrollSnapEpsilon_ )
