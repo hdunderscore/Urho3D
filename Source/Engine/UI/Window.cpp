@@ -218,9 +218,16 @@ void Window::OnDragMove(const IntVector2& position, const IntVector2& screenPosi
     SetCursorShape(dragMode_, cursor);
 }
 
-void Window::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, Cursor* cursor)
+void Window::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
 {
     dragMode_ = DRAG_NONE;
+}
+
+void Window::OnDragCancel(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
+{
+    dragMode_ = DRAG_NONE;
+    SetPosition(dragBeginPosition_);
+    SetSize(dragBeginSize_);
 }
 
 void Window::SetMovable(bool enable)

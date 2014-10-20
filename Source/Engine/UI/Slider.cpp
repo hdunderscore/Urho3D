@@ -145,7 +145,7 @@ void Slider::OnDragMove(const IntVector2& position, const IntVector2& screenPosi
     SetValue(newValue);
 }
 
-void Slider::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, Cursor* cursor)
+void Slider::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
 {
     dragSlider_ = false;
     selected_ = false;

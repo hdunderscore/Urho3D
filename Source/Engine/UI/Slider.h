@@ -53,10 +53,10 @@ public:
     /// React to mouse drag motion.
     virtual void OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor);
     /// React to mouse drag end.
-    virtual void OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, Cursor* cursor);
+    virtual void OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor);
     /// React to resize.
     virtual void OnResize();
-    
+
     /// Set orientation type.
     void SetOrientation(Orientation orientation);
     /// Set slider range maximum value (minimum value is always 0.)
