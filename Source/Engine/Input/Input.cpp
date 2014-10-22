@@ -226,7 +226,7 @@ void Input::Update()
     }
 }
 
-void Input::SetMouseVisible(bool enable)
+void Input::SetMouseVisible(bool enable, IntVector2 position)
 {
     // In touch emulation mode only enabled mouse is allowed
     if (touchEmulation_)
@@ -256,7 +256,14 @@ void Input::SetMouseVisible(bool enable)
                 lastMousePosition_ = center;
             }
             else
+            {
                 SDL_ShowCursor(SDL_TRUE);
+                if (position != MOUSE_POSITION_OFFSCREEN)
+                {
+                    SetMousePosition(position);
+                    lastMousePosition_ = position;
+                }
+            }
         }
 
         using namespace MouseVisibleChanged;

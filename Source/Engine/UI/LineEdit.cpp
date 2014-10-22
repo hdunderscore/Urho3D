@@ -74,7 +74,10 @@ LineEdit::LineEdit(Context* context) :
     dragBeginValue_(0.0f),
     dragAccumValue_(0.0f),
     numericPrecision_(4),
+    numericMinimum_((float)M_MIN_INT),
+    numericMaximum_((float)M_MAX_INT),
     dragButton_(MOUSEB_RIGHT),
+    toggleMouse_(false),
     sendTextFinishedEvent_(true)
 {
     clipChildren_ = true;
@@ -112,6 +115,8 @@ void LineEdit::RegisterObject(Context* context)
     ATTRIBUTE(LineEdit, VAR_INT, "Echo Character", echoCharacter_, 0, AM_FILE);
     ENUM_ACCESSOR_ATTRIBUTE(LineEdit, "Line Edit Mode", GetMode, SetMode, LineEditMode, lineEditModes, LEM_ALL, AM_FILE);
     ACCESSOR_ATTRIBUTE(LineEdit, VAR_INT, "Numeric Precision", GetNumericPrecision, SetNumericPrecision, unsigned, 4, AM_FILE);
+    ACCESSOR_ATTRIBUTE(LineEdit, VAR_FLOAT, "Numeric Min Range", GetNumericMinRange, SetNumericMinRange, float, (float)M_MIN_INT, AM_FILE);
+    ACCESSOR_ATTRIBUTE(LineEdit, VAR_FLOAT, "Numeric Max Range", GetNumericMaxRange, SetNumericMaxRange, float, (float)M_MAX_INT, AM_FILE);
     ACCESSOR_ATTRIBUTE(LineEdit, VAR_FLOAT, "Value", GetValue, SetValue, float, 0.0f, AM_FILE);
     ACCESSOR_ATTRIBUTE(LineEdit, VAR_INT, "Drag Edit Combo", GetDragEditCombo, SetDragEditCombo, int, MOUSEB_RIGHT, AM_FILE);
     ACCESSOR_ATTRIBUTE(LineEdit, VAR_FLOAT, "Drag Edit Increment", GetDragEditIncrement, SetDragEditIncrement, float, 0.1f, AM_FILE);
@@ -173,9 +178,11 @@ void LineEdit::OnDoubleClick(const IntVector2& position, const IntVector2& scree
 
 void LineEdit::OnDragBegin(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
 {
+    UIElement::OnDragBegin(position, screenPosition, buttons, qualifiers, cursor);
+
     dragBeginCursor_ = GetCharIndex(position);
 
-    if (mode_ == LEM_NUMERIC)
+    if (mode_ == LEM_NUMERIC && editable_ && (buttons == dragButton_))
     {
         dragBeginPosition_ = screenPosition;
         dragLastPosition_ = screenPosition;
@@ -183,6 +190,12 @@ void LineEdit::OnDragBegin(const IntVector2& position, const IntVector2& screenP
         dragAccumValue_ = 0.0f;
 
         Input* input = GetSubsystem<Input>();
+        if (cursor && cursor->IsVisible() && input->IsMouseVisible())
+        {
+            toggleMouse_ = true;
+            input->SetMouseVisible(false);
+            cursor->SetShape(CS_RESIZEHORIZONTAL);
+        }
 
         SetCursorPosition(0);
         text_->ClearSelection();
@@ -192,10 +205,13 @@ void LineEdit::OnDragBegin(const IntVector2& position, const IntVector2& screenP
 
 void LineEdit::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
 {
-    if (mode_ == LEM_NUMERIC && (buttons == dragButton_))
+    if (mode_ == LEM_NUMERIC && (buttons == dragButton_) && editable_)
     {
         float dX =(float)( screenPosition.x_ - dragLastPosition_.x_) / dragEditSmooth_;
-        dragLastPosition_ = screenPosition;
+        if (toggleMouse_ && cursor && cursor->IsVisible())
+            cursor->SetPosition(dragBeginPosition_);
+        else
+            dragLastPosition_ = screenPosition;
 
         if (qualifiers & QUAL_SHIFT)
             dX *= 0.5f;
@@ -223,15 +239,23 @@ void LineEdit::OnDragMove(const IntVector2& position, const IntVector2& screenPo
 
 void LineEdit::OnDragCancel(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
 {
-    if (mode_ == LEM_NUMERIC && (dragButtons & dragButton_))
+    UIElement::OnDragCancel(position, screenPosition, dragButtons, buttons, cursor);
+
+    if (mode_ == LEM_NUMERIC && (dragButtons & dragButton_) && editable_ )
     {
         lineValue_ = dragBeginValue_;
         FormatString();
-        Input* input = GetSubsystem<Input>();
         UpdateText();
 
         SetCursorPosition(dragBeginCursor_);
         UpdateCursor();
+
+        if (toggleMouse_)
+        {
+            Input* input = GetSubsystem<Input>();
+            input->SetMouseVisible(true, cursor->GetPosition());
+            cursor->SetShape(CS_NORMAL);
+        }
 
         sendTextFinishedEvent_ = false;
         SetFocus(false);
@@ -241,8 +265,19 @@ void LineEdit::OnDragCancel(const IntVector2& position, const IntVector2& screen
 
 void LineEdit::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
 {
-    if (mode_ == LEM_NUMERIC && dragButtons == dragButton_)
+    UIElement::OnDragEnd(position, screenPosition, dragButtons, buttons, cursor);
+
+    if (mode_ == LEM_NUMERIC && dragButtons == dragButton_ && editable_ )
+    {
+        if (toggleMouse_)
+        {
+            Input* input = GetSubsystem<Input>();
+            input->SetMouseVisible(true, cursor->GetPosition());
+            cursor->SetShape(CS_NORMAL);
+        }
+
         SetFocus(false);
+    }
 }
 
 bool LineEdit::OnDragDropTest(UIElement* source)
@@ -487,6 +522,8 @@ void LineEdit::OnKey(int key, int buttons, int qualifiers)
         {
             if (HasFocus())
                 SetFocus(false);
+
+            FormatString();
             return;
         }
         break;
@@ -803,8 +840,32 @@ void LineEdit::FormatString()
 {
     if (mode_ == LEM_NUMERIC)
     {
-        String formatString = "%0." + String(numericPrecision_) + "g";
+        String formatString = "%0." + String(numericPrecision_) + "f";
+        lineValue_ = Clamp(lineValue_, numericMinimum_, numericMaximum_);
         line_ = String(lineValue_, formatString);
+    }
+}
+
+void LineEdit::SetNumericRange(float lower, float upper)
+{
+    if (lower != numericMinimum_ || upper != numericMaximum_)
+    {
+        if (upper >= lower)
+        {
+            numericMinimum_ = lower;
+            numericMaximum_ = upper;
+        }
+        else
+        {
+            numericMinimum_ = upper;
+            numericMaximum_ = lower;
+        }
+
+        if (mode_ == LEM_NUMERIC)
+        {
+            FormatString();
+            UpdateText();
+        }
     }
 }
 

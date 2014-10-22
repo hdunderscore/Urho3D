@@ -116,7 +116,7 @@ UIElement@ CreateAttributeEditorParent(ListView@ list, const String&in name, uin
     return editorParent;
 }
 
-LineEdit@ CreateAttributeLineEdit(UIElement@ parent, Array<Serializable@>@ serializables, uint index, uint subIndex)
+LineEdit@ CreateAttributeLineEdit(UIElement@ parent, Array<Serializable@>@ serializables, uint index, uint subIndex, bool numeric)
 {
     LineEdit@ attrEdit = LineEdit();
     parent.AddChild(attrEdit);
@@ -127,13 +127,16 @@ LineEdit@ CreateAttributeLineEdit(UIElement@ parent, Array<Serializable@>@ seria
     attrEdit.vars["SubIndex"] = subIndex;
     SetAttributeEditorID(attrEdit, serializables);
 
+    if (numeric)
+        attrEdit.mode = LEM_NUMERIC;
+
     return attrEdit;
 }
 
 UIElement@ CreateStringAttributeEditor(ListView@ list, Array<Serializable@>@ serializables, const AttributeInfo&in info, uint index, uint subIndex)
 {
     UIElement@ parent = CreateAttributeEditorParent(list, info.name, index, subIndex);
-    LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex);
+    LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex, false);
     attrEdit.dragDropMode = DD_TARGET;
     // Do not subscribe to continuous edits of certain attributes (script class names) to prevent unnecessary errors getting printed
     if (noTextChangedAttrs.Find(info.name) == -1)
@@ -177,7 +180,7 @@ UIElement@ CreateNumAttributeEditor(ListView@ list, Array<Serializable@>@ serial
 
     for (uint i = 0; i < numCoords; ++i)
     {
-        LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex);
+        LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex, true);
         attrEdit.vars["Coordinate"] = i;
         SubscribeToEvent(attrEdit, "TextChanged", "EditAttribute");
         SubscribeToEvent(attrEdit, "TextFinished", "EditAttribute");
@@ -193,7 +196,7 @@ UIElement@ CreateIntAttributeEditor(ListView@ list, Array<Serializable@>@ serial
     if (info.enumNames is null || info.enumNames.empty)
     {
         // No enums, create a numeric editor
-        LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex);
+        LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex, true);
         SubscribeToEvent(attrEdit, "TextChanged", "EditAttribute");
         SubscribeToEvent(attrEdit, "TextFinished", "EditAttribute");
         // If the attribute is a node ID, make it a drag/drop target
@@ -250,7 +253,7 @@ UIElement@ CreateResourceRefAttributeEditor(ListView@ list, Array<Serializable@>
     container.SetFixedHeight(ATTR_HEIGHT);
     parent.AddChild(container);
 
-    LineEdit@ attrEdit = CreateAttributeLineEdit(container, serializables, index, subIndex);
+    LineEdit@ attrEdit = CreateAttributeLineEdit(container, serializables, index, subIndex, true);
     attrEdit.vars[TYPE_VAR] = resourceType.value;
     SubscribeToEvent(attrEdit, "TextFinished", "EditAttribute");
 

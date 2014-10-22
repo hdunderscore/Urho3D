@@ -18,6 +18,8 @@ IntRect viewportUIClipBorder = IntRect(27, 60, 0, 0); // used to clip viewport b
 bool mouseWheelCameraPosition = false;
 bool contextMenuActionWaitFrame = false;
 
+IntVector2 dragBeginPosition = IntVector2(-1, -1);
+
 const uint VIEWPORT_BORDER_H     = 0x00000001;
 const uint VIEWPORT_BORDER_H1    = 0x00000002;
 const uint VIEWPORT_BORDER_H2    = 0x00000004;
@@ -506,7 +508,6 @@ BorderImage@ CreateViewportDragBorder(uint value, int posX, int posY, int sizeX,
     BorderImage@ border = BorderImage();
     viewportUI.AddChild(border);
     border.name = "border";
-    border.enabled = true;
     border.style = "ViewportBorder";
     border.vars["VIEWMODE"] = value;
     border.SetFixedSize(sizeX, sizeY); // relevant size gets set by viewport later
@@ -1146,6 +1147,12 @@ void UpdateView(float timeStep)
     // Rotate/orbit/pan camera
     if (input.mouseButtonDown[MOUSEB_RIGHT] || input.mouseButtonDown[MOUSEB_MIDDLE])
     {
+        if (input.mouseVisible)
+        {
+            dragBeginPosition = input.mousePosition;
+            input.mouseVisible = false;
+        }
+
         IntVector2 mouseMove = input.mouseMove;
         if (mouseMove.x != 0 || mouseMove.y != 0)
         {
@@ -1177,9 +1184,14 @@ void UpdateView(float timeStep)
             FadeUI();
             input.mouseGrabbed = true;
         }
+        ui.cursor.position = dragBeginPosition;
     }
     else
+    {
+        input.SetMouseVisible(true, dragBeginPosition);
+
         input.mouseGrabbed = false;
+    }
 
     if (orbiting && !input.mouseButtonDown[MOUSEB_MIDDLE])
         orbiting = false;

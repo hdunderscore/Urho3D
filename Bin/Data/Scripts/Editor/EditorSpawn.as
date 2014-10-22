@@ -159,7 +159,7 @@ void RefreshPickedObjects()
         container.SetFixedHeight(ATTR_HEIGHT);
         parent.AddChild(container);
 
-        LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, i, 0);
+        LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, i, 0, false);
         nameEdit.name = "TextureNameEdit" + String(i);
 
         Button@ pickButton = CreateResourcePickerButton(container, null, i, 0, "Pick");

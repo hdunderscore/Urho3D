@@ -97,6 +97,12 @@ public:
     void SetMode(LineEditMode mode);
     /// Set the string format.
     void SetNumericPrecision(unsigned precision);
+    /// Set the range of values possible in numeric mode.
+    void SetNumericRange(float lower, float upper);
+    /// Set the lowest value possible in numeric mode.
+    void SetNumericMinRange(float lower) { numericMinimum_ = lower; }
+    /// Set the highest value possible in numeric mode.
+    void SetNumericMaxRange(float upper) { numericMaximum_ = upper; }
     /// Set the numeric value of the element.
     void SetValue(float val);
     /// Set the drag edit combo.
@@ -130,6 +136,10 @@ public:
     LineEditMode GetMode() const { return mode_; }
     /// Return the string format.
     unsigned GetNumericPrecision() const { return numericPrecision_; }
+    /// Return the lowest value possible in numeric mode.
+    float GetNumericMinRange() const {return numericMinimum_; }
+    /// Return the highest value possible in numeric mode.
+    float GetNumericMaxRange() const {return numericMaximum_; }
     /// Return the value.
     float GetValue() const { return lineValue_; }
     /// Return the drag edit combo.
@@ -183,13 +193,17 @@ protected:
     float lineValue_;
     /// The string formatting value.
     unsigned numericPrecision_;
+    /// The numeric minimum value acceptable in numeric mode.
+    float numericMinimum_;
+    /// The numeric maximum value acceptable in numeric mode.
+    float numericMaximum_;
     /// The drag edit combo.
     int dragButton_;
     /// Drag increment amount.
     float dragIncrement_;
     /// Value of text when Line Edit receives focus.
     String focusBeginLine_;
-    /// How much movement in pixels should cause a drag increment
+    /// How much movement in pixels should cause a drag increment.
     float dragEditSmooth_;
 
 private:
@@ -212,6 +226,8 @@ private:
     float dragAccumValue_;
     /// Used to prevent text finished being sent when drag cancelling.
     bool sendTextFinishedEvent_;
+    /// Used to determine mouse cursor behavior for drag editing.
+    bool toggleMouse_;
 };
 
 }

@@ -116,6 +116,8 @@ void Window::GetBatches(PODVector<UIBatch>& batches, PODVector<float>& vertexDat
 
 void Window::OnHover(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
 {
+    UIElement::OnHover(position, screenPosition, buttons, qualifiers, cursor);
+    
     if (dragMode_ == DRAG_NONE)
     {
         WindowDragMode mode = GetDragMode(position);
@@ -127,6 +129,8 @@ void Window::OnHover(const IntVector2& position, const IntVector2& screenPositio
 
 void Window::OnDragBegin(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
 {
+    UIElement::OnDragBegin(position, screenPosition, buttons, qualifiers, cursor);
+    
     if (buttons != MOUSEB_LEFT || !CheckAlignment())
     {
         dragMode_ = DRAG_NONE;
@@ -220,14 +224,21 @@ void Window::OnDragMove(const IntVector2& position, const IntVector2& screenPosi
 
 void Window::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
 {
+    UIElement::OnDragEnd(position, screenPosition, dragButtons, buttons, cursor);
+
     dragMode_ = DRAG_NONE;
 }
 
 void Window::OnDragCancel(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
 {
-    dragMode_ = DRAG_NONE;
-    SetPosition(dragBeginPosition_);
-    SetSize(dragBeginSize_);
+    UIElement::OnDragCancel(position, screenPosition, dragButtons, buttons, cursor);
+
+    if (dragButtons == MOUSEB_LEFT)
+    {
+        dragMode_ = DRAG_NONE;
+        SetPosition(dragBeginPosition_);
+        SetSize(dragBeginSize_);
+    }
 }
 
 void Window::SetMovable(bool enable)

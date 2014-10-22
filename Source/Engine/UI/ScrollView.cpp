@@ -120,11 +120,12 @@ void ScrollView::Update(float timeStep)
 
     if (GetSubsystem<UI>()->IsDragging())
     {
-        HashMap<UIElement*, int> dragElements = GetSubsystem<UI>()->GetDragElements();
-        for (HashMap<UIElement*, int>::Iterator i = dragElements.Begin(); i != dragElements.End(); ++i)
+        Vector<UIElement*> dragElements = GetSubsystem<UI>()->GetDragElements();
+
+        for (unsigned i = 0; i< dragElements.Size(); i++)
         {
-            UIElement* dragElement = i->first_;
-            int dragButtons = i->second_;
+            UIElement* dragElement = dragElements[i];
+            int dragButtons = dragElement->GetDragButtonCombo();
 
             if (dragButtons != MOUSEB_LEFT)
                 continue;

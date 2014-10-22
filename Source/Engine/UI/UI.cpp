@@ -607,17 +607,17 @@ UIElement* UI::GetFrontElement() const
     return front;
 }
 
-const HashMap<UIElement*, int> UI::GetDragElements()
+const Vector<UIElement*> UI::GetDragElements()
 {
     // Do not return the element until drag begin event has actually been posted
-    HashMap<UIElement*, int> r;
+    Vector<UIElement*> r;
     for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End(); ++i)
     {
         WeakPtr<UIElement> dragElement = i->first_;
         UI::DragData* dragData = i->second_;
 
         if (!dragElement && !dragData->dragBeginPending)
-            r[dragElement.Get()] = dragData->dragButtons;
+            r.Push(dragElement);
     }
 
     return r;

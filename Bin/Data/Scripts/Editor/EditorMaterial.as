@@ -133,7 +133,7 @@ void RefreshMaterialName()
     UIElement@ container = materialWindow.GetChild("NameContainer", true);
     container.RemoveAllChildren();
 
-    LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, 0, 0);
+    LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, 0, 0, false);
     if (editMaterial !is null)
         nameEdit.text = editMaterial.name;
     SubscribeToEvent(nameEdit, "TextFinished", "EditMaterialName");
@@ -162,7 +162,7 @@ void RefreshMaterialTechniques(bool fullUpdate = true)
             container.SetFixedHeight(ATTR_HEIGHT);
             list.AddItem(container);
         
-            LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, i, 0);
+            LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, i, 0, false);
             nameEdit.name = "TechniqueNameEdit" + String(i);
 
             Button@ pickButton = CreateResourcePickerButton(container, null, i, 0, "Pick");
@@ -183,7 +183,10 @@ void RefreshMaterialTechniques(bool fullUpdate = true)
             Text@ text = container2.CreateChild("Text");
             text.style = "EditorAttributeText";
             text.text = "Quality";
-            LineEdit@ attrEdit = CreateAttributeLineEdit(container2, null, i, 0);
+            LineEdit@ attrEdit = CreateAttributeLineEdit(container2, null, i, 0, true);
+            attrEdit.dragEditIncrement = 1;
+            attrEdit.numericPrecision = 0;
+            attrEdit.SetNumericRange(0, 10);
             attrEdit.text = String(entry.qualityLevel);
             SubscribeToEvent(attrEdit, "TextChanged", "EditTechniqueQuality");
             SubscribeToEvent(attrEdit, "TextFinished", "EditTechniqueQuality");
@@ -191,7 +194,7 @@ void RefreshMaterialTechniques(bool fullUpdate = true)
             text = container2.CreateChild("Text");
             text.style = "EditorAttributeText";
             text.text = "LOD Distance";
-            attrEdit = CreateAttributeLineEdit(container2, null, i, 0);
+            attrEdit = CreateAttributeLineEdit(container2, null, i, 0, true);
             attrEdit.text = String(entry.lodDistance);
             SubscribeToEvent(attrEdit, "TextChanged", "EditTechniqueLodDistance");
             SubscribeToEvent(attrEdit, "TextFinished", "EditTechniqueLodDistance");
@@ -231,7 +234,7 @@ void RefreshMaterialTextures(bool fullUpdate = true)
             container.SetFixedHeight(ATTR_HEIGHT);
             parent.AddChild(container);
     
-            LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, i, 0);
+            LineEdit@ nameEdit = CreateAttributeLineEdit(container, null, i, 0, false);
             nameEdit.name = "TextureNameEdit" + String(i);
 
             Button@ pickButton = CreateResourcePickerButton(container, null, i, 0, "Pick");
@@ -290,7 +293,7 @@ void RefreshMaterialShaderParameters()
 
         for (uint j = 0; j < numCoords; ++j)
         {
-            LineEdit@ attrEdit = CreateAttributeLineEdit(parent, null, 0, 0);
+            LineEdit@ attrEdit = CreateAttributeLineEdit(parent, null, 0, 0, false);
             attrEdit.vars["Coordinate"] = j;
             attrEdit.vars["Name"] = parameterNames[i];
             attrEdit.text = coordValues[j];

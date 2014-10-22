@@ -422,6 +422,10 @@ static void RegisterText3D(asIScriptEngine* engine)
 
 static void RegisterLineEdit(asIScriptEngine* engine)
 {
+    engine->RegisterEnum("LineEditMode");
+    engine->RegisterEnumValue("LineEditMode", "LEM_ALL", LEM_ALL);
+    engine->RegisterEnumValue("LineEditMode", "LEM_NUMERIC", LEM_NUMERIC);
+
     RegisterBorderImage<LineEdit>(engine, "LineEdit");
     engine->RegisterObjectMethod("LineEdit", "void set_text(const String&in)", asMETHOD(LineEdit, SetText), asCALL_THISCALL);
     engine->RegisterObjectMethod("LineEdit", "const String& get_text() const", asMETHOD(LineEdit, GetText), asCALL_THISCALL);
@@ -441,6 +445,21 @@ static void RegisterLineEdit(asIScriptEngine* engine)
     engine->RegisterObjectMethod("LineEdit", "bool get_textCopyable() const", asMETHOD(LineEdit, IsTextCopyable), asCALL_THISCALL);
     engine->RegisterObjectMethod("LineEdit", "Text@+ get_textElement() const", asMETHOD(LineEdit, GetTextElement), asCALL_THISCALL);
     engine->RegisterObjectMethod("LineEdit", "BorderImage@+ get_cursor() const", asMETHOD(LineEdit, GetCursor), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "void set_mode(LineEditMode mode)", asMETHOD(LineEdit, SetMode), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "LineEditMode get_mode() const", asMETHOD(LineEdit, GetMode), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "void set_numericPrecision(uint precision)", asMETHOD(LineEdit, SetNumericPrecision), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "uint get_numericPrecision() const", asMETHOD(LineEdit, GetNumericPrecision), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "void set_value(float value)", asMETHOD(LineEdit, SetValue), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "float get_value() const", asMETHOD(LineEdit, GetValue), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "void set_dragEditCombo(int combo)", asMETHOD(LineEdit, SetDragEditCombo), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "int get_dragEditCombo() const", asMETHOD(LineEdit, GetDragEditCombo), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "void set_dragEditIncrement(float increment)", asMETHOD(LineEdit, SetDragEditIncrement), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "float get_dragEditIncrement() const", asMETHOD(LineEdit, GetDragEditIncrement), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "void set_dragEditSmooth(float smooth)", asMETHOD(LineEdit, SetDragEditSmooth), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "float get_dragEditSmooth()", asMETHOD(LineEdit, GetDragEditSmooth), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "void SetNumericRange(float lower, float upper)", asMETHOD(LineEdit, SetNumericRange), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "float get_numericMinRange() const", asMETHOD(LineEdit,  GetNumericMinRange), asCALL_THISCALL);
+    engine->RegisterObjectMethod("LineEdit", "float get_numericMaxRange() const", asMETHOD(LineEdit,  GetNumericMaxRange), asCALL_THISCALL);
 }
 
 static void RegisterMenu(asIScriptEngine* engine)
@@ -660,7 +679,12 @@ static void UISetFocusElement(UIElement* element, UI* ptr)
     ptr->SetFocusElement(element);
 }
 
-static void RegisterUI(asIScriptEngine* engine)
+static CScriptArray* UIGetDragElements(UI* ptr)
+{
+    return VectorToHandleArray(ptr->GetDragElements(), "const Array<UIElement@>@");
+}
+
+static void RegisterUI(asIScriptEngine* engine) 
 {
     RegisterObject<UI>(engine, "UI");
     engine->RegisterObjectMethod("UI", "void Clear()", asMETHOD(UI, Clear), asCALL_THISCALL);
@@ -683,7 +707,7 @@ static void RegisterUI(asIScriptEngine* engine)
     engine->RegisterObjectMethod("UI", "void set_focusElement(UIElement@+)", asFUNCTION(UISetFocusElement), asCALL_CDECL_OBJLAST);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_focusElement() const", asMETHOD(UI, GetFocusElement), asCALL_THISCALL);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_frontElement() const", asMETHOD(UI, GetFrontElement), asCALL_THISCALL);
-    //engine->RegisterObjectMethod("UI", "const HashMap<UIElement@+, int> GetDragElements()", asMETHOD(UI, GetDragElements), asCALL_THISCALL);
+    engine->RegisterObjectMethod("UI", "const Array<UIElement@>@ GetDragElements()", asFUNCTION(UIGetDragElements), asCALL_CDECL_OBJLAST);
     engine->RegisterObjectMethod("UI", "bool IsDragging() const", asMETHOD(UI, IsDragging), asCALL_THISCALL);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_root() const", asMETHOD(UI, GetRoot), asCALL_THISCALL);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_modalRoot() const", asMETHOD(UI, GetRootModalElement), asCALL_THISCALL);

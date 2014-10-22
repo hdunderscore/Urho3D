@@ -112,10 +112,8 @@ public:
     UIElement* GetFocusElement() const { return focusElement_; }
     /// Return topmost enabled root-level non-modal element.
     UIElement* GetFrontElement() const;
-    /// Return currently dragged element.
-    //UIElement* GetDragElement(int dragButtons) const;
     /// Return currently dragged elements.
-    const HashMap<UIElement*, int> GetDragElements();
+    const Vector<UIElement*> GetDragElements();
     /// Return clipboard text.
     const String& GetClipboardText() const;
     /// Return UI element double click interval in seconds.

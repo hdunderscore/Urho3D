@@ -27,6 +27,8 @@
 #include "Mutex.h"
 #include "Object.h"
 
+#include "Cursor.h"
+
 namespace Urho3D
 {
 
@@ -36,12 +38,14 @@ class Serializer;
 class UIElement;
 class XMLFile;
 
+const IntVector2 MOUSE_POSITION_OFFSCREEN = IntVector2(M_MIN_INT, M_MIN_INT);
+
 /// %Input state for a finger touch.
 struct TouchState
 {
     /// Return last touched UI element, used by scripting integration.
     UIElement* GetTouchedElement();
-    
+
     /// Touch (finger) ID.
     int touchID_;
     /// Position in screen coordinates.
@@ -123,7 +127,7 @@ public:
     /// Set whether ALT-ENTER fullscreen toggle is enabled.
     void SetToggleFullscreen(bool enable);
     /// Set whether the operating system mouse cursor is visible. When not visible (default), is kept centered to prevent leaving the window.
-    void SetMouseVisible(bool enable);
+    void SetMouseVisible(bool enable, IntVector2 position = MOUSE_POSITION_OFFSCREEN);
     /// Set whether the mouse is currently being grabbed by an operation.
     void SetMouseGrabbed(bool grab);
     /// Add screen joystick.
