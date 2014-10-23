@@ -190,7 +190,7 @@ private:
     /// Handle mouse or touch move.
     void ProcessMove(const IntVector2& cursorPos, const IntVector2& cursorDeltaPos, int buttons, int qualifiers, Cursor* cursor, bool cursorVisible);
     /// Send a UI element drag or hover begin event.
-    void SendDragOrHoverEvent(StringHash eventType, UIElement* element, const IntVector2& screenPos, UI::DragData* dragData);
+    void SendDragOrHoverEvent(StringHash eventType, UIElement* element, const IntVector2& screenPos, const IntVector2& deltaPos, UI::DragData* dragData);
     /// Send a UI click or double click event.
     void SendClickEvent(StringHash eventType, UIElement* beginElement, UIElement* endElement, const IntVector2& pos, int button, int buttons, int qualifiers);
     /// Handle screen mode event.

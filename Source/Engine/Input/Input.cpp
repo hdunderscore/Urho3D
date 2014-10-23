@@ -107,6 +107,7 @@ Input::Input(Context* context) :
     toggleFullscreen_(true),
     mouseVisible_(false),
     mouseGrabbed_(false),
+    lastVisibleMousePosition_(MOUSE_POSITION_OFFSCREEN),
     touchEmulation_(false),
     inputFocus_(false),
     minimized_(false),
@@ -226,7 +227,7 @@ void Input::Update()
     }
 }
 
-void Input::SetMouseVisible(bool enable, IntVector2 position)
+void Input::SetMouseVisible(bool enable)
 {
     // In touch emulation mode only enabled mouse is allowed
     if (touchEmulation_)
@@ -251,6 +252,7 @@ void Input::SetMouseVisible(bool enable, IntVector2 position)
             {
                 SDL_ShowCursor(SDL_FALSE);
                 // Recenter the mouse cursor manually when hiding it to avoid erratic mouse move for one frame
+                lastVisibleMousePosition_ = GetMousePosition();
                 IntVector2 center(graphics_->GetWidth() / 2, graphics_->GetHeight() / 2);
                 SetMousePosition(center);
                 lastMousePosition_ = center;
@@ -258,11 +260,8 @@ void Input::SetMouseVisible(bool enable, IntVector2 position)
             else
             {
                 SDL_ShowCursor(SDL_TRUE);
-                if (position != MOUSE_POSITION_OFFSCREEN)
-                {
-                    SetMousePosition(position);
-                    lastMousePosition_ = position;
-                }
+                if (lastVisibleMousePosition_.x_ != MOUSE_POSITION_OFFSCREEN.x_ && lastVisibleMousePosition_.y_ != MOUSE_POSITION_OFFSCREEN.y_)
+                    SetMousePosition(lastVisibleMousePosition_);
             }
         }
 

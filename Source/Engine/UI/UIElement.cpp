@@ -506,7 +506,7 @@ void UIElement::OnDragBegin(const IntVector2& position, const IntVector2& screen
     dragButtonCount_ = ui->GetNumDragButtons(dragButtonCombo_);
 }
 
-void UIElement::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
+void UIElement::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, const IntVector2& deltaPos, int buttons, int qualifiers, Cursor* cursor)
 {
 }
 

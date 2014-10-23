@@ -203,11 +203,12 @@ void LineEdit::OnDragBegin(const IntVector2& position, const IntVector2& screenP
     }
 }
 
-void LineEdit::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
+void LineEdit::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, const IntVector2& deltaPos, int buttons, int qualifiers, Cursor* cursor)
 {
     if (mode_ == LEM_NUMERIC && (buttons == dragButton_) && editable_)
     {
-        float dX =(float)( screenPosition.x_ - dragLastPosition_.x_) / dragEditSmooth_;
+        //float dX =(float)( screenPosition.x_ - dragLastPosition_.x_) / dragEditSmooth_;
+        float dX =(float)( deltaPos.x_ ) / dragEditSmooth_;
         if (toggleMouse_ && cursor && cursor->IsVisible())
             cursor->SetPosition(dragBeginPosition_);
         else
@@ -253,7 +254,7 @@ void LineEdit::OnDragCancel(const IntVector2& position, const IntVector2& screen
         if (toggleMouse_)
         {
             Input* input = GetSubsystem<Input>();
-            input->SetMouseVisible(true, cursor->GetPosition());
+            input->SetMouseVisible(true);
             cursor->SetShape(CS_NORMAL);
         }
 
@@ -272,7 +273,7 @@ void LineEdit::OnDragEnd(const IntVector2& position, const IntVector2& screenPos
         if (toggleMouse_)
         {
             Input* input = GetSubsystem<Input>();
-            input->SetMouseVisible(true, cursor->GetPosition());
+            input->SetMouseVisible(true);
             cursor->SetShape(CS_NORMAL);
         }
 

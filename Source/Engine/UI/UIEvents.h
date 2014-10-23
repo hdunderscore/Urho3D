@@ -333,6 +333,8 @@ EVENT(E_DRAGMOVE, DragMove)
     PARAM(P_ELEMENT, Element);              // UIElement pointer
     PARAM(P_X, X);                          // int
     PARAM(P_Y, Y);                          // int
+    PARAM(P_DX, DX);                        // int
+    PARAM(P_DY, DY);                        // int
     PARAM(P_ELEMENTX, ElementX);            // int
     PARAM(P_ELEMENTY, ElementY);            // int
     PARAM(P_BUTTONS, Buttons);              // int

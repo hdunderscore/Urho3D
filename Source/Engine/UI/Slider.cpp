@@ -126,7 +126,7 @@ void Slider::OnDragBegin(const IntVector2& position, const IntVector2& screenPos
     }
 }
 
-void Slider::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
+void Slider::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, const IntVector2& deltaPos, int buttons, int qualifiers, Cursor* cursor)
 {
     if (!editable_ || !dragSlider_ || GetSize() == knob_->GetSize())
         return;

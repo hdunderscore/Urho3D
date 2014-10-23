@@ -14,6 +14,11 @@ Node@ resourcePreviewLightNode;
 Light@ resourcePreviewLight;
 int browserSearchSortMode = 0;
 
+bool rbPreviewRotating = false;
+StringHash DRAG_MOVE_EVENT_TYPE = StringHash("DragMove");
+StringHash DRAG_END_EVENT_TYPE = StringHash("DragEnd");
+StringHash DRAG_CANCEL_EVENT_TYPE = StringHash("DragCancel");
+
 BrowserDir@ rootDir;
 Array<BrowserFile@> browserFiles;
 Dictionary browserDirs;
@@ -354,10 +359,13 @@ void InitResourceBrowserPreview()
     resourceBrowserPreview.SetFixedWidth(266);
     resourceBrowserPreview.SetView(resourcePreviewScene, camera);
     resourceBrowserPreview.autoUpdate = false;
+    resourceBrowserPreview.focusMode = FM_FOCUSABLE;
 
     resourcePreviewNode = resourcePreviewScene.CreateChild("PreviewNodeContainer");
 
     SubscribeToEvent(resourceBrowserPreview, "DragMove", "RotateResourceBrowserPreview");
+    SubscribeToEvent(resourceBrowserPreview, "DragEnd", "RotateResourceBrowserPreview");
+    SubscribeToEvent(resourceBrowserPreview, "DragCancel", "RotateResourceBrowserPreview");
 
     RefreshBrowserPreview();
 }
@@ -1494,15 +1502,39 @@ void CreateResourcePreview(String path, Node@ previewNode)
 
 void RotateResourceBrowserPreview(StringHash eventType, VariantMap& eventData)
 {
-    int elemX = eventData["ElementX"].GetInt();
-    int elemY = eventData["ElementY"].GetInt();
+    if (eventType == DRAG_END_EVENT_TYPE || eventType == DRAG_CANCEL_EVENT_TYPE)
+    {
+        if (rbPreviewRotating)
+        {
+            rbPreviewRotating = false;
+            input.mouseVisible = true;
+            ui.cursor.visible = true;
+            input.mouseGrabbed = false;
+        }
+        return;
+    }
+
+    int buttons = eventData["Buttons"].GetInt();
+    if (buttons != MOUSEB_RIGHT && buttons != MOUSEB_MIDDLE)
+        return;
+        
+    if (input.mouseVisible && !rbPreviewRotating)
+    {
+        rbPreviewRotating = true;
+        input.mouseVisible = false;
+        ui.cursor.visible = false;
+        input.mouseGrabbed = true;
+    }
+
+    int DX = -eventData["DX"].GetInt();
+    int DY = -eventData["DY"].GetInt();
     
     if (resourceBrowserPreview.height > 0 && resourceBrowserPreview.width > 0)
     {
-        float yaw = ((resourceBrowserPreview.height / 2) - elemY) * (90.0 / resourceBrowserPreview.height);
-        float pitch = ((resourceBrowserPreview.width / 2) - elemX) * (90.0 / resourceBrowserPreview.width);
+        float yaw = DY * (90.0 / resourceBrowserPreview.height);
+        float pitch = DX * (90.0 / resourceBrowserPreview.width);
 
-        resourcePreviewNode.rotation = resourcePreviewNode.rotation.Slerp(Quaternion(yaw, pitch, 0), 0.1);
+        resourcePreviewNode.rotation = resourcePreviewNode.rotation * Quaternion(yaw, pitch, 0);
         RefreshBrowserPreview();
     }
 }

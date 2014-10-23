@@ -459,11 +459,6 @@ static unsigned InputLoadGesturesVectorBuffer(VectorBuffer& buffer, Input* ptr)
     return ptr->LoadGestures(buffer);
 }
 
-static void InputSetMouseVisible(bool enable, IntVector2 position, Input* ptr)
-{
-    ptr->SetMouseVisible(enable, position);
-}
-
 static void RegisterInput(asIScriptEngine* engine)
 {
     engine->RegisterObjectType("TouchState", 0, asOBJ_REF);
@@ -489,8 +484,6 @@ static void RegisterInput(asIScriptEngine* engine)
     engine->RegisterObjectMethod("JoystickState", "float get_axisPosition(uint) const", asMETHOD(JoystickState, GetAxisPosition), asCALL_THISCALL);
     engine->RegisterObjectMethod("JoystickState", "int get_hatPosition(uint) const", asMETHOD(JoystickState, GetHatPosition), asCALL_THISCALL);
 
-    engine->RegisterGlobalProperty("const int MOUSE_POSITION_OFFSCREEN", (void*)&MOUSE_POSITION_OFFSCREEN);
-
     RegisterObject<Input>(engine, "Input");
     engine->RegisterObjectMethod("Input", "int AddScreenJoystick(XMLFile@+ layoutFile = null, XMLFile@+ styleFile = null)", asMETHOD(Input, AddScreenJoystick), asCALL_THISCALL);
     engine->RegisterObjectMethod("Input", "bool RemoveScreenJoystick(int)", asMETHOD(Input, RemoveScreenJoystick), asCALL_THISCALL);
@@ -510,7 +503,6 @@ static void RegisterInput(asIScriptEngine* engine)
     engine->RegisterObjectMethod("Input", "int GetScancodeFromName(const String&in) const", asMETHOD(Input, GetScancodeFromName), asCALL_THISCALL);
     engine->RegisterObjectMethod("Input", "String GetScancodeName(int) const", asMETHOD(Input, GetScancodeName), asCALL_THISCALL);
     engine->RegisterObjectMethod("Input", "void set_mouseVisible(bool)", asMETHOD(Input, SetMouseVisible), asCALL_THISCALL);
-    engine->RegisterObjectMethod("Input", "void SetMouseVisible(bool enable, IntVector2 position = MOUSE_POSITION_OFFSCREEN)", asFUNCTION(InputSetMouseVisible), asCALL_CDECL_OBJLAST);
     engine->RegisterObjectMethod("Input", "bool get_mouseVisible() const", asMETHOD(Input, IsMouseVisible), asCALL_THISCALL);
     engine->RegisterObjectMethod("Input", "void set_mouseGrabbed(bool)", asMETHOD(Input, SetMouseGrabbed), asCALL_THISCALL);
     engine->RegisterObjectMethod("Input", "bool get_mouseGrabbed() const", asMETHOD(Input, IsMouseGrabbed), asCALL_THISCALL);

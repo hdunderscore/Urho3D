@@ -12,6 +12,8 @@ const uint MAX_NODE_ATTRIBUTES = 8;
 const int ATTRNAME_WIDTH = 150;
 const int ATTR_HEIGHT = 19;
 const StringHash TEXT_CHANGED_EVENT_TYPE("TextChanged");
+const StringHash TEXT_ENTRY_EVENT_TYPE("TextEntry");
+const StringHash TEXT_FINISHED_EVENT_TYPE("TextFinished");
 
 bool inLoadAttributeEditor = false;
 bool inEditAttribute = false;
@@ -125,12 +127,24 @@ LineEdit@ CreateAttributeLineEdit(UIElement@ parent, Array<Serializable@>@ seria
     attrEdit.SetFixedHeight(ATTR_HEIGHT - 2);
     attrEdit.vars["Index"] = index;
     attrEdit.vars["SubIndex"] = subIndex;
+    attrEdit.vars["Creation"] = true;
     SetAttributeEditorID(attrEdit, serializables);
 
     if (numeric)
+    {
         attrEdit.mode = LEM_NUMERIC;
+        SubscribeToEvent(attrEdit, "TextFinished", "LineEditIncrement");
+    }
 
     return attrEdit;
+}
+
+void LineEditIncrement(StringHash eventType, VariantMap& eventData)
+{
+    LineEdit@ attrEdit = eventData["Element"].GetPtr();
+    float value = attrEdit.value;
+    // Scale increment amount based on current value:
+    attrEdit.dragEditIncrement = Clamp(Abs(value * 0.01f), 0.01f, 10.0f);
 }
 
 UIElement@ CreateStringAttributeEditor(ListView@ list, Array<Serializable@>@ serializables, const AttributeInfo&in info, uint index, uint subIndex)
@@ -807,7 +821,9 @@ void EditAttribute(StringHash eventType, VariantMap& eventData)
     uint index = attrEdit.vars["Index"].GetUInt();
     uint subIndex = attrEdit.vars["SubIndex"].GetUInt();
     uint coordinate = attrEdit.vars["Coordinate"].GetUInt();
-    bool intermediateEdit = eventType == TEXT_CHANGED_EVENT_TYPE;
+    bool creation = attrEdit.vars["Creation"].GetBool();
+    bool intermediateEdit = (eventType == TEXT_CHANGED_EVENT_TYPE || eventType == TEXT_ENTRY_EVENT_TYPE) && !creation;
+    attrEdit.vars["Creation"] = false;
 
     // Do the editor pre logic before attribute is being modified
     if (!PreEditAttribute(serializables, index))
@@ -825,7 +841,7 @@ void EditAttribute(StringHash eventType, VariantMap& eventData)
         serializables[i].ApplyAttributes();
 
     // Do the editor post logic after attribute has been modified.
-    //if (!intermediateEdit)
+    if (!intermediateEdit)
         PostEditAttribute(serializables, index, oldValues);
 
     inEditAttribute = false;

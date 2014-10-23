@@ -18,7 +18,7 @@ IntRect viewportUIClipBorder = IntRect(27, 60, 0, 0); // used to clip viewport b
 bool mouseWheelCameraPosition = false;
 bool contextMenuActionWaitFrame = false;
 
-IntVector2 dragBeginPosition = IntVector2(-1, -1);
+bool toggledMouseLock = false;
 
 const uint VIEWPORT_BORDER_H     = 0x00000001;
 const uint VIEWPORT_BORDER_H1    = 0x00000002;
@@ -1087,10 +1087,35 @@ void UpdateViewports(float timeStep)
     }
 }
 
+void SetMouseLock()
+{
+    if (input.mouseVisible)
+    {
+        toggledMouseLock = true;
+        input.mouseVisible = false;
+        ui.cursor.visible = false;
+        FadeUI();
+        input.mouseGrabbed = true;
+    }
+}
+void ReleaseMouseLock()
+{
+    if (toggledMouseLock)
+    {
+        toggledMouseLock = false;
+        input.mouseVisible = true;
+        ui.cursor.visible = true;
+    }
+    input.mouseGrabbed = false;
+}
+
 void UpdateView(float timeStep)
 {
     if (ui.HasModalElement() || ui.focusElement !is null)
+    {
+        ReleaseMouseLock();
         return;
+    }
 
     // Move camera
     if (!input.keyDown[KEY_LCTRL])
@@ -1147,12 +1172,8 @@ void UpdateView(float timeStep)
     // Rotate/orbit/pan camera
     if (input.mouseButtonDown[MOUSEB_RIGHT] || input.mouseButtonDown[MOUSEB_MIDDLE])
     {
-        if (input.mouseVisible)
-        {
-            dragBeginPosition = input.mousePosition;
-            input.mouseVisible = false;
-        }
-
+        SetMouseLock();
+        
         IntVector2 mouseMove = input.mouseMove;
         if (mouseMove.x != 0 || mouseMove.y != 0)
         {
@@ -1179,18 +1200,10 @@ void UpdateView(float timeStep)
                 }
             }
         }
-        else
-        {
-            FadeUI();
-            input.mouseGrabbed = true;
-        }
-        ui.cursor.position = dragBeginPosition;
     }
     else
     {
-        input.SetMouseVisible(true, dragBeginPosition);
-
-        input.mouseGrabbed = false;
+        ReleaseMouseLock();
     }
 
     if (orbiting && !input.mouseButtonDown[MOUSEB_MIDDLE])

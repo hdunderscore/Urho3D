@@ -144,7 +144,7 @@ void Window::OnDragBegin(const IntVector2& position, const IntVector2& screenPos
     SetCursorShape(dragMode_, cursor);
 }
 
-void Window::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
+void Window::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, const IntVector2& deltaPos, int buttons, int qualifiers, Cursor* cursor)
 {
     if (dragMode_ == DRAG_NONE)
         return;

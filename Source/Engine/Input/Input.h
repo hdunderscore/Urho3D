@@ -127,7 +127,7 @@ public:
     /// Set whether ALT-ENTER fullscreen toggle is enabled.
     void SetToggleFullscreen(bool enable);
     /// Set whether the operating system mouse cursor is visible. When not visible (default), is kept centered to prevent leaving the window.
-    void SetMouseVisible(bool enable, IntVector2 position = MOUSE_POSITION_OFFSCREEN);
+    void SetMouseVisible(bool enable);
     /// Set whether the mouse is currently being grabbed by an operation.
     void SetMouseGrabbed(bool grab);
     /// Add screen joystick.
@@ -288,6 +288,8 @@ private:
     unsigned mouseButtonPress_;
     /// Last mouse position for calculating movement.
     IntVector2 lastMousePosition_;
+    /// Last mouse position before being set to not visible.
+    IntVector2 lastVisibleMousePosition_;
     /// Mouse movement since last frame.
     IntVector2 mouseMove_;
     /// Mouse wheel movement since last frame.
