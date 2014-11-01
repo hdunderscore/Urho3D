@@ -310,13 +310,22 @@ void UI::Update(float timeStep)
     // Drag begin based on time
     if (dragElementsCount_ > 0)
     {
-        for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End(); ++i)
+        for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End(); )
         {
             WeakPtr<UIElement> dragElement = i->first_;
             UI::DragData* dragData = i->second_;
 
-            if (!dragData->dragBeginPending || !dragElement)
+            if (!dragElement)
+            {
+                i = dragElementErase(i);
                 continue;
+            }
+
+            if (!dragData->dragBeginPending)
+            {
+                ++i;
+                continue;
+            }
 
             if (dragData->dragBeginTimer.GetMSec(false) >= (unsigned)(dragBeginInterval_ * 1000))
             {
@@ -330,6 +339,8 @@ void UI::Update(float timeStep)
 
                 SendDragOrHoverEvent(E_DRAGBEGIN, dragElement, beginSendPos, IntVector2::ZERO, dragData);
             }
+
+            ++i;
         }
     }
 
@@ -611,13 +622,21 @@ const Vector<UIElement*> UI::GetDragElements()
 {
     // Do not return the element until drag begin event has actually been posted
     Vector<UIElement*> r;
-    for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End(); ++i)
+    for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End(); )
     {
         WeakPtr<UIElement> dragElement = i->first_;
         UI::DragData* dragData = i->second_;
 
-        if (!dragElement && !dragData->dragBeginPending)
+        if (!dragElement)
+        {
+            i = dragElementErase(i);
+            continue;
+        }
+
+        if (!dragData->dragBeginPending)
             r.Push(dragElement);
+
+        ++i;
     }
 
     return r;
@@ -960,10 +979,16 @@ void UI::ProcessHover(const IntVector2& cursorPos, int buttons, int qualifiers, 
 {
     WeakPtr<UIElement> element(GetElementAt(cursorPos));
 
-    for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End(); ++i)
+    for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End();)
     {
         WeakPtr<UIElement> dragElement = i->first_;
         UI::DragData* dragData = i->second_;
+
+        if (!dragElement)
+        {
+            i = dragElementErase(i);
+            continue;
+        }
 
         bool dragSource = dragElement && (dragElement->GetDragDropMode() & DD_SOURCE) != 0;
         bool dragTarget = element && (element->GetDragDropMode() & DD_TARGET) != 0;
@@ -1013,6 +1038,8 @@ void UI::ProcessHover(const IntVector2& cursorPos, int buttons, int qualifiers, 
         }
         else if (dragSource && cursor)
             cursor->SetShape(dragElement == element ? CS_ACCEPTDROP : CS_REJECTDROP);
+
+        ++i;
     }
 
     // Hover effect
@@ -1049,10 +1076,10 @@ void UI::ProcessClickBegin(const IntVector2& cursorPos, int button, int buttons,
             newButton = true;
         buttons |= button;
 
+        SetFocusElement (element);
         if (element)
         {
             // Handle focusing & bringing to front
-            SetFocusElement(element);
             element->BringToFront();
 
             // Handle click
@@ -1122,6 +1149,12 @@ void UI::ProcessClickEnd(const IntVector2& cursorPos, int button, int buttons, i
             WeakPtr<UIElement> dragElement = i->first_;
             UI::DragData* dragData = i->second_;
 
+            if (!dragElement)
+            {
+                i = dragElementErase(i);
+                continue;
+            }
+
             if (dragData->dragButtons & button)
             {
                 // Handle end of click
@@ -1178,59 +1211,62 @@ void UI::ProcessMove(const IntVector2& cursorPos, const IntVector2& cursorDeltaP
             WeakPtr<UIElement> dragElement = i->first_;
             UI::DragData* dragData = i->second_;
 
+            if (!dragElement)
+            {
+                i = dragElementErase(i);
+                continue;
+            }
+
             if (!(dragData->dragButtons & buttons))
             {
                 ++i;
                 continue;
             }
 
-            if (dragElement)
+            // Calculate the position that we should send for this drag event.
+            IntVector2 sendPos;
+            if (usingTouchInput_)
             {
-                // Calculate the position that we should send for this drag event.
-                IntVector2 sendPos;
-                if (usingTouchInput_)
-                {
-                    dragData->sumPos += cursorDeltaPos;
-                    sendPos.x_ = dragData->sumPos.x_ / dragData->numDragButtons;
-                    sendPos.y_ = dragData->sumPos.y_ / dragData->numDragButtons;
-                }
-                else
-                {
-                    dragData->sumPos = cursorPos;
-                    sendPos = cursorPos;
-                }
+                dragData->sumPos += cursorDeltaPos;
+                sendPos.x_ = dragData->sumPos.x_ / dragData->numDragButtons;
+                sendPos.y_ = dragData->sumPos.y_ / dragData->numDragButtons;
+            }
+            else
+            {
+                dragData->sumPos = cursorPos;
+                sendPos = cursorPos;
+            }
 
-                if (dragElement->IsEnabled() && dragElement->IsVisible())
+            if (dragElement->IsEnabled() && dragElement->IsVisible())
+            {
+                // Signal drag begin if distance threshold was exceeded
+                if (dragData->dragBeginPending)
                 {
-                    // Signal drag begin if distance threshold was exceeded
-                    if (dragData->dragBeginPending)
+                    IntVector2 beginSendPos;
+                    beginSendPos.x_ = dragData->dragBeginSumPos.x_ / dragData->numDragButtons;
+                    beginSendPos.y_ = dragData->dragBeginSumPos.y_ / dragData->numDragButtons;
+
+                    IntVector2 offset = cursorPos - beginSendPos;
+                    if (Abs(offset.x_) >= dragBeginDistance_ || Abs(offset.y_) >= dragBeginDistance_)
                     {
-                        IntVector2 beginSendPos;
-                        beginSendPos.x_ = dragData->dragBeginSumPos.x_ / dragData->numDragButtons;
-                        beginSendPos.y_ = dragData->dragBeginSumPos.y_ / dragData->numDragButtons;
-
-                        IntVector2 offset = cursorPos - beginSendPos;
-                        if (Abs(offset.x_) >= dragBeginDistance_ || Abs(offset.y_) >= dragBeginDistance_)
-                        {
-                            dragData->dragBeginPending = false;
-                            dragConfirmedCount_ ++;
-                            dragElement->OnDragBegin(dragElement->ScreenToElement(beginSendPos), beginSendPos, buttons, qualifiers, cursor);
-                            SendDragOrHoverEvent(E_DRAGBEGIN, dragElement, beginSendPos, IntVector2::ZERO, dragData);
-                        }
-                    }
-
-                    if (!dragData->dragBeginPending)
-                    {
-                        dragElement->OnDragMove(dragElement->ScreenToElement(sendPos), sendPos, cursorDeltaPos, buttons, qualifiers, cursor);
-                        SendDragOrHoverEvent(E_DRAGMOVE, dragElement, sendPos, cursorDeltaPos, dragData);
+                        dragData->dragBeginPending = false;
+                        dragConfirmedCount_ ++;
+                        dragElement->OnDragBegin(dragElement->ScreenToElement(beginSendPos), beginSendPos, buttons, qualifiers, cursor);
+                        SendDragOrHoverEvent(E_DRAGBEGIN, dragElement, beginSendPos, IntVector2::ZERO, dragData);
                     }
                 }
-                else
+
+                if (!dragData->dragBeginPending)
                 {
-                    dragElement->OnDragEnd(dragElement->ScreenToElement(sendPos), sendPos, dragData->dragButtons, buttons, cursor);
-                    SendDragOrHoverEvent(E_DRAGEND, dragElement, sendPos, IntVector2::ZERO, dragData);
-                    dragElement.Reset();
+                    dragElement->OnDragMove(dragElement->ScreenToElement(sendPos), sendPos, cursorDeltaPos, buttons, qualifiers, cursor);
+                    SendDragOrHoverEvent(E_DRAGMOVE, dragElement, sendPos, cursorDeltaPos, dragData);
                 }
+            }
+            else
+            {
+                dragElement->OnDragEnd(dragElement->ScreenToElement(sendPos), sendPos, dragData->dragButtons, buttons, cursor);
+                SendDragOrHoverEvent(E_DRAGEND, dragElement, sendPos, IntVector2::ZERO, dragData);
+                dragElement.Reset();
             }
 
             ++i;
@@ -1462,7 +1498,7 @@ void UI::HandleTouchEnd(StringHash eventType, VariantMap& eventData)
     // Clear any drag events that were using the touch id
     for (HashMap<WeakPtr<UIElement>, int>::Iterator i = touchDragElements_.Begin(); i != touchDragElements_.End(); )
     {
-        WeakPtr<UIElement> touchElement = i->first_;
+        //WeakPtr<UIElement> touchElement = i->first_;
         int touches = i->second_;
         if (touches & touchId)
             i =touchDragElements_.Erase(i);
@@ -1632,8 +1668,6 @@ HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator UI::dragElementErase(HashMa
 
     if (!dragData->dragBeginPending)
         dragConfirmedCount_ --;
-    if (dragElement)
-        dragElement.Reset();
     i = dragElements_.Erase(i);
     dragElementsCount_ --;
 
