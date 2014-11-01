@@ -67,7 +67,6 @@ LineEdit::LineEdit(Context* context) :
     textCopyable_(true),
     mode_(LEM_ALL),
     dragBeginPosition_(IntVector2::ZERO),
-    dragLastPosition_(IntVector2::ZERO),
     lineValue_(0.0f),
     dragIncrement_(0.1f),
     dragEditSmooth_(10.0f),
@@ -185,7 +184,6 @@ void LineEdit::OnDragBegin(const IntVector2& position, const IntVector2& screenP
     if (mode_ == LEM_NUMERIC && editable_ && (buttons == dragButton_))
     {
         dragBeginPosition_ = screenPosition;
-        dragLastPosition_ = screenPosition;
         dragBeginValue_ = lineValue_;
         dragAccumValue_ = 0.0f;
 
@@ -207,12 +205,9 @@ void LineEdit::OnDragMove(const IntVector2& position, const IntVector2& screenPo
 {
     if (mode_ == LEM_NUMERIC && (buttons == dragButton_) && editable_)
     {
-        //float dX =(float)( screenPosition.x_ - dragLastPosition_.x_) / dragEditSmooth_;
         float dX =(float)( deltaPos.x_ ) / dragEditSmooth_;
         if (toggleMouse_ && cursor && cursor->IsVisible())
             cursor->SetPosition(dragBeginPosition_);
-        else
-            dragLastPosition_ = screenPosition;
 
         if (qualifiers & QUAL_SHIFT)
             dX *= 0.5f;

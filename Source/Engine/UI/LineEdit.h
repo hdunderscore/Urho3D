@@ -218,8 +218,6 @@ private:
 
     /// Where drag editing begins.
     IntVector2 dragBeginPosition_;
-    /// Where last drag edit position was.
-    IntVector2 dragLastPosition_;
     /// Value when beginning drag.
     float dragBeginValue_;
     /// Value while dragging.

@@ -1695,7 +1695,6 @@ void UI::ProcessDragCancel()
             dragElement->OnDragCancel(dragElement->ScreenToElement(cursorPos), cursorPos, dragData->dragButtons, mouseButtons_, cursor_);
             SendDragOrHoverEvent(E_DRAGCANCEL, dragElement, cursorPos, IntVector2::ZERO, dragData);
             i = dragElementErase(i);
-            LOGDEBUG("UI::ProcessDragCancel()::canceled");
         }
         else
             ++i;
