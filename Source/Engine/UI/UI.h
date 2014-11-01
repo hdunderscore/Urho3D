@@ -114,6 +114,10 @@ public:
     UIElement* GetFrontElement() const;
     /// Return currently dragged elements.
     const Vector<UIElement*> GetDragElements();
+    /// Return the number of currently dragged elements.
+    unsigned GetNumDragElements() const { return dragConfirmedCount_; }
+    /// Return the drag element at index.
+    UIElement* GetDragElement(unsigned index);
     /// Return clipboard text.
     const String& GetClipboardText() const;
     /// Return UI element double click interval in seconds.
@@ -302,6 +306,8 @@ private:
     int dragConfirmedCount_;
     /// UI elements that are being touched with touch input.
     HashMap<WeakPtr<UIElement>, int> touchDragElements_;
+    /// Confirmed drag elements cache.
+    Vector<UIElement*> dragElementsConfirmed_;
 };
 
 /// Register UI library objects.

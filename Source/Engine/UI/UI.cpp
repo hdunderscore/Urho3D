@@ -621,7 +621,9 @@ UIElement* UI::GetFrontElement() const
 const Vector<UIElement*> UI::GetDragElements()
 {
     // Do not return the element until drag begin event has actually been posted
-    Vector<UIElement*> r;
+    if (!dragElementsConfirmed_.Empty())
+        return dragElementsConfirmed_;
+
     for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End(); )
     {
         WeakPtr<UIElement> dragElement = i->first_;
@@ -634,12 +636,18 @@ const Vector<UIElement*> UI::GetDragElements()
         }
 
         if (!dragData->dragBeginPending)
-            r.Push(dragElement);
+            dragElementsConfirmed_.Push(dragElement);
 
         ++i;
     }
 
-    return r;
+    return dragElementsConfirmed_;
+}
+
+UIElement* UI::GetDragElement(unsigned index)
+{
+    GetDragElements();
+    return dragElementsConfirmed_[index];
 }
 
 const String& UI::GetClipboardText() const
@@ -1065,7 +1073,7 @@ void UI::ProcessHover(const IntVector2& cursorPos, int buttons, int qualifiers, 
 
 void UI::ProcessClickBegin(const IntVector2& cursorPos, int button, int buttons, int qualifiers, Cursor* cursor, bool cursorVisible)
 {
-    //if (cursorVisible)
+    if (cursorVisible)
     {
         WeakPtr<UIElement> element(GetElementAt(cursorPos));
 
@@ -1076,7 +1084,10 @@ void UI::ProcessClickBegin(const IntVector2& cursorPos, int button, int buttons,
             newButton = true;
         buttons |= button;
 
-        SetFocusElement (element);
+        if (element)
+            SetFocusElement (element);
+
+        // Focus change events may destroy the element, check again.
         if (element)
         {
             // Handle focusing & bringing to front
@@ -1139,7 +1150,7 @@ void UI::ProcessClickBegin(const IntVector2& cursorPos, int button, int buttons,
 
 void UI::ProcessClickEnd(const IntVector2& cursorPos, int button, int buttons, int qualifiers, Cursor* cursor, bool cursorVisible)
 {
-    //if (cursorVisible)
+    if (cursorVisible)
     {
         WeakPtr<UIElement> element(GetElementAt(cursorPos));
 
@@ -1203,7 +1214,7 @@ void UI::ProcessClickEnd(const IntVector2& cursorPos, int button, int buttons, i
 
 void UI::ProcessMove(const IntVector2& cursorPos, const IntVector2& cursorDeltaPos, int buttons, int qualifiers, Cursor* cursor, bool cursorVisible)
 {
-    //if (cursorVisible && dragElementsCount_ > 0 && buttons)
+    if (cursorVisible && dragElementsCount_ > 0 && buttons)
     if (dragElementsCount_ > 0 && buttons)
     {
         for (HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i = dragElements_.Begin(); i != dragElements_.End();)
@@ -1501,7 +1512,7 @@ void UI::HandleTouchEnd(StringHash eventType, VariantMap& eventData)
         //WeakPtr<UIElement> touchElement = i->first_;
         int touches = i->second_;
         if (touches & touchId)
-            i =touchDragElements_.Erase(i);
+            i = touchDragElements_.Erase(i);
         else
             ++i;
     }
@@ -1663,6 +1674,8 @@ void UI::HandleDropFile(StringHash eventType, VariantMap& eventData)
 
 HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator UI::dragElementErase(HashMap<WeakPtr<UIElement>, UI::DragData*>::Iterator i)
 {
+    dragElementsConfirmed_.Clear();
+
     WeakPtr<UIElement> dragElement = i->first_;
     DragData* dragData = i->second_;
 
