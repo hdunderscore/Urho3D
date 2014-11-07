@@ -1,0 +1,22 @@
+Slot docking:
+In vert/horz layout mode, you want to be able to slot-in/rearrange panels in respect to the layout mode.
+
+Split docking:
+Sometimes you want to split a window docking area to create a new docking area in one of the four directions (up, down, left, right).
+
+Tab docking:
+pre-requisite: Tab UI elements containers.
+You may want to drop a panel onto a tab and make a new tab, or you may drop it onto an exisitng tab and append to bottom (also it could flip to that tab so you can precisely place it).
+
+
+
+-- UI system looks for an element directly beneath the cursor (with no way to ignore certain items), this makes it difficult to have your preview dragging with the mouse to the location because it will block the dock if the dockable is in 'front'. This can be solved by using UI picking masks (akin to lighting, collision, etc masks).
+
+Set it up like this:
+pre defined flags:
+UI_PICK = 1 << 0 = GetElementAt -> Should the element be detected by GetElementAt?
+UI_DRAGDROP = 1 << 1 = DragDropTest/DragDropFinished -> Should the element be detected by DragDropTest?
+
+custom flags:
+you can set up your own custom flags for whatever you want,
+- extend signature of GetElementAt(IntVector2 pos, int mask = UI_PICK)
