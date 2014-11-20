@@ -72,6 +72,7 @@ Texture::Texture(Context* context) :
     Resource(context),
     GPUObject(GetSubsystem<Graphics>()),
     usage_(TEXTURE_STATIC),
+    format_(0),
     levels_(0),
     requestedLevels_(0),
     width_(0),
@@ -213,7 +214,7 @@ void Texture::UpdateParameters()
     // Anisotropy
     if (graphics_->GetAnisotropySupport())
     {
-        glTexParameterf(target_, GL_TEXTURE_MAX_ANISOTROPY_EXT, filterMode_ == FILTER_ANISOTROPIC ?
+        glTexParameterf(target_, GL_TEXTURE_MAX_ANISOTROPY_EXT, filterMode == FILTER_ANISOTROPIC ?
             (float)graphics_->GetTextureAnisotropy() : 1.0f);
     }
     

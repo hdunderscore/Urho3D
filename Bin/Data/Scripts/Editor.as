@@ -7,6 +7,7 @@
 #include "Scripts/Editor/EditorUIElement.as"
 #include "Scripts/Editor/EditorGizmo.as"
 #include "Scripts/Editor/EditorMaterial.as"
+#include "Scripts/Editor/EditorParticleEffect.as"
 #include "Scripts/Editor/EditorSettings.as"
 #include "Scripts/Editor/EditorPreferences.as"
 #include "Scripts/Editor/EditorToolBar.as"
@@ -50,7 +51,6 @@ void Start()
     input.mouseVisible = true;
     // Use system clipboard to allow transport of text in & out from the editor
     ui.useSystemClipboard = true;
-
 }
 
 void FirstFrame()
@@ -141,6 +141,8 @@ void LoadConfig()
         if (cameraElem.HasAttribute("limitrotation")) limitRotation = cameraElem.GetBool("limitrotation");
         if (cameraElem.HasAttribute("mousewheelcameraposition")) mouseWheelCameraPosition = cameraElem.GetBool("mousewheelcameraposition");
         if (cameraElem.HasAttribute("viewportmode")) viewportMode = cameraElem.GetUInt("viewportmode");
+        UpdateViewParameters();
+        if (cameraElem.HasAttribute("mouseorbitmode")) mouseOrbitMode = cameraElem.GetInt("mouseorbitmode");
         UpdateViewParameters();
     }
 
@@ -258,6 +260,7 @@ void SaveConfig()
     cameraElem.SetBool("limitrotation", limitRotation);
     cameraElem.SetBool("mousewheelcameraposition", mouseWheelCameraPosition);
     cameraElem.SetUInt("viewportmode", viewportMode);
+    cameraElem.SetInt("mouseorbitmode", mouseOrbitMode);
 
     objectElem.SetFloat("newnodedistance", newNodeDistance);
     objectElem.SetFloat("movestep", moveStep);

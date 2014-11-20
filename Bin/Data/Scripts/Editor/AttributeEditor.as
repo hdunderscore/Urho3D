@@ -29,6 +29,8 @@ Array<String> noTextChangedAttrs = {"Script File", "Class Name", "Script Object 
 
 WeakHandle testAnimState;
 
+bool dragEditAttribute = false;
+
 UIElement@ SetEditable(UIElement@ element, bool editable)
 {
     if (element is null)
@@ -179,6 +181,9 @@ UIElement@ CreateNumAttributeEditor(ListView@ list, Array<Serializable@>@ serial
     {
         LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex);
         attrEdit.vars["Coordinate"] = i;
+        
+        CreateDragSlider(attrEdit);
+
         SubscribeToEvent(attrEdit, "TextChanged", "EditAttribute");
         SubscribeToEvent(attrEdit, "TextFinished", "EditAttribute");
     }
@@ -194,6 +199,7 @@ UIElement@ CreateIntAttributeEditor(ListView@ list, Array<Serializable@>@ serial
     {
         // No enums, create a numeric editor
         LineEdit@ attrEdit = CreateAttributeLineEdit(parent, serializables, index, subIndex);
+        CreateDragSlider(attrEdit);
         SubscribeToEvent(attrEdit, "TextChanged", "EditAttribute");
         SubscribeToEvent(attrEdit, "TextFinished", "EditAttribute");
         // If the attribute is a node ID, make it a drag/drop target
@@ -789,6 +795,21 @@ void UpdateAttributes(Array<Serializable@>@ serializables, ListView@ list, bool&
         list.viewPosition = oldViewPos;
 }
 
+void CreateDragSlider(LineEdit@ parent)
+{
+    Button@ dragSld = Button();
+    dragSld.style = "EditorDragSlider";
+    dragSld.SetFixedHeight(ATTR_HEIGHT - 3);
+    dragSld.SetFixedWidth(dragSld.height);
+    dragSld.SetAlignment(HA_RIGHT, VA_TOP);
+    parent.AddChild(dragSld);
+
+    SubscribeToEvent(dragSld, "DragBegin", "LineDragBegin");
+    SubscribeToEvent(dragSld, "DragMove", "LineDragMove");
+    SubscribeToEvent(dragSld, "DragEnd", "LineDragEnd");
+    SubscribeToEvent(dragSld, "DragCancel", "LineDragCancel");
+}
+
 void EditAttribute(StringHash eventType, VariantMap& eventData)
 {
     // Changing elements programmatically may cause events to be sent. Stop possible infinite loop in that case.
@@ -812,24 +833,84 @@ void EditAttribute(StringHash eventType, VariantMap& eventData)
 
     inEditAttribute = true;
 
-    // Store old values so that PostEditAttribute can create undo actions
     Array<Variant> oldValues;
-    for (uint i = 0; i < serializables.length; ++i)
-        oldValues.Push(serializables[i].attributes[index]);
+    if (!dragEditAttribute)
+    {
+	    // Store old values so that PostEditAttribute can create undo actions
+	    for (uint i = 0; i < serializables.length; ++i)
+		    oldValues.Push(serializables[i].attributes[index]);
+    }
 
     StoreAttributeEditor(parent, serializables, index, subIndex, coordinate);
     for (uint i = 0; i < serializables.length; ++i)
-        serializables[i].ApplyAttributes();
+	    serializables[i].ApplyAttributes();
 
-    // Do the editor post logic after attribute has been modified.
-    PostEditAttribute(serializables, index, oldValues);
+    //disable undo 
+    if (!dragEditAttribute)
+    {
+	    // Do the editor post logic after attribute has been modified.
+	    PostEditAttribute(serializables, index, oldValues);
+    }
 
     inEditAttribute = false;
 
     // If not an intermediate edit, reload the editor fields with validated values
     // (attributes may have interactions; therefore we load everything, not just the value being edited)
     if (!intermediateEdit)
-        attributesDirty = true;
+	    attributesDirty = true;
+}
+
+void LineDragBegin(StringHash eventType, VariantMap& eventData)
+{
+    UIElement@ label = eventData["Element"].GetPtr();
+    int x = eventData["X"].GetInt();
+    label.vars["posX"] = x;
+    
+    //store value old value before dragging 
+    dragEditAttribute = false;
+    LineEdit@ selectedNumEditor = label.parent;
+    //not convenient way to trigger EditAttribute event
+    selectedNumEditor.text = selectedNumEditor.text;
+    selectedNumEditor.vars["DragBeginValue"] = selectedNumEditor.text;
+    selectedNumEditor.cursorPosition = 0;
+
+    SetMouseMode(true);
+}
+
+void LineDragMove(StringHash eventTypem, VariantMap& eventData)
+{
+    UIElement@ label = eventData["Element"].GetPtr();
+    LineEdit@ selectedNumEditor = label.parent;
+
+    int x = eventData["X"].GetInt();
+    int posx = label.vars["posX"].GetInt();
+    float val = input.mouseMoveX;
+
+    float fieldVal = selectedNumEditor.text.ToFloat();
+    fieldVal += val/100;
+    label.vars["posX"] = x;
+    selectedNumEditor.text = fieldVal;
+    selectedNumEditor.cursorPosition = 0;
+    //disable storing undo 
+    dragEditAttribute = true;
+}
+
+void LineDragEnd(StringHash eventType, VariantMap& eventData)
+{
+    dragEditAttribute = false;
+    SetMouseMode(false);
+}
+
+void LineDragCancel(StringHash eventType, VariantMap& eventData)
+{
+    UIElement@ label = eventData["Element"].GetPtr();
+
+    //prevent undo triggering
+    dragEditAttribute = true;
+    LineEdit@ selectedNumEditor = label.parent;
+    selectedNumEditor.text = selectedNumEditor.vars["DragBeginValue"].GetString();
+    selectedNumEditor.cursorPosition = 0;
+    SetMouseMode(false);
 }
 
 // Resource picker functionality
@@ -877,7 +958,7 @@ ResourcePicker@ resourcePicker = null;
 void InitResourcePicker()
 {
     // Fill resource picker data
-    Array<String> fontFilters = {"*.ttf", "*.fnt", "*.xml"};
+    Array<String> fontFilters = {"*.ttf", "*.otf", "*.fnt", "*.xml"};
     Array<String> imageFilters = {"*.png", "*.jpg", "*.bmp", "*.tga"};
     Array<String> luaFileFilters = {"*.lua", "*.luc"};
     Array<String> scriptFilters = {"*.as", "*.asc"};

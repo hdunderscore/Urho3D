@@ -28,6 +28,7 @@ Urho3D development, contributions and bugfixes by:
 - Gunnar Kriik
 - Ali Kämäräinen
 - Pete Leigh
+- Jonne Nauha
 - Paul Noome
 - David Palacios
 - Alex Parlett
@@ -50,9 +51,11 @@ Urho3D development, contributions and bugfixes by:
 - celeron55
 - hdunderscore
 - mightyCelu
+- nemerle
 - ninjastone
 - rasteron
 - reattiva
+- rifai
 - skaiware
 - szamq
 - thebluefish

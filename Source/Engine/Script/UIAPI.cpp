@@ -66,6 +66,11 @@ static void RegisterFont(asIScriptEngine* engine)
     engine->RegisterObjectMethod("Font", "bool SaveXML(File@+, int, bool arg2 = false)", asMETHOD(Font, SaveXML), asCALL_THISCALL);
     engine->RegisterObjectMethod("Font", "bool SaveXML(VectorBuffer&, int, bool arg2 = false)", asFUNCTION(FontSaveXMLVectorBuffer), asCALL_CDECL_OBJLAST);
     engine->RegisterObjectMethod("Font", "bool SaveXML(const String&in, int, bool arg2 = false)", asFUNCTION(FontSaveXML), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectMethod("Font", "IntVector2 GetTotalGlyphOffset(int) const", asMETHOD(Font, GetTotalGlyphOffset), asCALL_THISCALL);
+    engine->RegisterObjectMethod("Font", "void set_absoluteGlyphOffset(const IntVector2&)", asMETHOD(Font, SetAbsoluteGlyphOffset), asCALL_THISCALL);
+    engine->RegisterObjectMethod("Font", "const IntVector2& get_absoluteGlyphOffset() const", asMETHOD(Font, GetAbsoluteGlyphOffset), asCALL_THISCALL);
+    engine->RegisterObjectMethod("Font", "void set_scaledGlyphOffset(const Vector2&)", asMETHOD(Font, SetScaledGlyphOffset), asCALL_THISCALL);
+    engine->RegisterObjectMethod("Font", "const Vector2& get_scaledGlyphOffset() const", asMETHOD(Font, GetScaledGlyphOffset), asCALL_THISCALL);
 }
 
 static void RegisterUIElement(asIScriptEngine* engine)
@@ -239,6 +244,10 @@ static void RegisterScrollView(asIScriptEngine* engine)
     engine->RegisterObjectMethod("ScrollView", "float get_scrollDeceleration() const", asMETHOD(ScrollView, GetScrollDeceleration), asCALL_THISCALL);
     engine->RegisterObjectMethod("ScrollView", "void set_scrollSnapEpsilon(float)", asMETHOD(ScrollView, SetScrollSnapEpsilon), asCALL_THISCALL);
     engine->RegisterObjectMethod("ScrollView", "float get_scrollSnapEpsilon() const", asMETHOD(ScrollView, GetScrollSnapEpsilon), asCALL_THISCALL);
+    engine->RegisterObjectMethod("ScrollView", "void set_autoDisableChildren(bool)", asMETHOD(ScrollView, SetAutoDisableChildren), asCALL_THISCALL);
+    engine->RegisterObjectMethod("ScrollView", "bool get_autoDisableChildren() const", asMETHOD(ScrollView, GetAutoDisableChildren), asCALL_THISCALL);
+    engine->RegisterObjectMethod("ScrollView", "void set_autoDisableThreshold(float)", asMETHOD(ScrollView, SetAutoDisableThreshold), asCALL_THISCALL);
+    engine->RegisterObjectMethod("ScrollView", "float get_autoDisableThreshold() const", asMETHOD(ScrollView, GetAutoDisableThreshold), asCALL_THISCALL);
 }
 
 void ListViewSetSelections(CScriptArray* selections, ListView* ptr)
@@ -660,6 +669,11 @@ static void UISetFocusElement(UIElement* element, UI* ptr)
     ptr->SetFocusElement(element);
 }
 
+static CScriptArray* UIGetDragElements(UI* ptr)
+{
+    return VectorToHandleArray(ptr->GetDragElements(), "const Array<UIElement@>@");
+}
+
 static void RegisterUI(asIScriptEngine* engine)
 {
     RegisterObject<UI>(engine, "UI");
@@ -683,7 +697,8 @@ static void RegisterUI(asIScriptEngine* engine)
     engine->RegisterObjectMethod("UI", "void set_focusElement(UIElement@+)", asFUNCTION(UISetFocusElement), asCALL_CDECL_OBJLAST);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_focusElement() const", asMETHOD(UI, GetFocusElement), asCALL_THISCALL);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_frontElement() const", asMETHOD(UI, GetFrontElement), asCALL_THISCALL);
-    engine->RegisterObjectMethod("UI", "UIElement@+ get_dragElement() const", asMETHOD(UI, GetDragElement), asCALL_THISCALL);
+    engine->RegisterObjectMethod("UI", "const Array<UIElement@>@ GetDragElements()", asFUNCTION(UIGetDragElements), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectMethod("UI", "bool IsDragging() const", asMETHOD(UI, IsDragging), asCALL_THISCALL);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_root() const", asMETHOD(UI, GetRoot), asCALL_THISCALL);
     engine->RegisterObjectMethod("UI", "UIElement@+ get_modalRoot() const", asMETHOD(UI, GetRootModalElement), asCALL_THISCALL);
     engine->RegisterObjectMethod("UI", "void set_clipBoardText(const String&in)", asMETHOD(UI, SetClipboardText), asCALL_THISCALL);

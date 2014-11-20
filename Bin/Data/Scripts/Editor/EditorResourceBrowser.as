@@ -76,6 +76,7 @@ const StringHash BINARY_TYPE_SHADER("USHD");
 const StringHash BINARY_TYPE_ANIMATION("UANI");
 
 const StringHash EXTENSION_TYPE_TTF(".ttf");
+const StringHash EXTENSION_TYPE_OTF(".otf");
 const StringHash EXTENSION_TYPE_OGG(".ogg");
 const StringHash EXTENSION_TYPE_WAV(".wav");
 const StringHash EXTENSION_TYPE_DDS(".dds");
@@ -407,6 +408,10 @@ void HandleBrowserFileClick(StringHash eventType, VariantMap& eventData)
     else if (file.resourceType == RESOURCE_TYPE_SCRIPTFILE)
     {
         actions.Push(CreateBrowserFileActionMenu("Execute Script", "HandleBrowserRunScript", file));
+    }
+    else if (file.resourceType == RESOURCE_TYPE_PARTICLEEFFECT)
+    {
+        actions.Push(CreateBrowserFileActionMenu("Edit", "HandleBrowserEditResource", file));
     }
 
     actions.Push(CreateBrowserFileActionMenu("Open", "HandleBrowserOpenResource", file));
@@ -841,6 +846,14 @@ void HandleBrowserEditResource(StringHash eventType, VariantMap& eventData)
         if (material !is null)
             EditMaterial(material);
     }
+
+    if (file.resourceType == RESOURCE_TYPE_PARTICLEEFFECT)
+    {
+        Print("Resource Browser Particle Effect");
+        ParticleEffect@ particleEffect = cache.GetResource("ParticleEffect", file.resourceKey);
+        if (particleEffect !is null)
+            EditParticleEffect(particleEffect);
+    }
 }
 
 void HandleBrowserOpenResource(StringHash eventType, VariantMap& eventData)
@@ -1049,6 +1062,8 @@ int GetResourceType(StringHash fileType)
 
     // extension fileTypes
     else if (fileType == EXTENSION_TYPE_TTF)
+        return RESOURCE_TYPE_FONT;
+    else if (fileType == EXTENSION_TYPE_OTF)
         return RESOURCE_TYPE_FONT;
     else if (fileType == EXTENSION_TYPE_OGG)
         return RESOURCE_TYPE_SOUND;

@@ -251,6 +251,7 @@ Graphics::Graphics(Context* context) :
     externalWindow_(0),
     width_(0),
     height_(0),
+    position_(SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED),
     multiSample_(1),
     fullscreen_(false),
     borderless_(false),
@@ -272,7 +273,7 @@ Graphics::Graphics(Context* context) :
     numPrimitives_(0),
     numBatches_(0),
     maxScratchBufferRequest_(0),
-    defaultTextureFilterMode_(FILTER_BILINEAR),
+    defaultTextureFilterMode_(FILTER_TRILINEAR),
     shaderPath_("Shaders/HLSL/"),
     shaderExtension_(".hlsl"),
     orientations_("LandscapeLeft LandscapeRight")
@@ -364,6 +365,8 @@ void Graphics::SetWindowPosition(const IntVector2& position)
 {
     if (impl_->window_)
         SDL_SetWindowPosition(impl_->window_, position.x_, position.y_);
+    else
+        position_ = position; // Sets as initial position for OpenWindow()
 }
 
 void Graphics::SetWindowPosition(int x, int y)
@@ -1795,6 +1798,16 @@ void Graphics::SetDepthWrite(bool enable)
         depthWrite_ = enable;
     }
 }
+
+void Graphics::SetDrawAntialiased(bool enable)
+{
+    if (enable != drawAntialiased_)
+    {
+        impl_->device_->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, enable ? TRUE : FALSE);
+        drawAntialiased_ = enable;
+    }
+}
+
 void Graphics::SetFillMode(FillMode mode)
 {
     if (mode != fillMode_)
@@ -2014,12 +2027,9 @@ bool Graphics::IsInitialized() const
 
 IntVector2 Graphics::GetWindowPosition() const
 {
-    IntVector2 ret(IntVector2::ZERO);
-    
     if (impl_->window_)
-        SDL_GetWindowPosition(impl_->window_, &ret.x_, &ret.y_);
-    
-    return ret;
+        return position_;
+    return IntVector2::ZERO;
 }
 
 PODVector<IntVector2> Graphics::GetResolutions() const
@@ -2211,6 +2221,30 @@ void Graphics::WindowResized()
     eventData[P_RESIZABLE] = resizable_;
     eventData[P_BORDERLESS] = borderless_;
     SendEvent(E_SCREENMODE, eventData);
+}
+
+void Graphics::WindowMoved()
+{
+    if (!impl_->device_ || !impl_->window_)
+        return;
+
+    int newX, newY;
+
+    SDL_GetWindowPosition(impl_->window_, &newX, &newY);
+    if (newX == position_.x_ && newY == position_.y_)
+        return;
+
+    position_.x_ = newX;
+    position_.y_ = newY;
+
+    LOGDEBUGF("Window was moved to %d,%d", position_.x_, position_.y_);
+
+    using namespace WindowPos;
+
+    VariantMap& eventData = GetEventDataMap();
+    eventData[P_X] = position_.x_;
+    eventData[P_Y] = position_.y_;
+    SendEvent(E_WINDOWPOS, eventData);
 }
 
 void Graphics::Maximize()
@@ -2443,7 +2477,7 @@ bool Graphics::OpenWindow(int width, int height, bool resizable, bool borderless
         if (borderless)
             flags |= SDL_WINDOW_BORDERLESS;
 
-        impl_->window_ = SDL_CreateWindow(windowTitle_.CString(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+        impl_->window_ = SDL_CreateWindow(windowTitle_.CString(), position_.x_, position_.y_, width, height, flags);
     }
     else
         impl_->window_ = SDL_CreateWindowFrom(externalWindow_, 0);
@@ -2453,6 +2487,8 @@ bool Graphics::OpenWindow(int width, int height, bool resizable, bool borderless
         LOGERROR("Could not create window");
         return false;
     }
+
+    SDL_GetWindowPosition(impl_->window_, &position_.x_, &position_.y_);
 
     CreateWindowIcon();
 
@@ -2767,6 +2803,7 @@ void Graphics::ResetCachedState()
     stencilCompareMask_ = M_MAX_UNSIGNED;
     stencilWriteMask_ = M_MAX_UNSIGNED;
     useClipPlane_ = false;
+    drawAntialiased_ = true;
     impl_->blendEnable_ = FALSE;
     impl_->srcBlend_ = D3DBLEND_ONE;
     impl_->destBlend_ = D3DBLEND_ZERO;

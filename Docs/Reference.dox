@@ -129,7 +129,7 @@ The full list of supported parameters, their datatypes and default values:
 - LogName (string) %Log filename. Default "Urho3D.log".
 - FrameLimiter (bool) Whether to cap maximum framerate to 200 (desktop) or 60 (Android/iOS.) Default true.
 - WorkerThreads (bool) Whether to create worker threads for the %WorkQueue subsystem according to available CPU cores. Default true.
-- ResourcePaths (string) A semicolon-separated list of resource paths to use. If corresponding packages (ie. Data.pak for Data directory) exist they will be used instead. Default "CoreData;Data".
+- ResourcePaths (string) A semicolon-separated list of resource paths to use. If corresponding packages (ie. Data.pak for Data directory) exist they will be used instead. Default "Data;CoreData".
 - ResourcePackages (string) A semicolon-separated list of resource packages to use. Default empty.
 - AutoloadPaths (string) A semicolon-separated list of autoload paths to use. Any resource packages and subdirectories inside an autoload path will be added to the resource system. Default "Extra".
 - ForceSM2 (bool) Whether to force %Shader %Model 2, effective in Direct3D9 mode only. Default false.
@@ -138,6 +138,8 @@ The full list of supported parameters, their datatypes and default values:
 - WindowTitle (string) %Window title. Default "Urho3D".
 - WindowWidth (int) %Window horizontal dimension. Default 0 (use desktop resolution, or 1024 in windowed mode.)
 - WindowHeight (int) %Window vertical dimension. Default 0 (use desktop resolution, or 768 in windowed mode.)
+- WindowPositionX (int) %Window horizontal position. Default center to screen.
+- WindowPositionY (int) %Window vertical position. Default center to screen.
 - WindowResizable (bool) Whether window is resizable. Default false.
 - FullScreen (bool) Whether to create a full-screen window. Default true.
 - Borderless (bool) Whether to create the window as borderless. Default false.
@@ -835,7 +837,7 @@ Deferred rendering needs to render each opaque object only once to the G-buffer,
 
 After the G-buffer has been rendered, light volumes will be rendered into the final rendertarget to accumulate per-pixel lighting. As the material albedo is available, all lighting calculations are final and output both the diffuse and specular color at the same time. After light accumulation rendering proceeds to post-opaque, refract, transparent, and post-alpha passes, as in other rendering modes.
 
-\section RenderingModes_Comparision Advantages and disadvantages
+\section RenderingModes_Comparison Advantages and disadvantages
 
 Whether using forward or deferred rendering modes is more advantageous depends on the scene and lighting complexity.
 
@@ -985,8 +987,8 @@ For the layout definitions, see http://www.cgtextures.com/content.php?action=tut
 A technique definition looks like this:
 
 \code
-<technique vs="VertexShaderName" ps="PixelShaderName" vsdefines="DEFINE1 DEFINE2" psdefines="DEFINE3 DEFINE4" sm3="false|true" >
-    <pass name="base|litbase|light|alpha|litalpha|postopaque|refract|postalpha|prepass|material|deferred|depth|shadow" sm3="false|true"
+<technique vs="VertexShaderName" ps="PixelShaderName" vsdefines="DEFINE1 DEFINE2" psdefines="DEFINE3 DEFINE4" sm3="false|true" desktop="false|true" >
+    <pass name="base|litbase|light|alpha|litalpha|postopaque|refract|postalpha|prepass|material|deferred|depth|shadow" sm3="false|true" desktop="false|true" >
         vs="VertexShaderName" ps="PixelShaderName" vsdefines="DEFINE1 DEFINE2" psdefines="DEFINE3 DEFINE4"
         lighting="unlit|pervertex|perpixel"
         blend="replace|add|multiply|alpha|addalpha|premulalpha|invdestalpha|subtract|subtractalpha"
@@ -998,7 +1000,9 @@ A technique definition looks like this:
 </technique>
 \endcode
 
-The sm3 attribute in the technique root element allows the technique to specify it requires %Shader %Model 3 hardware. Omitting it is same as specifying false (works on both SM2 & 3.) The sm3 attribute can also be specified per pass, to disable for example a too complex lit base optimization pass on SM2.
+The "sm3" attribute in the technique root element allows the technique to specify it requires %Shader %Model 3 hardware. Omitting it is same as specifying false (works on both SM2 & 3.) The sm3 attribute can also be specified per pass, to disable for example a too complex lit base optimization pass on SM2.
+
+The "desktop" attribute in either technique or pass works similarly to allow requiring desktop hardware and excluding mobile devices.
 
 Shaders are referred to by giving the name of a shader without path and file extension. For example "Basic" or "LitSolid". The engine will add the correct path and file extension (Shaders/HLSL/LitSolid.hlsl for Direct3D9, and Shaders/GLSL/LitSolid.glsl for OpenGL) automatically. The same shader source file contains both the vertex and pixel shader. In addition, compilation defines can be specified, which are passed to the shader compiler. For example the define "DIFFMAP" typically enables diffuse mapping in the pixel shader.
 
@@ -1445,9 +1449,26 @@ Key events include both the symbolic keycode ("Key") that depends on the keyboar
 
 The input polling API differentiates between the initiation of a key/mouse button press, and holding the key or button down. \ref Input::GetKeyPress "GetKeyPress()" and \ref Input::GetMouseButtonPress "GetMouseButtonPress()" return true only for one frame (the initiation) while \ref Input::GetKeyDown "GetKeyDown()" and \ref Input::GetMouseButtonDown "GetMouseButtonDown()" return true as long as the key or button is held down. To check whether keys are down or pressed by scancode, use \ref Input::GetScancodeDown "GetScancodeDown()" and \ref Input::GetScancodePress "GetScancodePress()". Functions also exist for converting keycodes to scancodes or vice versa, or getting key names. See for example \ref Input::GetKeyName "GetKeyName()" and \ref Input::GetKeyFromScancode "GetKeyFromScancode()".
 
-Mouse motion since the last frame can be accessed with \ref Input::GetMouseMove() "GetMouseMove()". When the operating system mouse cursor is hidden, it will be kept centered to the application window to allow "endless" movement in any direction, for example for camera control. The cursor position within the window can be queried with \ref Input::GetMousePosition "GetMousePosition()", but that should only be used with a visible cursor (when no automatic centering is being done.)
+Mouse motion since the last frame can be accessed with \ref Input::GetMouseMove() "GetMouseMove()".  The cursor position within the window can be queried with \ref Input::GetMousePosition "GetMousePosition()".
 
 In AngelScript, the polling API is accessed via properties: input.keyDown[], input.keyPress[], input.scancodeDown[], input.scancodePress[], input.mouseButtonDown[], input.mouseButtonPress[], input.mouseMove, input.mousePosition.
+
+\section InputMouseModes Mouse modes
+
+The operating system mouse cursor can be used in three modes which can be switched with \ref Input::SetMouseMode() "SetMouseMode()".
+
+- MM_ABSOLUTE is the default behaviour, allowing the toggling of operating system cursor visibility and allowing the cursor to escape the window when visible.
+  When the operating system cursor is invisible in absolute mouse mode, the mouse is confined to the window.
+  If the operating system and %UI cursors are both invisible, interaction with the \ref UI "user interface" will be limited (eg: drag move / drag end events will not trigger).
+  SetMouseMode(MM_ABSOLUTE) will call SetMouseGrabbed(false).
+
+- MM_RELATIVE sets the operating system cursor to invisible and confines the cursor to the window.
+  The operating system cursor cannot be set to be visible in this mode via SetMouseVisible(), however changes are tracked and will be restored when another mouse mode is set.
+  When the virtual cursor is also invisible, %UI interaction will still function as normal (eg: drag events will trigger).
+  SetMouseMode(MM_RELATIVE) will call SetMouseGrabbed(true).
+
+- MM_WRAP grabs the mouse from the operating system and confines the operating system cursor to the window, wrapping the cursor when it is near the edges.
+  SetMouseMode(MM_WRAP) will call SetMouseGrabbed(true).
 
 \section InputJoystick Joystick input
 
@@ -1527,7 +1548,7 @@ Urho3D implements rigid body physics simulation using the Bullet library.
 
 To use, a PhysicsWorld component must first be created to the Scene.
 
-The physics simulation has its own fixed update rate, which by default is 60Hz. When the rendering framerate is higher than the physics update rate, physics motion is interpolated so that it always appears smooth. The update rate can be changed with \ref PhysicsWorld::SetFps "SetFps()" function. The physics update rate also determines the frequency of fixed timestep scene logic updates.
+The physics simulation has its own fixed update rate, which by default is 60Hz. When the rendering framerate is higher than the physics update rate, physics motion is interpolated so that it always appears smooth. The update rate can be changed with \ref PhysicsWorld::SetFps "SetFps()" function. The physics update rate also determines the frequency of fixed timestep scene logic updates. Hard limit for physics steps per frame or adaptive timestep can be configured with \ref PhysicsWorld::SetMaxSubSteps "SetMaxSubSteps()" function. These can help to prevent a "spiral of death" due to the CPU being unable to handle the physics load. However, note that using either can lead to time slowing down (when steps are limited) or inconsistent physics behavior (when using adaptive step.)
 
 The other physics components are:
 
@@ -1713,12 +1734,24 @@ To create automatically adjusting layouts, the layout mode can be switched to ei
 
 Left, top, right & bottom border widths and spacing between elements can also be specified for the layout. A grid layout is not directly supported, but it can be manually created with a horizontal layout inside a vertical layout, or vice versa.
 
+\section UI_Fonts Fonts
+
+Urho3D supports both FreeType (.ttf, .otf) and \ref http://www.angelcode.com/products/bmfont/ "bitmap" fonts.
+
+For FreeType fonts, it is possible to adjust the positioning of the font glyphs. See \ref Font::SetAbsoluteGlyphOffset "SetAbsoluteGlyphOffset()" to set a fixed pixel offset for all point sizes, or \ref Font::SetScaledGlyphOffset "SetScaledGlyphOffset()" to set a floating point offset that will be multiplied with the point size before applying. The offset information can be also stored in an accompanying XML file next to the font file, which is formatted in the following way: (it is legal to specify either or both of absolute and scaled offsets, and either or both of X & Y coordinates)
+
+\code
+<font>
+    <absoluteoffset x="xInt" y="yInt" />
+    <scaledoffset x="xFloat" y="yFloat" />
+</font>
+\endcode
+
 \section UI_Sprites Sprites
 
 Sprites are a special kind of %UI element that allow subpixel (float) positioning and scaling, as well as rotation, while the other elements use integer positioning for pixel-perfect display. Sprites can be used to implement rotating HUD elements such as minimaps or speedometer needles.
 
 Due to the free transformability, sprites can not be reliably queried with \ref UI::GetElementAt "GetElementAt()". Also, only other sprites should be parented to sprites, as the other elements do not support scaling and rotation.
-
 
 \page Urho2D Urho2D
 In order to make 2D games in Urho3D, the Urho2D sublibrary is provided. Urho2D includes 2D graphics and 2D physics.

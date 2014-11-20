@@ -196,7 +196,7 @@ bool Engine::Initialize(const VariantMap& parameters)
     FileSystem* fileSystem = GetSubsystem<FileSystem>();
     String exePath = fileSystem->GetProgramDir();
 
-    Vector<String> resourcePaths = GetParameter(parameters, "ResourcePaths", "CoreData;Data").GetString().Split(';');
+    Vector<String> resourcePaths = GetParameter(parameters, "ResourcePaths", "Data;CoreData").GetString().Split(';');
     Vector<String> resourcePackages = GetParameter(parameters, "ResourcePackages").GetString().Split(';');
     Vector<String> autoloadFolders = GetParameter(parameters, "AutoloadPaths", "Extra").GetString().Split(';');
 
@@ -262,7 +262,7 @@ bool Engine::Initialize(const VariantMap& parameters)
         }
     }
     
-    // Add auto load folders
+    // Add auto load folders. Prioritize these (if exist) before the default folders
     for (unsigned i = 0; i < autoloadFolders.Size(); ++i)
     {
         bool success = true;
@@ -279,7 +279,7 @@ bool Engine::Initialize(const VariantMap& parameters)
                     continue;
 
                 String autoResourceDir = exePath + autoloadFolder + "/" + folder;
-                success = cache->AddResourceDir(autoResourceDir);
+                success = cache->AddResourceDir(autoResourceDir, 0);
                 if (!success)
                 {
                     badResource = folder;
@@ -300,7 +300,7 @@ bool Engine::Initialize(const VariantMap& parameters)
                     String autoResourcePak = exePath + autoloadFolder + "/" + pak;
                     SharedPtr<PackageFile> package(new PackageFile(context_));
                     if (package->Open(autoResourcePak))
-                        cache->AddPackageFile(package);
+                        cache->AddPackageFile(package, 0);
                     else
                     {
                         badResource = autoResourcePak;
@@ -333,7 +333,10 @@ bool Engine::Initialize(const VariantMap& parameters)
         graphics->SetWindowIcon(cache->GetResource<Image>(GetParameter(parameters, "WindowIcon", String::EMPTY).GetString()));
         graphics->SetFlushGPU(GetParameter(parameters, "FlushGPU", false).GetBool());
         graphics->SetOrientations(GetParameter(parameters, "Orientations", "LandscapeLeft LandscapeRight").GetString());
-        
+
+        if (HasParameter(parameters, "WindowPositionX") && HasParameter(parameters, "WindowPositionY"))
+            graphics->SetWindowPosition(GetParameter(parameters, "WindowPositionX").GetInt(), GetParameter(parameters, "WindowPositionY").GetInt());
+
         if (!graphics->SetMode(
             GetParameter(parameters, "WindowWidth", 0).GetInt(),
             GetParameter(parameters, "WindowHeight", 0).GetInt(),

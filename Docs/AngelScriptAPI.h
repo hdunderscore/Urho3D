@@ -778,6 +778,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -998,6 +1002,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -1291,6 +1299,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -3081,6 +3093,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -3807,6 +3823,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -4101,6 +4121,7 @@ uint GetLastModifiedTime(const String&) const;
 bool Rename(const String&, const String&);
 Array<String> ScanDir(const String&, const String&, uint, bool) const;
 void SendEvent(const String&, VariantMap& = VariantMap ( ));
+bool SetLastModifiedTime(const String&, uint);
 int SystemCommand(const String&, bool = false);
 uint SystemCommandAsync(const String&);
 bool SystemOpen(const String&, const String&);
@@ -4142,6 +4163,7 @@ float quantize;
 class Font
 {
 // Methods:
+IntVector2 GetTotalGlyphOffset(int) const;
 bool Load(File);
 bool Load(VectorBuffer&);
 bool Save(File) const;
@@ -4152,6 +4174,7 @@ bool SaveXML(const String&, int, bool = false);
 void SendEvent(const String&, VariantMap& = VariantMap ( ));
 
 // Properties:
+IntVector2 absoluteGlyphOffset;
 /* readonly */
 StringHash baseType;
 /* readonly */
@@ -4161,6 +4184,7 @@ uint memoryUse;
 String name;
 /* readonly */
 int refs;
+Vector2 scaledGlyphOffset;
 /* readonly */
 StringHash type;
 /* readonly */
@@ -4447,6 +4471,7 @@ Array<bool> mouseButtonDown;
 /* readonly */
 Array<bool> mouseButtonPress;
 bool mouseGrabbed;
+MouseMode mouseMode;
 /* readonly */
 IntVector2 mouseMove;
 /* readonly */
@@ -4888,6 +4913,10 @@ uint cursorPosition;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 uint echoCharacter;
 bool editable;
@@ -5093,6 +5122,10 @@ UIElement contentElement;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -5485,6 +5518,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -6450,6 +6487,7 @@ bool occluder;
 int refs;
 bool relative;
 bool scaled;
+bool serializeParticles;
 float shadowDistance;
 uint shadowMask;
 bool sorted;
@@ -6558,6 +6596,7 @@ bool alphaMask;
 BlendMode blendMode;
 CompareMode depthTestMode;
 bool depthWrite;
+bool desktop;
 PassLightingMode lightingMode;
 String pixelShader;
 String pixelShaderDefines;
@@ -6649,6 +6688,7 @@ Vector3 gravity;
 uint id;
 bool internalEdge;
 bool interpolation;
+int maxSubSteps;
 /* readonly */
 Node node;
 /* readonly */
@@ -7803,6 +7843,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 /* readonly */
@@ -7963,6 +8007,8 @@ Array<Variant> attributeDefaults;
 /* readonly */
 Array<AttributeInfo> attributeInfos;
 Array<Variant> attributes;
+bool autoDisableChildren;
+float autoDisableThreshold;
 /* readonly */
 StringHash baseType;
 bool bringToBack;
@@ -7986,6 +8032,10 @@ UIElement contentElement;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -8348,6 +8398,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -8950,6 +9004,10 @@ Array<Color> colors;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 bool elementEventSender;
 int height;
 HorizontalAlignment horizontalAlignment;
@@ -9394,6 +9452,8 @@ class Technique
 {
 // Methods:
 Pass CreatePass(StringHash);
+Pass GetPass(StringHash);
+Pass GetSupportedPass(StringHash);
 bool HasPass(StringHash) const;
 bool Load(File);
 bool Load(VectorBuffer&);
@@ -9407,14 +9467,21 @@ void SendEvent(const String&, VariantMap& = VariantMap ( ));
 StringHash baseType;
 /* readonly */
 String category;
+bool desktop;
 /* readonly */
 uint memoryUse;
 String name;
+/* readonly */
+uint numPasses;
+/* readonly */
+Array<StringHash> passTypes;
 /* readonly */
 Array<Pass> passes;
 /* readonly */
 int refs;
 bool sm3;
+/* readonly */
+bool supported;
 /* readonly */
 StringHash type;
 /* readonly */
@@ -9702,6 +9769,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 Color effectColor;
@@ -10373,6 +10444,8 @@ int refs;
 /* readonly */
 uint systemTime;
 /* readonly */
+uint timeSinceEpoch;
+/* readonly */
 String timeStamp;
 /* readonly */
 float timeStep;
@@ -10520,6 +10593,10 @@ XMLFile defaultStyle;
 float delay;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -10611,6 +10688,7 @@ void DebugDraw(UIElement);
 UIElement GetElementAt(const IntVector2&, bool = true);
 UIElement GetElementAt(int, int, bool = true);
 bool HasModalElement() const;
+bool IsDragging() const;
 UIElement LoadLayout(File);
 UIElement LoadLayout(File, XMLFile);
 UIElement LoadLayout(VectorBuffer&);
@@ -10621,6 +10699,7 @@ bool SaveLayout(File, UIElement);
 bool SaveLayout(VectorBuffer&, UIElement);
 void SendEvent(const String&, VariantMap& = VariantMap ( ));
 void SetFocusElement(UIElement, bool = false);
+const Array<UIElement> GetDragElements();
 
 // Properties:
 /* readonly */
@@ -10635,8 +10714,6 @@ float defaultToolTipDelay;
 float doubleClickInterval;
 int dragBeginDistance;
 float dragBeginInterval;
-/* readonly */
-UIElement dragElement;
 UIElement focusElement;
 bool forceAutoHint;
 /* readonly */
@@ -10759,6 +10836,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -10837,7 +10918,7 @@ bool Load(VectorBuffer&);
 bool Save(File) const;
 bool Save(VectorBuffer&) const;
 void SendEvent(const String&, VariantMap& = VariantMap ( ));
-void SetEventFrame(float, const String&, const Variant&);
+void SetEventFrame(float, const String&, const VariantMap& = VariantMap ( ));
 void SetKeyFrame(float, const Variant&);
 
 // Properties:
@@ -11177,6 +11258,10 @@ XMLFile defaultStyle;
 Texture2D depthTexture;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -11406,6 +11491,10 @@ IntRect combinedScreenRect;
 XMLFile defaultStyle;
 /* readonly */
 float derivedOpacity;
+/* readonly */
+uint dragButtonCombo;
+/* readonly */
+int dragButtonCount;
 uint dragDropMode;
 bool editable;
 bool elementEventSender;
@@ -11942,6 +12031,13 @@ LM_FORCE_LOOPED,
 LM_FORCE_CLAMPED,
 };
 
+enum MouseMode
+{
+MM_ABSOLUTE,
+MM_RELATIVE,
+MM_WRAP,
+};
+
 enum Orientation
 {
 O_HORIZONTAL,
@@ -12176,6 +12272,7 @@ int Clamp(int, int, int);
 void ClearDelayedExecute(const String& = String ( ));
 VectorBuffer CompressVectorBuffer(VectorBuffer&);
 float Cos(float);
+uint CountSetBits(uint);
 VectorBuffer DecompressVectorBuffer(VectorBuffer&);
 void DelayedExecute(float, bool, const String&);
 void DelayedExecute(float, bool, const String&, const Array<Variant>);

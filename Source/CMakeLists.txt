@@ -51,8 +51,8 @@ if (HAVE_STDINT_H)
 endif ()
 
 # Setup SDK install destinations
-if (WIN32)
-    # CMake already automatically prepends "Urho3D" to CMAKE_INSTALL_PREFIX on Windows platform
+if (CMAKE_HOST_WIN32)
+    # CMake already automatically appends "Urho3D" to CMAKE_INSTALL_PREFIX on Windows platform
     set (SCRIPT_PATTERN *.bat)
 else ()
     set (PATH_SUFFIX /Urho3D)
@@ -87,7 +87,7 @@ file (GLOB CMAKE_SCRIPTS ${PROJECT_ROOT_DIR}/${SCRIPT_PATTERN})
 install (FILES ${CMAKE_SCRIPTS} DESTINATION ${DEST_SHARE_DIR}/Scripts PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # Setup package variables
-set (URHO3D_DESCRIPTION "Urho3D is a lightweight, cross-platform 2D and 3D game engine implemented in C++ and released under the MIT license. Greatly inspired by OGRE (http://www.ogre3d.org) and Horde3D (http://www.horde3d.org).")
+set (URHO3D_DESCRIPTION "Urho3D is a free lightweight, cross-platform 2D and 3D game engine implemented in C++ and released under the MIT license. Greatly inspired by OGRE (http://www.ogre3d.org) and Horde3D (http://www.horde3d.org).")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY ${URHO3D_DESCRIPTION})
 set (URHO3D_URL "https://github.com/urho3d/Urho3D")
 set (CPACK_PACKAGE_VENDOR ${URHO3D_URL})
@@ -121,6 +121,9 @@ if (URHO3D_64BIT)
     set (CPACK_SYSTEM_NAME ${CPACK_SYSTEM_NAME}-64bit)
 endif ()
 set (CPACK_SYSTEM_NAME ${CPACK_SYSTEM_NAME}-${URHO3D_LIB_TYPE})
+if (WIN32 AND NOT URHO3D_OPENGL)
+    set (CPACK_SYSTEM_NAME ${CPACK_SYSTEM_NAME}-D3D)
+endif ()
 if ("$ENV{RELEASE_TAG}" STREQUAL "")
     set (CPACK_SYSTEM_NAME ${CPACK_SYSTEM_NAME}-snapshot)
 endif ()

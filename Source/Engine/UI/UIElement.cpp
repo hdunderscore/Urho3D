@@ -132,6 +132,7 @@ UIElement::UIElement(Context* context) :
     resizeNestingLevel_(0),
     layoutNestingLevel_(0),
     layoutMinSize_(0),
+    layoutMaxSize_(0),
     indent_(0),
     indentSpacing_(16),
     position_(IntVector2::ZERO),
@@ -148,7 +149,9 @@ UIElement::UIElement(Context* context) :
     sortOrderDirty_(false),
     colorGradient_(false),
     traversalMode_(TM_BREADTH_FIRST),
-    elementEventSender_(false)
+    elementEventSender_(false),
+    dragButtonCombo_(0),
+    dragButtonCount_(0)
 {
     SetEnabled(false);
 }
@@ -499,14 +502,24 @@ void UIElement::OnDoubleClick(const IntVector2& position, const IntVector2& scre
 
 void UIElement::OnDragBegin(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
 {
+    dragButtonCombo_ = buttons;
+    dragButtonCount_ = CountSetBits(dragButtonCombo_);
 }
 
-void UIElement::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
+void UIElement::OnDragMove(const IntVector2& position, const IntVector2& screenPosition, const IntVector2& deltaPos, int buttons, int qualifiers, Cursor* cursor)
 {
 }
 
-void UIElement::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, Cursor* cursor)
+void UIElement::OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
 {
+    dragButtonCombo_ = 0;
+    dragButtonCount_ = 0;
+}
+
+void UIElement::OnDragCancel(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int buttons, Cursor* cursor)
+{
+    dragButtonCombo_ = 0;
+    dragButtonCount_ = 0;
 }
 
 bool UIElement::OnDragDropTest(UIElement* source)
@@ -1910,6 +1923,7 @@ void UIElement::CalculateLayout(PODVector<int>& positions, PODVector<int>& sizes
 
     // Calculate final positions and store the minimum child element size
     layoutMinSize_ = M_MAX_INT;
+    layoutMaxSize_ = 0;
     int position = begin;
     for (int i = 0; i < numChildren; ++i)
     {
@@ -1917,6 +1931,8 @@ void UIElement::CalculateLayout(PODVector<int>& positions, PODVector<int>& sizes
         position += sizes[i] + spacing;
         if (sizes[i] < layoutMinSize_)
             layoutMinSize_ = sizes[i];
+        if (sizes[i] > layoutMaxSize_)
+            layoutMaxSize_ = sizes[i];
     }
 }
 

@@ -156,9 +156,11 @@ public:
     /// React to mouse drag begin.
     virtual void OnDragBegin(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor);
     /// React to mouse drag motion.
-    virtual void OnDragMove(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor);
+    virtual void OnDragMove(const IntVector2& position, const IntVector2& screenPosition, const IntVector2& deltaPos, int buttons, int qualifiers, Cursor* cursor);
     /// React to mouse drag end.
-    virtual void OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, Cursor* cursor);
+    virtual void OnDragEnd(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int releaseButton, Cursor* cursor);
+    /// React to a mouse drag cancel event (ie, when an extra button is pressed)
+    virtual void OnDragCancel(const IntVector2& position, const IntVector2& screenPosition, int dragButtons, int cancelButton, Cursor* cursor);
     /// React to drag and drop test. Return true to signal that the drop is acceptable.
     virtual bool OnDragDropTest(UIElement* source);
     /// React to drag and drop finish. Return true to signal that the drop was accepted.
@@ -435,6 +437,10 @@ public:
     const Variant& GetVar(const StringHash& key) const;
     /// Return all user variables.
     const VariantMap& GetVars() const { return vars_; }
+    /// Return the drag button combo if this element is being dragged.
+    int GetDragButtonCombo() const { return dragButtonCombo_; }
+    /// Return the number of buttons dragging this element.
+    unsigned GetDragButtonCount() const { return dragButtonCount_; }
 
     /// Convert screen coordinates to element coordinates.
     IntVector2 ScreenToElement(const IntVector2& screenPosition);
@@ -448,15 +454,16 @@ public:
     IntRect GetCombinedScreenRect();
     /// Sort child elements if sorting enabled and order dirty. Called by UI.
     void SortChildren();
-    /// Return minimum layout element size in the layout direction. Only valid after layout has been calculated.
+    /// Return minimum layout element size in the layout direction. Only valid after layout has been calculated. Used internally by UI for optimizations.
     int GetLayoutMinSize() const { return layoutMinSize_; }
+    /// Return maximum layout element size in the layout direction. Only valid after layout has been calculated. Used internally by UI for optimizations.
+    int GetLayoutMaxSize() const { return layoutMaxSize_; }
     /// Return horizontal indentation.
     int GetIndent() const { return indent_; }
     /// Return indent spacing (number of pixels per indentation level).
     int GetIndentSpacing() const { return indentSpacing_; }
     /// Return indent width in pixels.
     int GetIndentWidth() const { return indent_ * indentSpacing_; }
-
     /// Set child offset.
     void SetChildOffset(const IntVector2& offset);
     /// Set hovering state.
@@ -547,6 +554,8 @@ protected:
     unsigned layoutNestingLevel_;
     /// Layout element minimum size in layout direction.
     int layoutMinSize_;
+    /// Layout element maximum size in layout direction.
+    int layoutMaxSize_;
     /// Horizontal indentation.
     int indent_;
     /// Indent spacing (number of pixels per indentation level).
@@ -559,6 +568,10 @@ protected:
     mutable bool positionDirty_;
     /// Applied style.
     String appliedStyle_;
+    /// Drag button combo.
+    int dragButtonCombo_;
+    /// Drag button count.
+    unsigned dragButtonCount_;
 
 private:
     /// Return child elements recursively.

@@ -540,6 +540,49 @@ void ParticleEffect::SetSizeMul(float sizeMul)
     sizeMul_ = sizeMul;
 }
 
+void ParticleEffect::AddColorTime(const Color& color, const float time)
+{
+    unsigned s = colorFrames_.Size();
+    colorFrames_.Resize(s + 1);
+
+    for (unsigned i = 0; i < s; i++)
+    {
+        if (colorFrames_[i].time_ > time)
+        {
+            for (unsigned j = s; j > i; j--)
+            {
+                colorFrames_[j].color_ = colorFrames_[j - 1].color_;
+                colorFrames_[j].time_ = colorFrames_[j - 1].time_;
+            }
+            colorFrames_[i].color_ = color;
+            colorFrames_[i].time_ = time;
+            return;
+        }
+    }
+
+    // highest time, add last:
+    colorFrames_[s].color_ = color;
+    colorFrames_[s].time_ = time;
+}
+
+void ParticleEffect::AddColorFrame(const ColorFrame& colorFrame)
+{
+    AddColorTime(colorFrame.color_, colorFrame.time_);
+}
+
+void ParticleEffect::RemoveColorFrame(unsigned index)
+{
+    unsigned s = colorFrames_.Size();
+
+    for (unsigned i = index; i < s - 1 ; i++)
+    {
+        colorFrames_[i].color_ = colorFrames_[i + 1].color_;
+        colorFrames_[i].time_ = colorFrames_[i + 1].time_;
+    }
+
+    colorFrames_.Resize(s - 1);
+}
+
 void ParticleEffect::SetColorFrames(const Vector<ColorFrame>& colorFrames)
 {
     colorFrames_ = colorFrames;
@@ -552,6 +595,64 @@ void ParticleEffect::SetColorFrame(unsigned index, const ColorFrame& colorFrame)
     colorFrames_[index] = colorFrame;
 }
 
+void ParticleEffect::SetNumColorFrames(unsigned number)
+{
+    unsigned s = colorFrames_.Size();
+    if (s != number)
+         colorFrames_.Resize(number);
+}
+
+void ParticleEffect::SortColorFrames()
+{
+    Vector<ColorFrame> cf = colorFrames_;
+    colorFrames_.Clear();
+    for (unsigned i = 0; i < cf.Size(); i++)
+        AddColorFrame(cf[i]);
+}
+
+void ParticleEffect::AddTextureTime(const Rect& uv, const float time)
+{
+    unsigned s = textureFrames_.Size();
+    textureFrames_.Resize(s + 1);
+
+    for (unsigned i = 0; i < s; i++)
+    {
+        if (textureFrames_[i].time_ > time)
+        {
+            for (unsigned j = s; j > i; j--)
+            {
+                textureFrames_[j].uv_ = textureFrames_[j - 1].uv_;
+                textureFrames_[j].time_ = textureFrames_[j - 1].time_;
+            }
+            textureFrames_[i].uv_ = uv;
+            textureFrames_[i].time_ = time;
+            return;
+        }
+    }
+
+    // highest time, add last:
+    textureFrames_[s].uv_ = uv;
+    textureFrames_[s].time_ = time;
+}
+
+void ParticleEffect::AddTextureFrame(const TextureFrame& textureFrame)
+{
+    AddTextureTime(textureFrame.uv_, textureFrame.time_);
+}
+
+void ParticleEffect::RemoveTextureFrame(unsigned index)
+{
+    unsigned s = textureFrames_.Size();
+
+    for (unsigned i = index; i < s - 1 ; i++)
+    {
+        textureFrames_[i].uv_ = textureFrames_[i + 1].uv_;
+        textureFrames_[i].time_ = textureFrames_[i + 1].time_;
+    }
+
+    textureFrames_.Resize(s - 1);
+}
+
 void ParticleEffect::SetTextureFrames(const Vector<TextureFrame>& textureFrames)
 {
     textureFrames_ = textureFrames;
@@ -562,6 +663,21 @@ void ParticleEffect::SetTextureFrame(unsigned index, const TextureFrame& texture
     if (textureFrames_.Size() < index + 1)
         textureFrames_.Resize(index + 1);
     textureFrames_[index] = textureFrame;
+}
+
+void ParticleEffect::SetNumTextureFrames(unsigned number)
+{
+    unsigned s = textureFrames_.Size();
+    if (s != number)
+         textureFrames_.Resize(number);
+}
+
+void ParticleEffect::SortTextureFrames()
+{
+    Vector<TextureFrame> tf = textureFrames_;
+    textureFrames_.Clear();
+    for (unsigned i = 0; i < tf.Size(); i++)
+        AddTextureFrame(tf[i]);
 }
 
 const ColorFrame* ParticleEffect::GetColorFrame(unsigned index) const
