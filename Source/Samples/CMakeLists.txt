@@ -33,6 +33,13 @@ set (COMMON_SAMPLE_H_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Sample.h" "${CMAKE_CURRE
 # Define dependency libs
 set (INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Add Emscripten compiler flags
+if (EMSCRIPTEN)
+    message(STATUS "SAMPLES EMFLAGS: ${EMSCRIPTEN_CXX_FLAGS}")
+    setup_emscripten_executable ()
+    #add_compile_options (${EMSCRIPTEN_CXX_FLAGS})
+endif()
+
 # Add samples
 add_subdirectory (01_HelloWorld)
 add_subdirectory (02_HelloGUI)

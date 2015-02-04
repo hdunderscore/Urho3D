@@ -103,6 +103,9 @@ set (CMAKE_HAVE_SYS_PRCTL_H 1)
 set (CMAKE_WORDS_BIGENDIAN 0)
 set (CMAKE_DL_LIBS)
 
+# Important emscripten flags
+set (EMSCRIPTEN_CXX_FLAGS "-s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2")
+
 # In order for check_function_exists() detection to work, we must signal it to pass an additional flag, which causes the compilation
 # to abort if linking results in any undefined symbols. The CMake detection mechanism depends on the undefined symbol error to be raised.
 set (CMAKE_REQUIRED_FLAGS "-s ERROR_ON_UNDEFINED_SYMBOLS=1")
@@ -124,8 +127,8 @@ if (CMAKE_HOST_WIN32)
         foreach (cat LIBRARIES OBJECTS INCLUDES)
             set (CMAKE_${lang}_USE_RESPONSE_FILE_FOR_${cat} 1)
         endforeach ()
-        set (CMAKE_${lang}_RESPONSE_FILE_LINK_FLAG @)
-        set (CMAKE_${lang}_CREATE_STATIC_LIBRARY <CMAKE_AR> rc <TARGET> <LINK_FLAGS> <OBJECTS>)
+        set (CMAKE_${lang}_RESPONSE_FILE_LINK_FLAG "@")
+        set (CMAKE_${lang}_CREATE_STATIC_LIBRARY "<CMAKE_AR> rc <TARGET> <LINK_FLAGS> <OBJECTS>")
     endforeach ()
 endif ()
 
