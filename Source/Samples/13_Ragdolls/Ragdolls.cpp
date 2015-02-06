@@ -49,14 +49,21 @@
 #include "CreateRagdoll.h"
 #include "Ragdolls.h"
 
+#include <Urho3D/IO/Log.h>
+
+//#include <emscripten/emscripten.h>
+#include <emscripten/html5.h>
+
 #include <Urho3D/DebugNew.h>
 
 DEFINE_APPLICATION_MAIN(Ragdolls)
+//EM_BOOL pointerlockCallback(int eventType, const EmscriptenPointerlockChangeEvent *keyEvent, void *userData);
 
 Ragdolls::Ragdolls(Context* context) :
     Sample(context),
     drawDebug_(false)
 {
+    //emscripten_set_pointerlockchange_callback(NULL, NULL, false, pointerlockCallback);
     // Register an object factory for our custom CreateRagdoll component so that we can create them to scene nodes
     context->RegisterFactory<CreateRagdoll>();
 }
@@ -77,7 +84,21 @@ void Ragdolls::Start()
 
     // Hook up to the frame update and render post-update events
     SubscribeToEvents();
+
+    GetSubsystem<Input>()->SetMouseVisible(false);
+    
+//     EMSCRIPTEN_RESULT r = emscripten_request_pointerlock(NULL, false);
+//     LOGINFO(String(r));
 }
+
+// EM_BOOL pointerlockCallback(int eventType, const EmscriptenPointerlockChangeEvent *keyEvent, void *userData)
+// {
+//     LOGINFO("pointerlockCallback");
+//     LOGINFO("isActive: " + String(keyEvent->isActive));
+//     LOGINFO("nodeName: " + String(keyEvent->nodeName));
+//     LOGINFO("id: " + String(keyEvent->id));
+//     return 1;
+// }
 
 void Ragdolls::CreateScene()
 {
@@ -206,28 +227,31 @@ void Ragdolls::SetupViewport()
     renderer->SetViewport(0, viewport);
 }
 
+bool t = false;
 void Ragdolls::MoveCamera(float timeStep)
 {
     // Do not move if the UI has a focused element (the console)
     if (GetSubsystem<UI>()->GetFocusElement())
         return;
-    
+
     Input* input = GetSubsystem<Input>();
-    
+
     // Movement speed as world units per second
     const float MOVE_SPEED = 20.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
-    
+
     // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
     IntVector2 mouseMove = input->GetMouseMove();
+    //LOGINFO(String(mouseMove.x_) + " " + String(mouseMove.y_));
+
     yaw_ += MOUSE_SENSITIVITY * mouseMove.x_;
     pitch_ += MOUSE_SENSITIVITY * mouseMove.y_;
     pitch_ = Clamp(pitch_, -90.0f, 90.0f);
-    
+
     // Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
     cameraNode_->SetRotation(Quaternion(pitch_, yaw_, 0.0f));
-    
+
     // Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
     if (input->GetKeyDown('W'))
         cameraNode_->Translate(Vector3::FORWARD * MOVE_SPEED * timeStep);
@@ -237,11 +261,11 @@ void Ragdolls::MoveCamera(float timeStep)
         cameraNode_->Translate(Vector3::LEFT * MOVE_SPEED * timeStep);
     if (input->GetKeyDown('D'))
         cameraNode_->Translate(Vector3::RIGHT * MOVE_SPEED * timeStep);
-    
+
     // "Shoot" a physics object with left mousebutton
     if (input->GetMouseButtonPress(MOUSEB_LEFT))
         SpawnObject();
-    
+
     // Check for loading / saving the scene
     if (input->GetKeyPress(KEY_F5))
     {
@@ -252,6 +276,30 @@ void Ragdolls::MoveCamera(float timeStep)
     {
         File loadFile(context_, GetSubsystem<FileSystem>()->GetProgramDir() + "Data/Scenes/Ragdolls.xml", FILE_READ);
         scene_->LoadXML(loadFile);
+    }
+
+    if (input->GetKeyPress(KEY_Z))
+    {
+        input->SetMouseVisible(!input->IsMouseVisible());
+    }
+
+    if (input->GetKeyDown(KEY_X))
+    {
+        if (!t)
+        {
+            input->SetMouseMode(input->GetMouseMode() == MM_RELATIVE ? MM_ABSOLUTE : MM_RELATIVE);
+            t = true;
+        }
+    }
+    else if (t)
+    {
+        t = false;
+        EmscriptenPointerlockChangeEvent plce;
+        LOGINFO("Update:");
+        LOGINFO(String(emscripten_get_pointerlock_status(&plce)));
+        LOGINFO("isActive: " + String(plce.isActive));
+        LOGINFO("nodeName: " + String(plce.nodeName));
+        LOGINFO("id: " + String(plce.id));
     }
 
     // Toggle physics debug geometry with space
@@ -293,6 +341,14 @@ void Ragdolls::SubscribeToEvents()
     // Subscribe HandlePostRenderUpdate() function for processing the post-render update event, during which we request
     // debug geometry
     SubscribeToEvent(E_POSTRENDERUPDATE, HANDLER(Ragdolls, HandlePostRenderUpdate));
+
+    SubscribeToEvent(E_MOUSEMODECHANGED, HANDLER(Ragdolls, HandleMouseModeChanged));
+}
+
+void Ragdolls::HandleMouseModeChanged(StringHash eventType, VariantMap& eventData)
+{
+    LOGINFO("Ragdolls::HandleMouseModeChanged");
+    LOGINFO(String(eventData["Mode"].GetInt()));
 }
 
 void Ragdolls::HandleUpdate(StringHash eventType, VariantMap& eventData)
@@ -302,6 +358,8 @@ void Ragdolls::HandleUpdate(StringHash eventType, VariantMap& eventData)
     // Take the frame time step, which is stored as a float
     float timeStep = eventData[P_TIMESTEP].GetFloat();
     
+
+
     // Move the camera, scale movement with time step
     MoveCamera(timeStep);
 }
