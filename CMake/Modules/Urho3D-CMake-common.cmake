@@ -161,7 +161,7 @@ endif ()
 # Path to packages to include when building emscripten
 if (EMSCRIPTEN)
     if ((CMAKE_PROJECT_NAME STREQUAL Urho3D AND URHO3D_SAMPLES) OR (NOT CMAKE_PROJECT_NAME STREQUAL Urho3D))
-        set (URHO3D_DATA_PACKAGES_PATH "${CMAKE_SOURCE_DIR}/Bin" CACHE PATH "Path to .paks to be preloaded in Emscripten build.")
+        set (URHO3D_DATA_PACKAGES_PATH "${CMAKE_SOURCE_DIR}/bin" CACHE PATH "Path to .paks to be preloaded in Emscripten build.")
         #setup_emscripten_executable ()
     endif ()
 endif ()
