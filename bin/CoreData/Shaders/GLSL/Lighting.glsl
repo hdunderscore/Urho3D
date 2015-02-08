@@ -87,10 +87,19 @@ float GetDiffuse(vec3 normal, vec3 worldPos, out vec3 lightDir)
         lightDir = cLightDirPS;
         return max(dot(normal, lightDir), 0.0);
     #else
-        vec3 lightVec = (cLightPosPS.xyz - worldPos) * cLightPosPS.w;
-        float lightDist = length(lightVec);
-        lightDir = lightVec / lightDist;
-        return max(dot(normal, lightDir), 0.0) * texture2D(sLightRampMap, vec2(lightDist, 0.0)).r;
+        #ifdef LUX_LIGHTING
+            vec3 lightVec = (cLightPosPS.xyz - worldPos);
+            float lightDist = length(lightVec);
+            lightDir = lightVec / lightDist;
+            float lightRadius = cLightColor.a;
+            float n = max(1 - pow(lightDist / lightRadius, 4), 0.0f);
+            return n*n / (lightDist * lightDist + 1.0f);
+        #else
+            vec3 lightVec = (cLightPosPS.xyz - worldPos) *cLightPosPS.w;
+            float lightDist = length(lightVec);
+            lightDir = lightVec / lightDist;
+            return max(dot(normal, lightDir), 0.0f) * texture2D(sLightRampMap, vec2(lightDist, 0.0)).r;
+        #endif
     #endif
 }
 

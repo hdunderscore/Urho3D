@@ -106,6 +106,6 @@ void PS(float2 iTexCoord : TEXCOORD0,
     #ifdef COMBINE2
     float3 color = tex2D(sDiffMap, iScreenPos).rgb * cBloomHDRMix.x;
     float3 bloom = tex2D(sNormalMap, iTexCoord).rgb * cBloomHDRMix.y;
-    oColor = float4(color + bloom, 1.0);
+    oColor = float4(color + bloom * bloom, 1.0);
     #endif
 }

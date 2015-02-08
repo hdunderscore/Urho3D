@@ -31,6 +31,7 @@
 #include "../../Resource/ResourceCache.h"
 #include "../../Graphics/Texture2D.h"
 #include "../../Resource/XMLFile.h"
+#include "../../Resource/Image.h"
 
 #include "../../DebugNew.h"
 
@@ -102,6 +103,47 @@ bool Texture2D::EndLoad()
     loadParameters_.Reset();
     
     return success;
+}
+
+bool Texture2D::SaveTGA(const String& filename) const
+{
+    bool result = false;
+    int components = Min(GetRowDataSize(1), 4);
+    Image* img = new Image(context_);
+    img->SetSize(GetLevelWidth(0), GetLevelHeight(0), components);
+
+    size_t size =
+        GetRowDataSize(GetLevelWidth(0)) *
+        GetLevelHeight(0) *
+        4;
+
+    unsigned char* buf = new unsigned char[size];
+    if (GetData(0, buf))
+        LOGINFO("Texture2D GetData successful");
+    else
+        LOGERROR("Texture2D GetData failed");
+
+    img->SetData(buf);
+    delete[] buf;
+    if (img->IsCompressed())
+    {
+        LOGINFO("COMPRESSED");
+        CompressedLevel cl = img->GetCompressedLevel(0);
+
+        buf = new unsigned char[size];
+        cl.Decompress(buf);
+        img->SetData(buf);
+        result = img->SaveTGA(filename);
+        delete[] buf;
+    }
+    else
+    {
+        LOGINFO("UNCOMPRESSED");
+        result = img->SaveTGA(filename);
+    }
+    delete img;
+    LOGINFO("Save result: " + String(result));
+    return result;
 }
 
 void Texture2D::OnDeviceLost()
@@ -462,13 +504,62 @@ bool Texture2D::GetData(unsigned level, void* dest) const
     d3dRect.top = 0;
     d3dRect.right = levelWidth;
     d3dRect.bottom = levelHeight;
-    
-    if (FAILED(((IDirect3DTexture9*)object_)->LockRect(level, &d3dLockedRect, &d3dRect, D3DLOCK_READONLY)))
+
+    IDirect3DSurface9* dstSurf;
+    IDirect3DSurface9* cpySrc;
+
+    if (usage_ & D3DUSAGE_RENDERTARGET)
     {
-        LOGERROR("Could not lock texture");
-        return false;
+        LOGINFO("RENDER TARGET");
+        IDirect3DDevice9* device = graphics_->GetImpl()->GetDevice();
+        IDirect3DSurface9* src = (IDirect3DSurface9*)GetRenderSurface()->GetSurface();
+
+        D3DSURFACE_DESC srcDesc;
+        src->GetDesc(&srcDesc);
+//         if (srcDesc.MultiSampleType != D3DMULTISAMPLE_NONE)
+//         {
+//             LOGERROR("RenderTarget is multi-sampled.");
+//             return false;
+//         }
+
+        D3DFORMAT format = (D3DFORMAT)format_;// srcDesc.Format;// D3DFMT_A8R8G8B8;
+        device->CreateRenderTarget(levelWidth, levelHeight, format, D3DMULTISAMPLE_NONE, 0, FALSE, &cpySrc, NULL);
+        device->StretchRect(src, NULL, cpySrc, NULL, D3DTEXF_NONE);
+
+        if (FAILED(device->CreateOffscreenPlainSurface(
+            GetLevelWidth(level),
+            GetLevelHeight(level),
+            format,
+            D3DPOOL_SYSTEMMEM,
+            &dstSurf, NULL)))
+        {
+            LOGERROR("Could not create off-screen plain surface");
+            return false;
+        }
+
+        if (FAILED(device->GetRenderTargetData(cpySrc, dstSurf)))
+        {
+            LOGERROR("Could not copy render target surface");
+            dstSurf->Release();
+            return false;
+        }
+
+        if (FAILED(dstSurf->LockRect(&d3dLockedRect, &d3dRect, D3DLOCK_READONLY)))
+        {
+            LOGERROR("Could not lock texture2");
+            dstSurf->Release();
+            return false;
+        }
     }
-    
+    else
+    {
+        if (FAILED(((IDirect3DTexture9*)object_)->LockRect(level, &d3dLockedRect, &d3dRect, D3DLOCK_READONLY)))
+        {
+            LOGERROR("Could not lock texture1");
+            return false;
+        }
+    }
+
     int height = levelHeight;
     if (IsCompressed())
         height = (height + 3) >> 2;
@@ -515,8 +606,19 @@ bool Texture2D::GetData(unsigned level, void* dest) const
         }
         break;
     }
-    
-    ((IDirect3DTexture9*)object_)->UnlockRect(level);
+
+
+    if (usage_ & D3DUSAGE_RENDERTARGET)
+    {
+        dstSurf->UnlockRect();
+        dstSurf->Release();
+        cpySrc->Release();
+    }
+    else
+    {
+        ((IDirect3DTexture9*)object_)->UnlockRect(level);
+    }
+
     return true;
 }
 

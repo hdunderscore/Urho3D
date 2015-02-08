@@ -49,6 +49,8 @@ public:
     virtual bool BeginLoad(Deserializer& source);
     /// Finish resource loading. Always called from the main thread. Return true if successful.
     virtual bool EndLoad();
+    /// Save texture to file.
+    bool Texture2D::SaveTGA(const String& filename) const;
     /// Release default pool resources.
     virtual void OnDeviceLost();
     /// Recreate default pool resources.

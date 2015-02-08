@@ -1,0 +1,1 @@
+Urho3dPlayer Data/Scripts/Lux.as -w -s -m 4 -af 8

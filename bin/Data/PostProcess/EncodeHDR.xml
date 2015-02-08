@@ -1,0 +1,5 @@
+<renderpath>
+    <command type="quad" tag="EncodeHDR" vs="EncodeHDR" ps="EncodeHDR"  blend="replace">
+        <texture unit="diffuse" name="viewport" />
+    </command>
+</renderpath>

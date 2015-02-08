@@ -8,7 +8,7 @@
         <output index="1" name="depth" />
     </command>
     <command type="clear" color="0 0 0 0" output="light" />
-    <command type="lightvolumes" vs="PrepassLight" ps="PrepassLight" output="light">
+    <command type="lightvolumes" vs="LuxPrepassLight" ps="LuxPrepassLight" output="light">
         <texture unit="normal" name="normal" />
         <texture unit="depth" name="depth" />
     </command>

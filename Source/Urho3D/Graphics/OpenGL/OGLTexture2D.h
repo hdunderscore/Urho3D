@@ -44,7 +44,9 @@ public:
     virtual ~Texture2D();
     /// Register object factory.
     static void RegisterObject(Context* context);
-    
+
+    bool SaveTGA(const String& filename) { return false; }
+
     /// Load resource from stream. May be called from a worker thread. Return true if successful.
     virtual bool BeginLoad(Deserializer& source);
     /// Finish resource loading. Always called from the main thread. Return true if successful.

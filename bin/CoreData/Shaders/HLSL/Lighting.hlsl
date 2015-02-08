@@ -100,10 +100,19 @@ float GetDiffuse(float3 normal, float3 worldPos, out float3 lightDir)
         lightDir = cLightDirPS;
         return saturate(dot(normal, lightDir));
     #else
-        float3 lightVec = (cLightPosPS.xyz - worldPos) * cLightPosPS.w;
-        float lightDist = length(lightVec);
-        lightDir = lightVec / lightDist;
-        return saturate(dot(normal, lightDir)) * tex1D(sLightRampMap, lightDist).r;
+        #ifdef LUX_LIGHTING
+            float3 lightVec = (cLightPosPS.xyz - worldPos);
+            float lightDist = length(lightVec);
+            lightDir = lightVec / lightDist;
+            float lightRadius = cLightColor.a;
+            float n = saturate(1.0f - pow(lightDist / lightRadius, 4));
+            return n*n / (lightDist * lightDist + 1.0f);
+        #else
+            float3 lightVec = (cLightPosPS.xyz - worldPos) *cLightPosPS.w;
+            float lightDist = length(lightVec);
+            lightDir = lightVec / lightDist;
+            return saturate(dot(normal, lightDir)) * tex1D(sLightRampMap, lightDist).r;
+        #endif
     #endif
 }
 

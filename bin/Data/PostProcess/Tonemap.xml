@@ -1,5 +1,5 @@
 <renderpath>
-    <command type="quad" enabled="true" tag="TonemapReinhardEq3" vs="Tonemap" ps="Tonemap" psdefines="REINHARDEQ3" output="viewport">
+    <command type="quad" enabled="false" tag="TonemapReinhardEq3" vs="Tonemap" ps="Tonemap" psdefines="REINHARDEQ3" output="viewport">
         <parameter name="TonemapExposureBias" value="1.0" />
         <texture unit="diffuse" name="viewport" />
     </command>
@@ -8,9 +8,9 @@
         <parameter name="TonemapMaxWhite" value="8.0" />
         <texture unit="diffuse" name="viewport" />
     </command>
-    <command type="quad" enabled="false" tag="TonemapUncharted2" vs="Tonemap" ps="Tonemap" psdefines="UNCHARTED2" output="viewport">
-        <parameter name="TonemapExposureBias" value="1.0" />
-        <parameter name="TonemapMaxWhite" value="4.0" />
+    <command type="quad" enabled="true" tag="TonemapUncharted2" vs="Tonemap" ps="Tonemap" psdefines="UNCHARTED2" output="viewport">
+        <parameter name="TonemapExposureBias" value="0.5" />
+        <parameter name="TonemapMaxWhite" value="2.0" />
         <texture unit="diffuse" name="viewport" />
     </command>
 </renderpath>

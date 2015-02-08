@@ -1,0 +1,7 @@
+﻿<cubemap>
+    <image name="speccube.dds" layout="horizontalnvidia" />
+    <address coord="uv" mode="clamp" />
+    <filter mode="trilinear" />
+    <mipmap enable="true" />
+    <srgb enable="true" />
+</cubemap>

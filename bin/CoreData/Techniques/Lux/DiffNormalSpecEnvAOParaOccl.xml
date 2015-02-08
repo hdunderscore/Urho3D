@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<technique vs="Lux" ps="Lux" psdefines="DIFFMAP SPECMAP">
+    <pass name="base" vsdefines="NORMALMAP ENVCUBEMAP AO PARALLAX_OCCLUSION" psdefines="NORMALMAP ENVCUBEMAP AO PARALLAX_OCCLUSION" />
+    <pass name="light" vsdefines="NORMALMAP AO PARALLAX_OCCLUSION" psdefines="NORMALMAP AO PARALLAX_OCCLUSION" depthtest="equal" depthwrite="false" blend="add" />
+    <pass name="prepass" psdefines="NORMALMAP ENVCUBEMAP PREPASS" />
+    <pass name="material" vsdefines="NORMALMAP ENVCUBEMAP" psdefines="MATERIAL NORMALMAP ENVCUBEMAP" depthtest="equal" depthwrite="false" />
+    <pass name="deferred" vsdefines="NORMALMAP ENVCUBEMAP AO PARALLAX_OCCLUSION" psdefines="DEFERRED NORMALMAP ENVCUBEMAP AO PARALLAX_OCCLUSION" />
+    <pass name="ibl" vsdefines="ENVCUBEMAP NORMALMAP" psdefines="ENVCUBEMAP NORMALMAP"  depthtest="equal" depthwrite="false" blend="add"/>
+    <pass name="depth" vs="Depth" ps="Depth" />
+    <pass name="shadow" vs="Shadow" ps="Shadow" />
+</technique>

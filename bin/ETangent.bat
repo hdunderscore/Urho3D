@@ -1,0 +1,1 @@
+Urho3dPlayer Data/Scripts/TangentMapper.as -w -x 1024 -y 1024

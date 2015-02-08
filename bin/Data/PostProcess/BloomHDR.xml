@@ -8,7 +8,7 @@
     <rendertarget name="blur8" tag="BloomHDR" sizedivisor="8 8" format="rgba16f" filter="true" />
     <rendertarget name="blur16" tag="BloomHDR" sizedivisor="16 16" format="rgba16f" filter="true" />
     <command type="quad" tag="BloomHDR" vs="BloomHDR" ps="BloomHDR" vsdefines="BRIGHT" psdefines="BRIGHT" output="bright2">
-        <parameter name="BloomHDRThreshold" value="0.8" />
+        <parameter name="BloomHDRThreshold" value="1.0" />
         <texture unit="diffuse" name="viewport" />
     </command>
     <command type="quad" tag="BloomHDR" vs="CopyFramebuffer" ps="CopyFramebuffer" output="bright4">

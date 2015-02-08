@@ -475,6 +475,7 @@ static void RegisterQuaternion(asIScriptEngine* engine)
     engine->RegisterObjectMethod("Quaternion", "Quaternion Nlerp(Quaternion, float, bool) const", asMETHOD(Quaternion, Nlerp), asCALL_THISCALL);
     engine->RegisterObjectMethod("Quaternion", "bool Equals(const Quaternion&in) const", asMETHOD(Quaternion, Equals), asCALL_THISCALL);
     engine->RegisterObjectMethod("Quaternion", "bool IsNaN() const", asMETHOD(Quaternion, IsNaN), asCALL_THISCALL);
+    engine->RegisterObjectMethod("Quaternion", "Matrix3 RotationMatrix() const", asMETHODPR(Quaternion, RotationMatrix, () const, Matrix3), asCALL_THISCALL);
     engine->RegisterObjectMethod("Quaternion", "String ToString() const", asMETHOD(Quaternion, ToString), asCALL_THISCALL);
     engine->RegisterObjectMethod("Quaternion", "Vector3 get_eulerAngles() const", asMETHOD(Quaternion, EulerAngles), asCALL_THISCALL);
     engine->RegisterObjectMethod("Quaternion", "float get_yaw() const", asMETHOD(Quaternion, YawAngle), asCALL_THISCALL);
@@ -1198,8 +1199,8 @@ void RegisterMathAPI(asIScriptEngine* engine)
     RegisterVector2(engine);
     RegisterVector3(engine);
     RegisterVector4(engine);
-    RegisterQuaternion(engine);
     RegisterMatrix3(engine);
+    RegisterQuaternion(engine);
     RegisterMatrix4(engine);
     RegisterMatrix3x4(engine);
     RegisterRect(engine);

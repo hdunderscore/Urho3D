@@ -1,6 +1,8 @@
 <renderpath>
     <command type="clear" color="fog" depth="1.0" stencil="0" />
-    <command type="scenepass" pass="base" vertexlights="true" metadata="base" />
+    <command type="scenepass" pass="base" vertexlights="true" metadata="base">
+        <parameter name="AmbientHDRScale" value="5.0" />
+    </command>
     <command type="forwardlights" pass="light" />
     <command type="scenepass" pass="postopaque" />
     <command type="scenepass" pass="refract">
