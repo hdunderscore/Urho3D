@@ -939,16 +939,34 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
         if (targetNode is null)
             targetNode = editorScene;
 
-        Array<Node@> sourceNodes = GetMultipleSourceNodes(source);
-        if (sourceNodes.length > 0)
-        {
-            if (sourceNodes.length > 1)
-                SceneChangeParent(sourceNodes[0], sourceNodes, targetNode);
-            else
-                SceneChangeParent(sourceNodes[0], targetNode);
+        IntVector2 mpos = target.ScreenToElement(input.mousePosition);
+        // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
+        float relpos = float(mpos.y) / float(target.height);
 
-            // Focus the node at its new position in the list which in turn should trigger a refresh in attribute inspector
-            FocusNode(sourceNodes[0]);
+        if (targetNode is editorScene || (relpos >= 0.25 && relpos <= 0.75))
+        {
+            // re-parent to target node
+            ReparentNodes(source, targetNode);
+        }
+        else if (relpos < 0.25)
+        {
+            // mouse on top edge of target, re-order above target
+            uint index = GetNodeParentIndex(targetNode);
+            if (targetNode.parent !is null)
+                targetNode = targetNode.parent;
+            ReparentNodes(source, targetNode, index);
+            UpdateHierarchyItem(targetNode);
+        }
+        else
+        {
+            // mouse on bottom edge of target, re-order below target
+            uint index = GetNodeParentIndex(targetNode);
+            if (index != M_MAX_UNSIGNED)
+                index++;
+            if (targetNode.parent !is null)
+                targetNode = targetNode.parent;
+            ReparentNodes(source, targetNode, index);
+            UpdateHierarchyItem(targetNode);
         }
     }
     else if (itemType == ITEM_UI_ELEMENT)
@@ -1025,6 +1043,39 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
             }
         }
     }
+}
+
+void ReparentNodes(UIElement@ source, Node@ targetNode, uint index = M_MAX_UNSIGNED)
+{
+    Array<Node@> sourceNodes = GetMultipleSourceNodes(source);
+    if (sourceNodes.length > 0)
+    {
+        if (sourceNodes.length > 1)
+            SceneChangeParent(sourceNodes[0], sourceNodes, targetNode, true, index);
+        else
+            SceneChangeParent(sourceNodes[0], targetNode, true, index);
+
+        // Focus the node at its new position in the list which in turn should trigger a refresh in attribute inspector
+        FocusNode(sourceNodes[0]);
+    }
+}
+
+uint GetNodeParentIndex(Node@ targetNode)
+{
+    if (targetNode !is null)
+    {
+        Node@ parent = targetNode.parent;
+        if (parent !is null)
+        {
+            for (uint i = 0; i < parent.numChildren; i++)
+            {
+                Node@ node = parent.children[i];
+                if (node is targetNode)
+                    return i;
+            }
+        }
+    }
+    return M_MAX_UNSIGNED;
 }
 
 Array<Node@> GetMultipleSourceNodes(UIElement@ source)

@@ -813,7 +813,7 @@ bool SceneToggleEnable()
     return true;
 }
 
-bool SceneChangeParent(Node@ sourceNode, Node@ targetNode, bool createUndoAction = true)
+bool SceneChangeParent(Node@ sourceNode, Node@ targetNode, bool createUndoAction = true, uint index = M_MAX_UNSIGNED)
 {
     // Create undo action if requested
     if (createUndoAction)
@@ -823,7 +823,12 @@ bool SceneChangeParent(Node@ sourceNode, Node@ targetNode, bool createUndoAction
         SaveEditAction(action);
     }
 
-    sourceNode.parent = targetNode;
+    Node@ dummy = scene.CreateChild();
+    dummy.AddChild(sourceNode);
+
+    targetNode.AddChild(sourceNode, index);
+
+    dummy.Remove();
     SetSceneModified();
 
     // Return true if success
@@ -836,7 +841,7 @@ bool SceneChangeParent(Node@ sourceNode, Node@ targetNode, bool createUndoAction
         return false;
 }
 
-bool SceneChangeParent(Node@ sourceNode, Array<Node@> sourceNodes, Node@ targetNode, bool createUndoAction = true)
+bool SceneChangeParent(Node@ sourceNode, Array<Node@> sourceNodes, Node@ targetNode, bool createUndoAction = true, uint index = M_MAX_UNSIGNED)
 {
     // Create undo action if requested
     if (createUndoAction)
@@ -846,11 +851,16 @@ bool SceneChangeParent(Node@ sourceNode, Array<Node@> sourceNodes, Node@ targetN
         SaveEditAction(action);
     }
 
+    Node@ dummy = scene.CreateChild();
     for (uint i = 0; i < sourceNodes.length; ++i)
     {
         Node@ node = sourceNodes[i];
-        node.parent = targetNode;
+        
+        dummy.AddChild(node);
+
+        targetNode.AddChild(node, index);
     }
+    dummy.Remove();
     SetSceneModified();
 
     // Return true if success
