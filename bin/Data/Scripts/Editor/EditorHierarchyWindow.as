@@ -22,6 +22,8 @@ const StringHash[] ID_VARS = { StringHash(""), NODE_ID_VAR, COMPONENT_ID_VAR, UI
 Color nodeTextColor(1.0f, 1.0f, 1.0f);
 Color componentTextColor(0.7f, 1.0f, 0.7f);
 
+const float nodeGap = 0.2;
+
 Window@ hierarchyWindow;
 ListView@ hierarchyList;
 BorderImage@ hierarchyIndicator;
@@ -837,12 +839,12 @@ void HandleDragDropTest(StringHash eventType, VariantMap& eventData)
         // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
         float relpos = float(mpos.y) / float(target.height);
 
-        if (targetNode is editorScene || (relpos >= 0.25 && relpos <= 0.75))
+        if (targetNode is editorScene || (relpos >= nodeGap && relpos <= 1.0 - nodeGap))
         {
             // Re-parent
             hierarchyIndicator.Remove();
         }
-        else if (relpos < 0.25)
+        else if (relpos < nodeGap)
         {
             // Top re-order
             uint index = GetUIElementParentIndex(target);
@@ -985,7 +987,7 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
     {
         Node@ sourceNode = editorScene.GetNode(source.vars[NODE_ID_VAR].GetUInt());
         Node@ targetNode = editorScene.GetNode(target.vars[NODE_ID_VAR].GetUInt());
-
+        Array<Node@> sourceNodes = GetMultipleSourceNodes(source);
         // If target is null, parent to scene
         if (targetNode is null)
             targetNode = editorScene;
@@ -994,31 +996,35 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
         // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
         float relpos = float(mpos.y) / float(target.height);
 
-        if (targetNode is editorScene || (relpos >= 0.25 && relpos <= 0.75))
+        if (targetNode is editorScene || (relpos >= nodeGap && relpos <= 1.0 - nodeGap))
         {
             // re-parent to target node
-            ReparentNodes(source, targetNode);
+            ReparentNodes(sourceNodes, targetNode);
         }
-        else if (relpos < 0.25)
+        else if (relpos < nodeGap)
         {
             // mouse on top edge of target, re-order above target
-            uint index = GetNodeParentIndex(targetNode, sourceNode);
+            Node@ dummy = ReparentNodesDummy(sourceNodes);
+            uint index = GetNodeParentIndex(targetNode);
             if (targetNode.parent !is null)
                 targetNode = targetNode.parent;
             
-            ReparentNodes(source, targetNode, index);
+            ReparentNodes(sourceNodes, targetNode, index);
+            dummy.Remove();
             UpdateHierarchyItem(targetNode);
         }
         else
         {
             // mouse on bottom edge of target, re-order below target
-            uint index = GetNodeParentIndex(targetNode, sourceNode);
+            Node@ dummy = ReparentNodesDummy(sourceNodes);
+            uint index = GetNodeParentIndex(targetNode);
             if (index != M_MAX_UNSIGNED)
                 index++;
             if (targetNode.parent !is null)
                 targetNode = targetNode.parent;
 
-            ReparentNodes(source, targetNode, index);
+            ReparentNodes(sourceNodes, targetNode, index);
+            dummy.Remove();
             UpdateHierarchyItem(targetNode);
         }
     }
@@ -1098,9 +1104,8 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
     }
 }
 
-void ReparentNodes(UIElement@ source, Node@ targetNode, uint index = M_MAX_UNSIGNED)
+void ReparentNodes(Array<Node@> &sourceNodes, Node@ targetNode, uint index = M_MAX_UNSIGNED)
 {
-    Array<Node@> sourceNodes = GetMultipleSourceNodes(source);
     if (sourceNodes.length > 0)
     {
         if (sourceNodes.length > 1)
@@ -1113,6 +1118,16 @@ void ReparentNodes(UIElement@ source, Node@ targetNode, uint index = M_MAX_UNSIG
     }
 }
 
+Node@ ReparentNodesDummy(Array<Node@> &sourceNodes)
+{
+    Node@ dummy = editorScene.CreateChild("dummy");
+    for (uint i = 0; i < sourceNodes.length; i++)
+    {
+        Node@ node = sourceNodes[i];
+        dummy.AddChild(node);
+    }
+    return dummy;
+}
 uint GetNodeParentIndex(Node@ targetNode, Node@ sourceNode = null)
 {
     if (targetNode !is null)
@@ -1124,10 +1139,10 @@ uint GetNodeParentIndex(Node@ targetNode, Node@ sourceNode = null)
             for (uint i = 0; i < parent.numChildren; i++)
             {
                 Node@ node = parent.children[i];
-                if (node is sourceNode)
-                    continue; // Using source node to exclude from index increment.
+                //if (node is sourceNode)
+                //    continue; // Using source node to exclude from index increment.
                 if (node is targetNode)
-                    return index;
+                    return i;
                 index++;
             }
         }
@@ -1221,13 +1236,13 @@ bool TestDragDrop(UIElement@ source, UIElement@ target, int& itemType)
         // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
         float relpos = float(mpos.y) / float(target.height);
 
-        if ((targetNode is editorScene || targetNode is null) || (relpos >= 0.25 && relpos <= 0.75))
+        if ((targetNode is editorScene || targetNode is null) || (relpos >= nodeGap && relpos <= 1.0 - nodeGap))
         {
             // Re-parent
             itemType = ITEM_NODE;
             return true;
         }
-        else if (relpos < 0.25)
+        else if (relpos < nodeGap)
         {
             // Top re-order
             itemType = ITEM_NODE;

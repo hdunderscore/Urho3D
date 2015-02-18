@@ -852,7 +852,7 @@ bool SceneChangeParent(Node@ sourceNode, Array<Node@> sourceNodes, Node@ targetN
     }
 
     Node@ dummy = scene.CreateChild();
-    for (uint i = 0; i < sourceNodes.length; ++i)
+    for (uint i = sourceNodes.length - 1; i < M_MAX_UNSIGNED; i--)
     {
         Node@ node = sourceNodes[i];
         
