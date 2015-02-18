@@ -26,7 +26,6 @@ const float nodeGap = 0.2;
 
 Window@ hierarchyWindow;
 ListView@ hierarchyList;
-BorderImage@ hierarchyIndicator;
 
 // UIElement does not have unique ID, so use a running number to generate a new ID each time an item is inserted into hierarchy list
 const uint UI_ELEMENT_BASE_ID = 1;
@@ -819,55 +818,6 @@ void HandleDragDropTest(StringHash eventType, VariantMap& eventData)
     UIElement@ target = eventData["Target"].GetPtr();
     int itemType;
     eventData["Accept"] = TestDragDrop(source, target, itemType);
-
-    // Visual indicator for re-parenting/re-ordering
-    if (itemType == ITEM_NODE)
-    {
-        Node@ targetNode = editorScene.GetNode(target.vars[NODE_ID_VAR].GetUInt());
-
-        // If target is null, parent to scene
-        if (targetNode is null)
-            targetNode = editorScene;
-
-        if (hierarchyIndicator is null)
-        {
-            hierarchyIndicator = BorderImage();
-        }
-
-        // Checking for re-ordering of hierarchy
-        IntVector2 mpos = target.ScreenToElement(input.mousePosition);
-        // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
-        float relpos = float(mpos.y) / float(target.height);
-
-        if (targetNode is editorScene || (relpos >= nodeGap && relpos <= 1.0 - nodeGap))
-        {
-            // Re-parent
-            hierarchyIndicator.Remove();
-        }
-        else if (relpos < nodeGap)
-        {
-            // Top re-order
-            uint index = GetUIElementParentIndex(target);
-            target.InsertChild(0, hierarchyIndicator);
-            hierarchyIndicator.style = "EditorDivider";
-            hierarchyIndicator.minHeight = 30;
-            hierarchyIndicator.minWidth = 300;
-            hierarchyIndicator.SetPosition(0, 0);
-        }
-        else
-        {
-            // Bottom re-order
-            uint index = GetUIElementParentIndex(target);
-            if (index != M_MAX_UNSIGNED)
-                index++;
-            target.InsertChild(1, hierarchyIndicator);
-            hierarchyIndicator.defaultStyle = target.defaultStyle;
-            hierarchyIndicator.style = "EditorDivider";
-            hierarchyIndicator.minHeight = 30;
-            hierarchyIndicator.minWidth = 300;
-            hierarchyIndicator.SetPosition(0, target.height);
-        }
-    }
 }
 
 void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
@@ -1120,7 +1070,7 @@ void ReparentNodes(Array<Node@> &sourceNodes, Node@ targetNode, uint index = M_M
 
 Node@ ReparentNodesDummy(Array<Node@> &sourceNodes)
 {
-    Node@ dummy = editorScene.CreateChild("dummy");
+    Node@ dummy = editorScene.CreateChild();
     for (uint i = 0; i < sourceNodes.length; i++)
     {
         Node@ node = sourceNodes[i];
