@@ -24,6 +24,7 @@ Color componentTextColor(0.7f, 1.0f, 0.7f);
 
 Window@ hierarchyWindow;
 ListView@ hierarchyList;
+BorderImage@ hierarchyIndicator;
 
 // UIElement does not have unique ID, so use a running number to generate a new ID each time an item is inserted into hierarchy list
 const uint UI_ELEMENT_BASE_ID = 1;
@@ -816,6 +817,55 @@ void HandleDragDropTest(StringHash eventType, VariantMap& eventData)
     UIElement@ target = eventData["Target"].GetPtr();
     int itemType;
     eventData["Accept"] = TestDragDrop(source, target, itemType);
+
+    // Visual indicator for re-parenting/re-ordering
+    if (itemType == ITEM_NODE)
+    {
+        Node@ targetNode = editorScene.GetNode(target.vars[NODE_ID_VAR].GetUInt());
+
+        // If target is null, parent to scene
+        if (targetNode is null)
+            targetNode = editorScene;
+
+        if (hierarchyIndicator is null)
+        {
+            hierarchyIndicator = BorderImage();
+        }
+
+        // Checking for re-ordering of hierarchy
+        IntVector2 mpos = target.ScreenToElement(input.mousePosition);
+        // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
+        float relpos = float(mpos.y) / float(target.height);
+
+        if (targetNode is editorScene || (relpos >= 0.25 && relpos <= 0.75))
+        {
+            // Re-parent
+            hierarchyIndicator.Remove();
+        }
+        else if (relpos < 0.25)
+        {
+            // Top re-order
+            uint index = GetUIElementParentIndex(target);
+            target.InsertChild(0, hierarchyIndicator);
+            hierarchyIndicator.style = "EditorDivider";
+            hierarchyIndicator.minHeight = 30;
+            hierarchyIndicator.minWidth = 300;
+            hierarchyIndicator.SetPosition(0, 0);
+        }
+        else
+        {
+            // Bottom re-order
+            uint index = GetUIElementParentIndex(target);
+            if (index != M_MAX_UNSIGNED)
+                index++;
+            target.InsertChild(1, hierarchyIndicator);
+            hierarchyIndicator.defaultStyle = target.defaultStyle;
+            hierarchyIndicator.style = "EditorDivider";
+            hierarchyIndicator.minHeight = 30;
+            hierarchyIndicator.minWidth = 300;
+            hierarchyIndicator.SetPosition(0, target.height);
+        }
+    }
 }
 
 void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
@@ -930,9 +980,10 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
         }
         return;
     }
-
+    
     if (itemType == ITEM_NODE)
     {
+        Node@ sourceNode = editorScene.GetNode(source.vars[NODE_ID_VAR].GetUInt());
         Node@ targetNode = editorScene.GetNode(target.vars[NODE_ID_VAR].GetUInt());
 
         // If target is null, parent to scene
@@ -951,20 +1002,22 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
         else if (relpos < 0.25)
         {
             // mouse on top edge of target, re-order above target
-            uint index = GetNodeParentIndex(targetNode);
+            uint index = GetNodeParentIndex(targetNode, sourceNode);
             if (targetNode.parent !is null)
                 targetNode = targetNode.parent;
+            
             ReparentNodes(source, targetNode, index);
             UpdateHierarchyItem(targetNode);
         }
         else
         {
             // mouse on bottom edge of target, re-order below target
-            uint index = GetNodeParentIndex(targetNode);
+            uint index = GetNodeParentIndex(targetNode, sourceNode);
             if (index != M_MAX_UNSIGNED)
                 index++;
             if (targetNode.parent !is null)
                 targetNode = targetNode.parent;
+
             ReparentNodes(source, targetNode, index);
             UpdateHierarchyItem(targetNode);
         }
@@ -1060,17 +1113,39 @@ void ReparentNodes(UIElement@ source, Node@ targetNode, uint index = M_MAX_UNSIG
     }
 }
 
-uint GetNodeParentIndex(Node@ targetNode)
+uint GetNodeParentIndex(Node@ targetNode, Node@ sourceNode = null)
 {
     if (targetNode !is null)
     {
         Node@ parent = targetNode.parent;
         if (parent !is null)
         {
+            uint index = 0;
             for (uint i = 0; i < parent.numChildren; i++)
             {
                 Node@ node = parent.children[i];
+                if (node is sourceNode)
+                    continue; // Using source node to exclude from index increment.
                 if (node is targetNode)
+                    return index;
+                index++;
+            }
+        }
+    }
+    return M_MAX_UNSIGNED;
+}
+
+uint GetUIElementParentIndex(UIElement@ target)
+{
+    if (target !is null)
+    {
+        UIElement@ parent = target.parent;
+        if (parent !is null)
+        {
+            for (uint i = 0; i < parent.numChildren; i++)
+            {
+                UIElement@ element = parent.children[i];
+                if (element is target)
                     return i;
             }
         }
@@ -1133,12 +1208,37 @@ bool TestDragDrop(UIElement@ source, UIElement@ target, int& itemType)
     {
         Node@ sourceNode;
         Node@ targetNode;
+
         Variant variant = source.GetVar(NODE_ID_VAR);
         if (!variant.empty)
             sourceNode = editorScene.GetNode(variant.GetUInt());
         variant = target.GetVar(NODE_ID_VAR);
         if (!variant.empty)
             targetNode = editorScene.GetNode(variant.GetUInt());
+
+        // Checking for re-ordering of hierarchy
+        IntVector2 mpos = target.ScreenToElement(input.mousePosition);
+        // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
+        float relpos = float(mpos.y) / float(target.height);
+
+        if ((targetNode is editorScene || targetNode is null) || (relpos >= 0.25 && relpos <= 0.75))
+        {
+            // Re-parent
+            itemType = ITEM_NODE;
+            return true;
+        }
+        else if (relpos < 0.25)
+        {
+            // Top re-order
+            itemType = ITEM_NODE;
+            return true;
+        }
+        else
+        {
+            // Bottom re-order
+            itemType = ITEM_NODE;
+            return true;
+        }
 
         if (sourceNode !is null && targetNode !is null)
         {
