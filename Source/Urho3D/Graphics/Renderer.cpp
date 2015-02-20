@@ -277,6 +277,9 @@ Renderer::Renderer(Context* context) :
     dynamicInstancing_(true),
     shadersDirty_(true),
     initialized_(false),
+    #ifdef URHO3D_LAZY_RENDER
+    renderFrame_(true),
+    #endif
     resetViews_(false)
 {
     SubscribeToEvent(E_SCREENMODE, HANDLER(Renderer, HandleScreenMode));
@@ -477,6 +480,22 @@ void Renderer::SetOccluderSizeThreshold(float screenSize)
 void Renderer::ReloadShaders()
 {
     shadersDirty_ = true;
+}
+
+void Renderer::SetRenderFrame(bool update)
+{
+#ifdef URHO3D_LAZY_RENDER
+    renderFrame_ = update;
+#endif
+}
+
+bool Renderer::GetRenderFrame()
+{
+#ifdef URHO3D_LAZY_RENDER
+    return renderFrame_;
+#else
+    return true;
+#endif
 }
 
 Viewport* Renderer::GetViewport(unsigned index) const

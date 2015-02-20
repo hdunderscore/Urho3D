@@ -207,7 +207,9 @@ public:
     void SetMobileShadowBiasAdd(float add);
     /// Force reload of shaders.
     void ReloadShaders();
-    
+    /// Set whether to render the next frame.
+    void SetRenderFrame(bool update);
+
     /// Return number of backbuffer viewports.
     unsigned GetNumViewports() const { return viewports_.Size(); }
     /// Return backbuffer viewport by index.
@@ -284,7 +286,9 @@ public:
     VertexBuffer* GetInstancingBuffer() const { return dynamicInstancing_ ? instancingBuffer_ : (VertexBuffer*)0; }
     /// Return the frame update parameters.
     const FrameInfo& GetFrameInfo() const { return frame_; }
-    
+    /// Set Frame for updating.
+    bool GetRenderFrame();
+
     /// Update for rendering. Called by HandleRenderUpdate().
     void Update(float timeStep);
     /// Render. Called by Engine.
@@ -481,6 +485,10 @@ private:
     bool initialized_;
     /// Flag for views needing reset.
     bool resetViews_;
+    #ifdef URHO3D_LAZY_RENDER
+    /// Flag to indicate frame should be rendered, when in GUI mode.
+    bool renderFrame_;
+    #endif
 };
 
 }

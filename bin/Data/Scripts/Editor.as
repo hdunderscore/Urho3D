@@ -129,7 +129,11 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
                 }
             }
         }
+        renderer.renderFrame = true;
     }
+
+    if (runUpdate)
+        renderer.renderFrame = true;
 }
 
 void HandleReloadFinished(StringHash eventType, VariantMap& eventData)

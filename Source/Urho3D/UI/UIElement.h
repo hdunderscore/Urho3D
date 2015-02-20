@@ -26,6 +26,7 @@
 #include "../UI/UIBatch.h"
 #include "../Math/Vector2.h"
 #include "../Resource/XMLFile.h"
+#include "../Graphics/Renderer.h"
 
 namespace Urho3D
 {
@@ -503,6 +504,10 @@ protected:
     bool FilterUIStyleAttributes(XMLElement& dest, const XMLElement& styleElem) const;
     /// Filter implicit attributes in serialization process.
     virtual bool FilterImplicitAttributes(XMLElement& dest) const;
+    #ifdef URHO3D_LAZY_RENDER
+    /// Set render frame for update
+    void MarkDirtyRender();
+    #endif
 
     /// Name.
     String name_;
@@ -578,6 +583,10 @@ protected:
     int dragButtonCombo_;
     /// Drag button count.
     unsigned dragButtonCount_;
+    #ifdef URHO3D_LAZY_RENDER
+    /// Renderer
+    WeakPtr<Renderer> renderer_;
+    #endif
 
 private:
     /// Return child elements recursively.
@@ -634,3 +643,11 @@ private:
 template <class T> T* UIElement::CreateChild(const String& name, unsigned index) { return static_cast<T*>(CreateChild(T::GetTypeStatic(), name, index)); }
 
 }
+
+#ifdef URHO3D_LAZY_RENDER
+#define MARKDIRTYRENDERIF(condition) if (condition) MarkDirtyRender();
+#define MARKDIRTYRENDER() MarkDirtyRender();
+#else
+#define MARKDIRTYRENDERIF(condition)
+#define MARKDIRTYRENDER()
+#endif

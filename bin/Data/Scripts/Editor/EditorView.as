@@ -1152,6 +1152,8 @@ void SetMouseMode(bool enable)
         }
         else if (mouseOrbitMode == ORBIT_WRAP)
             input.mouseMode = MM_WRAP;
+
+        renderer.renderFrame = true;
     }
     else
     {

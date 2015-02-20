@@ -28,6 +28,7 @@
 #include "../Scene/SceneEvents.h"
 #include "../Scene/ValueAnimation.h"
 #include "../Resource/XMLElement.h"
+#include "../Graphics/Renderer.h"
 
 #include "../DebugNew.h"
 
@@ -351,6 +352,11 @@ void Animatable::UpdateAttributeAnimations(float timeStep)
 
     for (unsigned i = 0; i < finishedNames.Size(); ++i)
         SetAttributeAnimation(finishedNames[i], 0);
+
+    #ifdef URHO3D_LAZY_RENDER
+    if (finishedNames.Size() > 0)
+        GetSubsystem<Renderer>()->SetRenderFrame(true);
+    #endif
 }
 
 bool Animatable::IsAnimatedNetworkAttribute(const AttributeInfo& attrInfo) const

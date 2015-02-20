@@ -296,12 +296,16 @@ void Text::SetSelection(unsigned start, unsigned length)
     selectionStart_ = start;
     selectionLength_ = length;
     ValidateSelection();
+
+    MARKDIRTYRENDER();
 }
 
 void Text::ClearSelection()
 {
     selectionStart_ = 0;
     selectionLength_ = 0;
+
+    MARKDIRTYRENDER();
 }
 
 void Text::SetSelectionColor(const Color& color)

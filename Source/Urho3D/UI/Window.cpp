@@ -21,11 +21,11 @@
 //
 
 #include "../Core/Context.h"
-#include "../UI/Cursor.h"
 #include "../Input/InputEvents.h"
 #include "../UI/UI.h"
 #include "../UI/UIEvents.h"
 #include "../UI/Window.h"
+#include "../Graphics/Renderer.h"
 
 #include "../DebugNew.h"
 
@@ -44,6 +44,9 @@ Window::Window(Context* context) :
     fixedHeightResizing_(false),
     resizeBorder_(DEFAULT_RESIZE_BORDER, DEFAULT_RESIZE_BORDER, DEFAULT_RESIZE_BORDER, DEFAULT_RESIZE_BORDER),
     dragMode_(DRAG_NONE),
+    #ifdef URHO3D_LAZY_RENDER
+    lastCursorShape_(CS_NORMAL),
+    #endif
     modal_(false),
     modalAutoDismiss_(true),
     modalShadeColor_(Color::TRANSPARENT),
@@ -117,6 +120,10 @@ void Window::OnHover(const IntVector2& position, const IntVector2& screenPositio
 {
     UIElement::OnHover(position, screenPosition, buttons, qualifiers, cursor);
 
+    #ifdef URHO3D_LAZY_RENDER
+    CursorShape cursorShape = lastCursorShape_;
+    #endif
+
     if (dragMode_ == DRAG_NONE)
     {
         WindowDragMode mode = GetDragMode(position);
@@ -124,6 +131,11 @@ void Window::OnHover(const IntVector2& position, const IntVector2& screenPositio
     }
     else
         SetCursorShape(dragMode_, cursor);
+
+#ifdef URHO3D_LAZY_RENDER
+    if (cursorShape != lastCursorShape_)
+        GetSubsystem<Renderer>()->SetRenderFrame(true);
+#endif
 }
 
 void Window::OnDragBegin(const IntVector2& position, const IntVector2& screenPosition, int buttons, int qualifiers, Cursor* cursor)
@@ -352,7 +364,7 @@ WindowDragMode Window::GetDragMode(const IntVector2& position) const
     return mode;
 }
 
-void Window::SetCursorShape(WindowDragMode mode, Cursor* cursor) const
+void Window::SetCursorShape(WindowDragMode mode, Cursor* cursor)
 {
     CursorShape shape = CS_NORMAL;
 
@@ -381,6 +393,10 @@ void Window::SetCursorShape(WindowDragMode mode, Cursor* cursor) const
     default:
         break;
     }
+
+    #ifdef URHO3D_LAZY_RENDER
+    lastCursorShape_ = shape;
+    #endif
 
     if (cursor)
         cursor->SetShape(shape);

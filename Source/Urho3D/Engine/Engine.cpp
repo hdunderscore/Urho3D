@@ -628,6 +628,13 @@ void Engine::Render()
     if (headless_)
         return;
 
+    Renderer *renderer = GetSubsystem<Renderer>();
+    #ifdef URHO3D_LAZY_RENDER
+    if (!renderer->GetRenderFrame())
+        return;
+    renderer->SetRenderFrame(false);
+    #endif
+
     PROFILE(Render);
 
     // If device is lost, BeginFrame will fail and we skip rendering
@@ -635,7 +642,7 @@ void Engine::Render()
     if (!graphics->BeginFrame())
         return;
 
-    GetSubsystem<Renderer>()->Render();
+    renderer->Render();
     GetSubsystem<UI>()->Render();
     graphics->EndFrame();
 }

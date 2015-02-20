@@ -26,6 +26,7 @@
 #include "../UI/Text.h"
 #include "../UI/UI.h"
 #include "../UI/UIEvents.h"
+#include "../Graphics/Renderer.h"
 
 #include "../DebugNew.h"
 
@@ -473,6 +474,8 @@ void LineEdit::OnTextInput(const String& text, int buttons, int qualifiers)
         text_->ClearSelection();
         UpdateText();
         UpdateCursor();
+
+        MARKDIRTYRENDER();
     }
 }
 
@@ -586,6 +589,8 @@ void LineEdit::UpdateText()
     eventData[P_ELEMENT] = this;
     eventData[P_TEXT] = line_;
     SendEvent(E_TEXTCHANGED, eventData);
+
+    MARKDIRTYRENDER();
 }
 
 void LineEdit::UpdateCursor()
@@ -610,6 +615,8 @@ void LineEdit::UpdateCursor()
 
     // Restart blinking
     cursorBlinkTimer_ = 0.0f;
+
+    MARKDIRTYRENDER();
 }
 
 unsigned LineEdit::GetCharIndex(const IntVector2& position)

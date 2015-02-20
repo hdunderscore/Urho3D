@@ -1239,6 +1239,10 @@ void Input::GainFocus()
         lastMousePosition_ = GetMousePosition();
 
     SendInputFocusEvent();
+
+    #ifdef URHO3D_LAZY_RENDER
+    GetSubsystem<Renderer>()->SetRenderFrame(true);
+    #endif
 }
 
 void Input::LoseFocus()

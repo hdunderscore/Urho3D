@@ -130,6 +130,9 @@ UIElement::UIElement(Context* context) :
     colorGradient_(false),
     traversalMode_(TM_BREADTH_FIRST),
     elementEventSender_(false),
+    #ifdef URHO3D_LAZY_RENDER
+    renderer_(GetSubsystem<Renderer>()),
+    #endif
     dragButtonCombo_(0),
     dragButtonCount_(0)
 {
@@ -798,27 +801,33 @@ void UIElement::SetPriority(int priority)
 
 void UIElement::SetOpacity(float opacity)
 {
+    MARKDIRTYRENDERIF(Abs(Clamp(opacity, 0.0f, 1.0f) - opacity_) < 0.01f);
     opacity_ = Clamp(opacity, 0.0f, 1.0f);
     MarkDirty();
 }
 
 void UIElement::SetBringToFront(bool enable)
 {
+    MARKDIRTYRENDERIF(bringToFront_ != enable);
     bringToFront_ = enable;
 }
 
 void UIElement::SetBringToBack(bool enable)
 {
+    MARKDIRTYRENDERIF(bringToBack_ != enable);
     bringToBack_ = enable;
 }
 
 void UIElement::SetClipChildren(bool enable)
 {
+    MARKDIRTYRENDERIF(clipChildren_ != enable);
     clipChildren_ = enable;
 }
 
 void UIElement::SetSortChildren(bool enable)
 {
+    MARKDIRTYRENDERIF(sortChildren_ != enable);
+
     if (!sortChildren_ && enable)
         sortOrderDirty_ = true;
 
@@ -827,6 +836,7 @@ void UIElement::SetSortChildren(bool enable)
 
 void UIElement::SetUseDerivedOpacity(bool enable)
 {
+    MARKDIRTYRENDERIF(useDerivedOpacity_ != enable);
     useDerivedOpacity_ = enable;
 }
 
@@ -911,6 +921,8 @@ void UIElement::SetVisible(bool enable)
         eventData[P_ELEMENT] = this;
         eventData[P_VISIBLE] = visible_;
         SendEvent(E_VISIBLECHANGED, eventData);
+
+        MARKDIRTYRENDER();
     }
 }
 
@@ -940,6 +952,8 @@ bool UIElement::SetStyle(const String& styleName, XMLFile* file)
         defaultStyle_ = file;
     }
 
+    MARKDIRTYRENDER();
+
     styleXPathQuery_.SetVariable("typeName", actualStyleName);
     XMLElement styleElem = file->GetRoot().SelectSinglePrepared(styleXPathQuery_);
     return styleElem && SetStyle(styleElem);
@@ -949,17 +963,23 @@ bool UIElement::SetStyle(const XMLElement& element)
 {
     appliedStyle_ = element.GetAttribute("type");
 
+    MARKDIRTYRENDER();
+
     // Consider style attribute values as instance-level attribute default values
     return LoadXML(element, true);
 }
 
 bool UIElement::SetStyleAuto(XMLFile* file)
 {
+    MARKDIRTYRENDER();
+
     return SetStyle(String::EMPTY, file);
 }
 
 void UIElement::SetDefaultStyle(XMLFile* style)
 {
+    MARKDIRTYRENDER();
+
     defaultStyle_ = style;
 }
 
@@ -1014,6 +1034,13 @@ void UIElement::SetIndentSpacing(int indentSpacing)
     OnIndentSet();
 }
 
+#ifdef URHO3D_LAZY_RENDER
+void UIElement::MarkDirtyRender()
+{
+    if (renderer_)
+        renderer_->SetRenderFrame(true);
+}
+#endif
 void UIElement::UpdateLayout()
 {
     if (layoutMode_ == LM_FREE || layoutNestingLevel_)
@@ -1185,6 +1212,8 @@ void UIElement::BringToFront()
                 other->SetPriority(priority - 1);
         }
     }
+
+    MARKDIRTYRENDER();
 }
 
 UIElement* UIElement::CreateChild(StringHash type, const String& name, unsigned index)
@@ -1344,6 +1373,8 @@ void UIElement::Remove()
 {
     if (parent_)
         parent_->RemoveChild(this);
+
+    MARKDIRTYRENDER();
 }
 
 unsigned UIElement::FindChild(UIElement* element) const
@@ -1370,6 +1401,7 @@ void UIElement::SetInternal(bool enable)
 
 void UIElement::SetTraversalMode(TraversalMode traversalMode)
 {
+    MARKDIRTYRENDERIF(traversalMode_ != traversalMode);
     traversalMode_ = traversalMode;
 }
 
@@ -1589,6 +1621,8 @@ void UIElement::SortChildren()
         if (layoutMode_ == LM_FREE)
             Sort(children_.Begin(), children_.End(), CompareUIElements);
         sortOrderDirty_ = false;
+
+        MARKDIRTYRENDER();
     }
 }
 
@@ -1599,6 +1633,8 @@ void UIElement::SetChildOffset(const IntVector2& offset)
         childOffset_ = offset;
         for (Vector<SharedPtr<UIElement> >::ConstIterator i = children_.Begin(); i != children_.End(); ++i)
             (*i)->MarkDirty();
+
+        MARKDIRTYRENDER();
     }
 }
 

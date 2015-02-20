@@ -109,6 +109,7 @@ else ()
 endif ()
 option (URHO3D_PACKAGING "Enable resources packaging support, on Emscripten default to 1, on other platforms default to 0" ${EMSCRIPTEN})
 option (URHO3D_PROFILING "Enable profiling support" TRUE)
+option (URHO3D_LAZY_RENDER "Enable lazy rendering (eg, for GUI applications)" FALSE)
 option (URHO3D_LOGGING "Enable logging support" TRUE)
 option (URHO3D_TESTING "Enable testing support")
 if (URHO3D_TESTING)
@@ -173,6 +174,11 @@ if (CMAKE_VERSION VERSION_GREATER 2.8 OR CMAKE_VERSION VERSION_EQUAL 2.8)
         set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${URHO3D_BUILD_CONFIGURATIONS})
     endif ()
 endif()
+
+# Enable lazy rendering
+if (URHO3D_LAZY_RENDER)
+    add_definitions (-DURHO3D_LAZY_RENDER)
+endif ()
 
 # Enable testing
 if (URHO3D_TESTING)

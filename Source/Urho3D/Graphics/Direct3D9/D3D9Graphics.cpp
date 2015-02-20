@@ -40,6 +40,7 @@
 #include "../../Graphics/ParticleEmitter.h"
 #include "../../Core/ProcessUtils.h"
 #include "../../Core/Profiler.h"
+#include "../../Graphics/Renderer.h"
 #include "../../Resource/ResourceCache.h"
 #include "../../Graphics/Shader.h"
 #include "../../Graphics/ShaderPrecache.h"
@@ -2170,9 +2171,13 @@ void Graphics::WindowResized()
 {
     if (!impl_->device_ || !impl_->window_)
         return;
-    
+
+    #ifdef URHO3D_LAZY_RENDER
+    GetSubsystem<Renderer>()->SetRenderFrame(true);
+    #endif#
+
     int newWidth, newHeight;
-    
+
     SDL_GetWindowSize(impl_->window_, &newWidth, &newHeight);
     if (newWidth == width_ && newHeight == height_)
         return;
@@ -2198,12 +2203,18 @@ void Graphics::WindowResized()
     eventData[P_RESIZABLE] = resizable_;
     eventData[P_BORDERLESS] = borderless_;
     SendEvent(E_SCREENMODE, eventData);
+
+
 }
 
 void Graphics::WindowMoved()
 {
     if (!impl_->device_ || !impl_->window_)
         return;
+
+    #ifdef URHO3D_LAZY_RENDER
+    GetSubsystem<Renderer>()->SetRenderFrame(true);
+    #endif#
 
     int newX, newY;
 

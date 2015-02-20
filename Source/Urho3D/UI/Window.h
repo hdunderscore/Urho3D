@@ -23,6 +23,7 @@
 #pragma once
 
 #include "../UI/BorderImage.h"
+#include "Cursor.h"
 
 namespace Urho3D
 {
@@ -115,7 +116,7 @@ protected:
     /// Identify drag mode (move/resize.)
     WindowDragMode GetDragMode(const IntVector2& position) const;
     /// Set cursor shape based on drag mode.
-    void SetCursorShape(WindowDragMode mode, Cursor* cursor) const;
+    void SetCursorShape(WindowDragMode mode, Cursor* cursor);
     /// Validate window position.
     void ValidatePosition();
     /// Check whether alignment supports moving and resizing.
@@ -149,6 +150,10 @@ protected:
     Color modalFrameColor_;
     /// Modal frame size, used when modal flag is set.
     IntVector2 modalFrameSize_;
+    #ifdef URHO3D_LAZY_RENDER
+    /// The last cursor shape.
+    CursorShape lastCursorShape_;
+    #endif
 };
 
 }

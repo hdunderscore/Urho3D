@@ -51,6 +51,7 @@
 #include "../UI/UI.h"
 #include "../UI/UIEvents.h"
 #include "../Graphics/VertexBuffer.h"
+#include "../Graphics/Renderer.h"
 #include "../UI/Window.h"
 #include "../UI/View3D.h"
 
@@ -208,6 +209,10 @@ void UI::SetFocusElement(UIElement* element, bool byKey)
     eventData[P_CLICKEDELEMENT] = originalElement;
     eventData[P_ELEMENT] = element;
     SendEvent(E_FOCUSCHANGED, eventData);
+
+    #ifdef URHO3D_LAZY_RENDER
+    GetSubsystem<Renderer>()->SetRenderFrame(true);
+    #endif
 }
 
 bool UI::SetModalElement(UIElement* modalElement, bool enable)
@@ -374,6 +379,10 @@ void UI::Update(float timeStep)
                 VariantMap& eventData = GetEventDataMap();
                 eventData[P_ELEMENT] = element;
                 element->SendEvent(E_HOVEREND, eventData);
+
+                #ifdef URHO3D_LAZY_RENDER
+                GetSubsystem<Renderer>()->SetRenderFrame(true);
+                #endif
             }
             i = hoveredElements_.Erase(i);
         }
@@ -1048,6 +1057,10 @@ void UI::ProcessHover(const IntVector2& cursorPos, int buttons, int qualifiers, 
                 eventData[P_ACCEPT] = accept;
                 SendEvent(E_DRAGDROPTEST, eventData);
                 accept = eventData[P_ACCEPT].GetBool();
+
+                #ifdef URHO3D_LAZY_RENDER
+                GetSubsystem<Renderer>()->SetRenderFrame(true);
+                #endif
             }
 
             if (cursor)
@@ -1208,6 +1221,10 @@ void UI::ProcessClickEnd(const IntVector2& cursorPos, int button, int buttons, i
                                 eventData[P_TARGET] = element.Get();
                                 eventData[P_ACCEPT] = accept;
                                 SendEvent(E_DRAGDROPFINISH, eventData);
+
+                                #ifdef URHO3D_LAZY_RENDER
+                                GetSubsystem<Renderer>()->SetRenderFrame(true);
+                                #endif
                             }
                         }
                     }
@@ -1301,6 +1318,10 @@ void UI::SendDragOrHoverEvent(StringHash eventType, UIElement* element, const In
     if (!element)
         return;
 
+    #ifdef URHO3D_LAZY_RENDER
+    GetSubsystem<Renderer>()->SetRenderFrame(true);
+    #endif
+
     IntVector2 relativePos = element->ScreenToElement(screenPos);
 
     using namespace DragMove;
@@ -1329,6 +1350,10 @@ void UI::SendDragOrHoverEvent(StringHash eventType, UIElement* element, const In
 
 void UI::SendClickEvent(StringHash eventType, UIElement* beginElement, UIElement* endElement, const IntVector2& pos, int button, int buttons, int qualifiers)
 {
+    #ifdef URHO3D_LAZY_RENDER
+    GetSubsystem<Renderer>()->SetRenderFrame(true);
+    #endif
+
     VariantMap& eventData = GetEventDataMap();
     eventData[UIMouseClick::P_ELEMENT] = endElement;
     eventData[UIMouseClick::P_X] = pos.x_;
@@ -1418,6 +1443,10 @@ void UI::HandleMouseMove(StringHash eventType, VariantMap& eventData)
                 pos.x_ = Clamp(pos.x_, 0, rootSize.x_ - 1);
                 pos.y_ = Clamp(pos.y_, 0, rootSize.y_ - 1);
                 cursor_->SetPosition(pos);
+
+                #ifdef URHO3D_LAZY_RENDER
+                GetSubsystem<Renderer>()->SetRenderFrame(true);
+                #endif
             }
         }
         else
