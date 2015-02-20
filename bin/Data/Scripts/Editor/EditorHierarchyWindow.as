@@ -22,7 +22,10 @@ const StringHash[] ID_VARS = { StringHash(""), NODE_ID_VAR, COMPONENT_ID_VAR, UI
 Color nodeTextColor(1.0f, 1.0f, 1.0f);
 Color componentTextColor(0.7f, 1.0f, 0.7f);
 
-const float nodeGap = 0.2;
+// The gap between hierarchy items that allows for re-ordering (ratio).
+const float hierarchyReorderGap = 0.25;
+// The lowest point of a hierarchy element that allow for re-parenting (ratio).
+const float hierarchyReparentMax = 1.0 - hierarchyReorderGap;
 
 Window@ hierarchyWindow;
 ListView@ hierarchyList;
@@ -946,14 +949,18 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
         // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
         float relpos = float(mpos.y) / float(target.height);
 
-        if (targetNode is editorScene || (relpos >= nodeGap && relpos <= 1.0 - nodeGap))
+        if (targetNode is editorScene || (relpos >= hierarchyReorderGap && relpos <= hierarchyReparentMax))
         {
-            // re-parent to target node
+            // Re-parent to target node
+            // Add to dummy to preserve order
+            Node@ dummy = ReparentNodesDummy(sourceNodes);
             ReparentNodes(sourceNodes, targetNode);
+            dummy.Remove();
         }
-        else if (relpos < nodeGap)
+        else if (relpos < hierarchyReorderGap)
         {
-            // mouse on top edge of target, re-order above target
+            // Mouse on top edge of target, re-order above target
+            // Add to dummy to preserve order and get correct index
             Node@ dummy = ReparentNodesDummy(sourceNodes);
             uint index = GetNodeParentIndex(targetNode);
             if (targetNode.parent !is null)
@@ -965,7 +972,8 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
         }
         else
         {
-            // mouse on bottom edge of target, re-order below target
+            // Mouse on bottom edge of target, re-order below target
+            // Add to dummy to preserve order and get correct index
             Node@ dummy = ReparentNodesDummy(sourceNodes);
             uint index = GetNodeParentIndex(targetNode);
             if (index != M_MAX_UNSIGNED)
@@ -1071,29 +1079,25 @@ void ReparentNodes(Array<Node@> &sourceNodes, Node@ targetNode, uint index = M_M
 Node@ ReparentNodesDummy(Array<Node@> &sourceNodes)
 {
     Node@ dummy = editorScene.CreateChild();
-    for (uint i = 0; i < sourceNodes.length; i++)
+    for (uint i = sourceNodes.length - 1; i < M_MAX_UNSIGNED; i--)
     {
         Node@ node = sourceNodes[i];
         dummy.AddChild(node);
     }
     return dummy;
 }
-uint GetNodeParentIndex(Node@ targetNode, Node@ sourceNode = null)
+uint GetNodeParentIndex(Node@ targetNode)
 {
     if (targetNode !is null)
     {
         Node@ parent = targetNode.parent;
         if (parent !is null)
         {
-            uint index = 0;
             for (uint i = 0; i < parent.numChildren; i++)
             {
                 Node@ node = parent.children[i];
-                //if (node is sourceNode)
-                //    continue; // Using source node to exclude from index increment.
                 if (node is targetNode)
                     return i;
-                index++;
             }
         }
     }
@@ -1186,13 +1190,13 @@ bool TestDragDrop(UIElement@ source, UIElement@ target, int& itemType)
         // a value between 0 and 1 representing how close the mouse is to the bottom of the target element.
         float relpos = float(mpos.y) / float(target.height);
 
-        if ((targetNode is editorScene || targetNode is null) || (relpos >= nodeGap && relpos <= 1.0 - nodeGap))
+        if ((targetNode is editorScene || targetNode is null) || (relpos >= hierarchyReorderGap && relpos <= hierarchyReparentMax))
         {
             // Re-parent
             itemType = ITEM_NODE;
             return true;
         }
-        else if (relpos < nodeGap)
+        else if (relpos < hierarchyReorderGap)
         {
             // Top re-order
             itemType = ITEM_NODE;
