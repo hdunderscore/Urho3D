@@ -1229,6 +1229,8 @@ void UnfadeUI()
 
 void FadeUI(bool fade = true)
 {
+    renderer.renderFrame = true;
+
     if (uiHidden || uiFaded == fade)
         return;
 
