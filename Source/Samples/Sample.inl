@@ -40,6 +40,7 @@
 #include <Urho3D/UI/UI.h>
 #include <Urho3D/Resource/XMLFile.h>
 
+//! Begin [Example Application]
 Sample::Sample(Context* context) :
     Application(context),
     yaw_(0.0f),
@@ -50,6 +51,7 @@ Sample::Sample(Context* context) :
     paused_(false)
 {
 }
+//! End [Example Application]
 
 void Sample::Setup()
 {

@@ -51,6 +51,7 @@ function CreateUI()
     button = CreateButton(160, 80, 120, 40, "Stop Music")
     SubscribeToEvent(button, "Released", "HandleStopMusic")
 
+    --! Begin [Example Audio]
     -- Create sliders for controlling sound and music master volume
     local slider = CreateSlider(20, 140, 200, 20, "Sound Volume")
     slider.value = audio:GetMasterGain(SOUND_EFFECT)
@@ -59,6 +60,7 @@ function CreateUI()
     slider = CreateSlider(20, 200, 200, 20, "Music Volume")
     slider.value = audio:GetMasterGain(SOUND_MUSIC)
     SubscribeToEvent(slider, "SliderChanged", "HandleMusicVolume")
+    --! End [Example Audio]
 end
 
 function CreateButton(x, y, xSize, ySize, text)

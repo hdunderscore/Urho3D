@@ -117,7 +117,8 @@ void Urho2DSprite::CreateScene()
         // Add to sprite node vector
         spriteNodes_.Push(spriteNode);
     }
-
+    
+    //! Begin [Example AnimatedSprite2D]
     // Get animation set
     AnimationSet2D* animationSet = cache->GetResource<AnimationSet2D>("Urho2D/GoldIcon.scml");
     if (!animationSet)
@@ -130,6 +131,7 @@ void Urho2DSprite::CreateScene()
     // Set animation
     animatedSprite->SetAnimationSet(animationSet);
     animatedSprite->SetAnimation("idle");
+    //! End [Example AnimatedSprite2D]
 }
 
 void Urho2DSprite::CreateInstructions()

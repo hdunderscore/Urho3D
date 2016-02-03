@@ -19,7 +19,7 @@ void Start()
 
     // Setup the viewport for displaying the scene
     SetupViewport();
-    
+
     // Subscribe to global events for camera movement
     SubscribeToEvents();
 }
@@ -42,9 +42,11 @@ void CreateScene()
 
 void CreateUI()
 {
+    //! Begin [Example ResourceCache]
     // Set up global UI style into the root UI element
     XMLFile@ style = cache.GetResource("XMLFile", "UI/DefaultStyle.xml");
     ui.root.defaultStyle = style;
+    //! End [Example ResourceCache]
 
     // Create a Cursor UI element because we want to be able to hide and show it at will. When hidden, the mouse cursor will
     // control the camera, and when visible, it will interact with the UI

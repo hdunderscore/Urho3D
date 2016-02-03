@@ -66,6 +66,7 @@ function CreateScene()
     local bounds = BoundingBox(Vector3(-47.0, 0.0, -47.0), Vector3(47.0, 0.0, 47.0))
 
     for i = 1, NUM_MODELS do
+        --! Begin [Example Animation]
         local modelNode = scene_:CreateChild("Jack")
         modelNode.position = Vector3(Random(90.0) - 45.0, 0.0, Random(90.0) - 45.0)
         modelNode.rotation = Quaternion(0.0, Random(360.0), 0.0)
@@ -83,6 +84,7 @@ function CreateScene()
         state.weight = 1.0
         state.looped = true
         state.time = Random(walkAnimation.length)
+        --! End [Example Animation]
 
         -- Create our Mover script object that will move & animate the model during each frame's update.
 

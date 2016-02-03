@@ -69,6 +69,7 @@ void CreateScene()
 
     for (uint i = 0; i < NUM_MODELS; ++i)
     {
+        //! Begin [Example Animation]
         Node@ modelNode = scene_.CreateChild("Jack");
         modelNode.position = Vector3(Random(90.0f) - 45.0f, 0.0f, Random(90.0f) - 45.0f);
         modelNode.rotation = Quaternion(0.0f, Random(360.0f), 0.0f);
@@ -86,6 +87,7 @@ void CreateScene()
         state.weight = 1.0f;
         state.looped = true;
         state.time = Random(walkAnimation.length);
+        //! End [Example Animation]
 
         // Create our Mover script object that will move & animate the model during each frame's update. Here we use a shortcut
         // script-only API function, CreateScriptObject, which creates a ScriptInstance component into the scene node, then uses

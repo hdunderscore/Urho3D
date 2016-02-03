@@ -1,0 +1,62 @@
+body {
+    /*width: 1024px;*/
+    margin: auto;
+    color: #333;
+}
+
+/*@media screen and (min-width: 900)
+{
+    .contents, .header {
+        width: 90%;
+        max-width: 1024px;
+        margin-left: 50px !important;
+    }
+}
+
+@media screen and (max-width: 900)
+{
+    .contents, .header {
+        width: 100%;
+    }
+}*/
+
+#MSearchBox {
+    right: auto;
+}
+
+/*.tablist a, .tablist li, .tablist li.current a,
+.navpath ul, .navpath li.navelem a,
+.tabs, .tabs2, .tabs3 {
+    background-image: none;
+}*/
+
+.memproto, dl.reflist dt,
+.memdoc, dl.reflist dd,
+.fieldtable th {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.navpath ul {
+    border: none;
+}
+
+div.header{
+    border-bottom: none;
+    background-image: none;
+    background-color: inherit;
+}
+
+titlearea {
+    border-bottom: none;
+}
+
+hr {
+    border-top: 1px solid #E6E6E6;
+}
+
+.line {
+    font-size: 14px;
+    line-height: 1.3;
+}

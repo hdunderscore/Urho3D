@@ -455,6 +455,7 @@ void HandleCrowdAgentFormation(StringHash eventType, VariantMap& eventData)
     }
 }
 
+//! Begin [Example AnimationController]
 void HandleCrowdAgentReposition(StringHash eventType, VariantMap& eventData)
 {
     const String WALKING_ANI = "Models/Jack_Walk.ani";
@@ -486,6 +487,7 @@ void HandleCrowdAgentReposition(StringHash eventType, VariantMap& eventData)
             animCtrl.Stop(WALKING_ANI, 0.8f);
     }
 }
+//! End [Example AnimationController]
 
 // Create XML patch instructions for screen joystick layout specific to this sample app
 String patchInstructions =

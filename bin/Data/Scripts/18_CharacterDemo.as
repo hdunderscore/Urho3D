@@ -137,6 +137,7 @@ void CreateScene()
 
 void CreateCharacter()
 {
+    //! Begin [Example AnimatedModel]
     characterNode = scene_.CreateChild("Jack");
     characterNode.position = Vector3(0.0f, 1.0f, 0.0f);
 
@@ -146,6 +147,7 @@ void CreateCharacter()
     object.material = cache.GetResource("Material", "Materials/Jack.xml");
     object.castShadows = true;
     characterNode.CreateComponent("AnimationController");
+    //! End [Example AnimatedModel]
 
     // Set the head bone for manual control
     object.skeleton.GetBone("Bip01_Head").animated = false;

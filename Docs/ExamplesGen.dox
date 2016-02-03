@@ -1,0 +1,129 @@
+namespace Urho3D
+{
+/**
+    \class Application
+    Example (C++), from ../Source/Urho3D/Engine/Application.h:
+    \snippet ../Source/Urho3D/Engine/Application.h Example Application
+*/
+
+/**
+    \class Application
+    Example (C++), from ../Source/Samples/01_HelloWorld/HelloWorld.cpp:
+    \snippet ../Source/Samples/01_HelloWorld/HelloWorld.cpp Example Application
+*/
+
+/**
+    \class Animation
+    Example (C++), from ../Source/Samples/06_SkeletalAnimation/SkeletalAnimation.cpp:
+    \snippet ../Source/Samples/06_SkeletalAnimation/SkeletalAnimation.cpp Example Animation
+*/
+
+/**
+    \class Audio
+    Example (C++), from ../Source/Samples/14_SoundEffects/SoundEffects.cpp:
+    \snippet ../Source/Samples/14_SoundEffects/SoundEffects.cpp Example Audio
+*/
+
+/**
+    \class AnimatedModel
+    Example (C++), from ../Source/Samples/18_CharacterDemo/CharacterDemo.cpp:
+    \snippet ../Source/Samples/18_CharacterDemo/CharacterDemo.cpp Example AnimatedModel
+*/
+
+/**
+    \class AnimatedSprite2D
+    Example (C++), from ../Source/Samples/24_Urho2DSprite/Urho2DSprite.cpp:
+    \snippet ../Source/Samples/24_Urho2DSprite/Urho2DSprite.cpp Example AnimatedSprite2D
+*/
+
+/**
+    \class ResourceCache
+    Example (C++), from ../Source/Samples/38_SceneAndUILoad/SceneAndUILoad.cpp:
+    \snippet ../Source/Samples/38_SceneAndUILoad/SceneAndUILoad.cpp Example ResourceCache
+*/
+
+/**
+    \class AnimationController
+    Example (C++), from ../Source/Samples/39_CrowdNavigation/CrowdNavigation.cpp:
+    \snippet ../Source/Samples/39_CrowdNavigation/CrowdNavigation.cpp Example AnimationController
+*/
+
+/**
+    \class Application
+    Example (C++), from ../Source/Samples/Sample.inl:
+    \snippet ../Source/Samples/Sample.inl Example Application
+*/
+
+/**
+    \class Animation
+    Example (Angelscript), from ../Bin/Data/Scripts/06_SkeletalAnimation.as:
+    \snippet ../Bin/Data/Scripts/06_SkeletalAnimation.as Example Animation
+*/
+
+/**
+    \class Audio
+    Example (Angelscript), from ../Bin/Data/Scripts/14_SoundEffects.as:
+    \snippet ../Bin/Data/Scripts/14_SoundEffects.as Example Audio
+*/
+
+/**
+    \class AnimatedModel
+    Example (Angelscript), from ../Bin/Data/Scripts/18_CharacterDemo.as:
+    \snippet ../Bin/Data/Scripts/18_CharacterDemo.as Example AnimatedModel
+*/
+
+/**
+    \class AnimatedSprite2D
+    Example (Angelscript), from ../Bin/Data/Scripts/24_Urho2DSprite.as:
+    \snippet ../Bin/Data/Scripts/24_Urho2DSprite.as Example AnimatedSprite2D
+*/
+
+/**
+    \class ResourceCache
+    Example (Angelscript), from ../Bin/Data/Scripts/38_SceneAndUILoad.as:
+    \snippet ../Bin/Data/Scripts/38_SceneAndUILoad.as Example ResourceCache
+*/
+
+/**
+    \class AnimationController
+    Example (Angelscript), from ../Bin/Data/Scripts/39_CrowdNavigation.as:
+    \snippet ../Bin/Data/Scripts/39_CrowdNavigation.as Example AnimationController
+*/
+
+/**
+    \class Animation
+    Example (Lua), from ../Bin/Data/LuaScripts/06_SkeletalAnimation.lua:
+    \snippet ../Bin/Data/LuaScripts/06_SkeletalAnimation.lua Example Animation
+*/
+
+/**
+    \class Audio
+    Example (Lua), from ../Bin/Data/LuaScripts/14_SoundEffects.lua:
+    \snippet ../Bin/Data/LuaScripts/14_SoundEffects.lua Example Audio
+*/
+
+/**
+    \class AnimatedModel
+    Example (Lua), from ../Bin/Data/LuaScripts/18_CharacterDemo.lua:
+    \snippet ../Bin/Data/LuaScripts/18_CharacterDemo.lua Example AnimatedModel
+*/
+
+/**
+    \class AnimatedSprite2D
+    Example (Lua), from ../Bin/Data/LuaScripts/24_Urho2DSprite.lua:
+    \snippet ../Bin/Data/LuaScripts/24_Urho2DSprite.lua Example AnimatedSprite2D
+*/
+
+/**
+    \class ResourceCache
+    Example (Lua), from ../Bin/Data/LuaScripts/38_SceneAndUILoad.lua:
+    \snippet ../Bin/Data/LuaScripts/38_SceneAndUILoad.lua Example ResourceCache
+*/
+
+/**
+    \class AnimationController
+    Example (Lua), from ../Bin/Data/LuaScripts/39_CrowdNavigation.lua:
+    \snippet ../Bin/Data/LuaScripts/39_CrowdNavigation.lua Example AnimationController
+*/
+
+}

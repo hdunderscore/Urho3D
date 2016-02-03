@@ -179,6 +179,7 @@ void CharacterDemo::CreateScene()
 
 void CharacterDemo::CreateCharacter()
 {
+    //! Begin [Example AnimatedModel]
     ResourceCache* cache = GetSubsystem<ResourceCache>();
 
     Node* objectNode = scene_->CreateChild("Jack");
@@ -190,6 +191,7 @@ void CharacterDemo::CreateCharacter()
     object->SetMaterial(cache->GetResource<Material>("Materials/Jack.xml"));
     object->SetCastShadows(true);
     objectNode->CreateComponent<AnimationController>();
+    //! End [Example AnimatedModel]
 
     // Set the head bone for manual control
     object->GetSkeleton().GetBone("Bip01_Head")->animated_ = false;

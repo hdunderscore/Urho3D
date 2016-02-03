@@ -109,6 +109,7 @@ void SoundEffects::CreateUI()
     button = CreateButton(160, 80, 120, 40, "Stop Music");
     SubscribeToEvent(button, E_RELEASED, URHO3D_HANDLER(SoundEffects, HandleStopMusic));
 
+    //! Begin [Example Audio]
     Audio* audio = GetSubsystem<Audio>();
 
     // Create sliders for controlling sound and music master volume
@@ -119,6 +120,7 @@ void SoundEffects::CreateUI()
     slider = CreateSlider(20, 200, 200, 20, "Music Volume");
     slider->SetValue(audio->GetMasterGain(SOUND_MUSIC));
     SubscribeToEvent(slider, E_SLIDERCHANGED, URHO3D_HANDLER(SoundEffects, HandleMusicVolume));
+    //! End [Example Audio]
 }
 
 Button* SoundEffects::CreateButton(int x, int y, int xSize, int ySize, const String& text)

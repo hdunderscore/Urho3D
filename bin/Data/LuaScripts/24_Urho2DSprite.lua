@@ -92,6 +92,7 @@ function CreateScene()
         end
     end
 
+    --! Begin [Example AnimatedSprite2D]
     local animationSet = cache:GetResource("AnimationSet2D", "Urho2D/GoldIcon.scml")
     if animationSet == nil then
         return
@@ -104,6 +105,7 @@ function CreateScene()
     -- Set animation
     animatedSprite.animationSet = animationSet
     animatedSprite.animation = "idle"
+    --! End [Example AnimatedSprite2D]
 end
 
 function CreateInstructions()

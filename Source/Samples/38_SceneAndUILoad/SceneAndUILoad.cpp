@@ -82,12 +82,14 @@ void SceneAndUILoad::CreateScene()
 
 void SceneAndUILoad::CreateUI()
 {
+    //! Begin [Example ResourceCache]
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     UI* ui = GetSubsystem<UI>();
 
     // Set up global UI style into the root UI element
     XMLFile* style = cache->GetResource<XMLFile>("UI/DefaultStyle.xml");
     ui->GetRoot()->SetDefaultStyle(style);
+    //! End [Example ResourceCache]
 
     // Create a Cursor UI element because we want to be able to hide and show it at will. When hidden, the mouse cursor will
     // control the camera, and when visible, it will interact with the UI

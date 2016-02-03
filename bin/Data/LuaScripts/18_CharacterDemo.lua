@@ -135,6 +135,7 @@ function CreateScene()
 end
 
 function CreateCharacter()
+    --! Begin [Example AnimatedModel]
     characterNode = scene_:CreateChild("Jack")
     characterNode.position = Vector3(0.0, 1.0, 0.0)
 
@@ -144,6 +145,7 @@ function CreateCharacter()
     object.material = cache:GetResource("Material", "Materials/Jack.xml")
     object.castShadows = true
     characterNode:CreateComponent("AnimationController")
+    --! End [Example AnimatedModel]
 
     -- Set the head bone for manual control
     object.skeleton:GetBone("Bip01_Head").animated = false

@@ -509,6 +509,7 @@ void CrowdNavigation::HandleCrowdAgentFailure(StringHash eventType, VariantMap& 
     }
 }
 
+//! Begin [Example AnimationController]
 void CrowdNavigation::HandleCrowdAgentReposition(StringHash eventType, VariantMap& eventData)
 {
     static const char* WALKING_ANI = "Models/Jack_Walk.ani";
@@ -541,6 +542,7 @@ void CrowdNavigation::HandleCrowdAgentReposition(StringHash eventType, VariantMa
             animCtrl->Stop(WALKING_ANI, 0.8f);
     }
 }
+//! End [Example AnimationController]
 
 void CrowdNavigation::HandleCrowdAgentFormation(StringHash eventType, VariantMap& eventData)
 {
