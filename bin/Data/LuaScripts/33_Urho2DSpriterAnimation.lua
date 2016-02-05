@@ -45,16 +45,17 @@ function CreateScene()
     camera.orthoSize = graphics.height * PIXEL_SIZE
     camera.zoom = 1.5 * Min(graphics.width / 1280, graphics.height / 800) -- Set zoom according to user's resolution to ensure full visibility (initial zoom (1.5) is set for full visibility at 1280x800 resolution)
 
+    --! Begin [Example AnimationSet2D]
     local spriterAnimationSet = cache:GetResource("AnimationSet2D", "Urho2D/imp/imp.scml")
     if spriterAnimationSet == nil then
         return
     end
 
     spriterNode = scene_:CreateChild("SpriterAnimation")
-
     local spriterAnimatedSprite = spriterNode:CreateComponent("AnimatedSprite2D")
     spriterAnimatedSprite.animationSet = spriterAnimationSet
     spriterAnimatedSprite:SetAnimation(spriterAnimationSet:GetAnimation(spriterAnimationIndex), LM_FORCE_LOOPED)
+    --! End [Example AnimationSet2D]
 end
 
 function CreateInstructions()

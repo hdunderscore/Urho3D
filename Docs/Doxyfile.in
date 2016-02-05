@@ -627,7 +627,7 @@ GENERATE_DEPRECATEDLIST= YES
 # sections, marked by \if <section_label> ... \endif and \cond <section_label>
 # ... \endcond blocks.
 
-ENABLED_SECTIONS       = 
+ENABLED_SECTIONS       = INTERNAL
 
 # The MAX_INITIALIZER_LINES tag determines the maximum number of lines that the
 # initial value of a variable or macro / define can have for it to appear in the
@@ -843,7 +843,8 @@ EXCLUDE_SYMBOLS        =
 
 EXAMPLE_PATH           = ../Bin/Data/LuaScripts \
                          ../Bin/Data/Scripts \
-                         ../Source/Samples
+                         ../Source/Samples \
+                         ../Source/Urho3D
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and

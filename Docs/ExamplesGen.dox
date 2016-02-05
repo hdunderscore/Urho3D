@@ -1,9 +1,231 @@
 namespace Urho3D
 {
 /**
+    \class AutoProfileBlock
+    Example (C++), from ../Source/Urho3D/Audio/Audio.cpp:
+    \snippet ../Source/Urho3D/Audio/Audio.cpp Example AutoProfileBlock
+*/
+
+/**
+    \class AllocatorNode
+    Example (C++), from ../Source/Urho3D/Container/Allocator.cpp:
+    \snippet ../Source/Urho3D/Container/Allocator.cpp Example AllocatorNode
+*/
+
+/**
+    \class AllocatorBlock 1
+    Example (C++), from ../Source/Urho3D/Container/HashMap.h:
+    \snippet ../Source/Urho3D/Container/HashMap.h Example AllocatorBlock 1
+*/
+
+/**
+    \class AllocatorBlock 2
+    Example (C++), from ../Source/Urho3D/Container/HashMap.h:
+    \snippet ../Source/Urho3D/Container/HashMap.h Example AllocatorBlock 2
+*/
+
+/**
+    \class AutoProfileBlock
+    Example (C++), from ../Source/Urho3D/Core/Profiler.h:
+    \snippet ../Source/Urho3D/Core/Profiler.h Example AutoProfileBlock
+*/
+
+/**
     \class Application
     Example (C++), from ../Source/Urho3D/Engine/Application.h:
     \snippet ../Source/Urho3D/Engine/Application.h Example Application
+*/
+
+/**
+    \class AttributeAccessor
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeAccessor
+*/
+
+/**
+    \class AttributeAccessorImpl
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeAccessorImpl
+*/
+
+/**
+    \class AttributeInfo
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeInfo
+*/
+
+/**
+    \class AttributeTrait
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait
+*/
+
+/**
+    \class EnumAttributeAccessorImpl
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example EnumAttributeAccessorImpl
+*/
+
+/**
+    \class AttributeTrait<bool>
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<bool>
+*/
+
+/**
+    \class AttributeTrait<float>
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<float>
+*/
+
+/**
+    \class AttributeTrait<int>
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<int>
+*/
+
+/**
+    \class AttributeTrait<unsigned>
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<unsigned>
+*/
+
+/**
+    \class AnimationState
+    Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AnimationState
+*/
+
+/**
+    \class AnimationControl Usage
+    Example (C++), from ../Source/Urho3D/Graphics/AnimationController.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimationController.cpp Example AnimationControl Usage
+*/
+
+/**
+    \class AnimationState
+    Example (C++), from ../Source/Urho3D/Graphics/AnimationController.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimationController.cpp Example AnimationState
+*/
+
+/**
+    \class AnimationControl Initialization
+    Example (C++), from ../Source/Urho3D/Graphics/AnimationController.cpp:
+    \snippet ../Source/Urho3D/Graphics/AnimationController.cpp Example AnimationControl Initialization
+*/
+
+/**
+    \class Batch Draw
+    Example (C++), from ../Source/Urho3D/Graphics/Batch.cpp:
+    \snippet ../Source/Urho3D/Graphics/Batch.cpp Example Batch Draw
+*/
+
+/**
+    \class BatchGroup Draw
+    Example (C++), from ../Source/Urho3D/Graphics/Batch.cpp:
+    \snippet ../Source/Urho3D/Graphics/Batch.cpp Example BatchGroup Draw
+*/
+
+/**
+    \class Batch Initialization
+    Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
+    \snippet ../Source/Urho3D/Graphics/View.cpp Example Batch Initialization
+*/
+
+/**
+    \class Batch Usage
+    Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
+    \snippet ../Source/Urho3D/Graphics/View.cpp Example Batch Usage
+*/
+
+/**
+    \class BatchGroup
+    Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
+    \snippet ../Source/Urho3D/Graphics/View.cpp Example BatchGroup
+*/
+
+/**
+    \class BatchQueue
+    Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
+    \snippet ../Source/Urho3D/Graphics/View.cpp Example BatchQueue
+*/
+
+/**
+    \class BackgroundLoadItem
+    Example (C++), from ../Source/Urho3D/Resource/BackgroundLoader.cpp:
+    \snippet ../Source/Urho3D/Resource/BackgroundLoader.cpp Example BackgroundLoadItem
+*/
+
+/**
+    \class BackgroundLoader Initialization
+    Example (C++), from ../Source/Urho3D/Resource/ResourceCache.cpp:
+    \snippet ../Source/Urho3D/Resource/ResourceCache.cpp Example BackgroundLoader Initialization
+*/
+
+/**
+    \class BackgroundLoader Queue
+    Example (C++), from ../Source/Urho3D/Resource/ResourceCache.cpp:
+    \snippet ../Source/Urho3D/Resource/ResourceCache.cpp Example BackgroundLoader Queue
+*/
+
+/**
+    \class AttributeAccessor
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeAccessor
+*/
+
+/**
+    \class AttributeAccessorImpl
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeAccessorImpl
+*/
+
+/**
+    \class AttributeInfo
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeInfo
+*/
+
+/**
+    \class AttributeTrait
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait
+*/
+
+/**
+    \class EnumAttributeAccessorImpl
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example EnumAttributeAccessorImpl
+*/
+
+/**
+    \class AttributeTrait<bool>
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<bool>
+*/
+
+/**
+    \class AttributeTrait<float>
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<float>
+*/
+
+/**
+    \class AttributeTrait<int>
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<int>
+*/
+
+/**
+    \class AttributeTrait<unsigned>
+    Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
+    \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<unsigned>
+*/
+
+/**
+    \class AreaAllocator
+    Example (C++), from ../Source/Urho3D/UI/FontFaceFreeType.cpp:
+    \snippet ../Source/Urho3D/UI/FontFaceFreeType.cpp Example AreaAllocator
 */
 
 /**
@@ -34,6 +256,18 @@ namespace Urho3D
     \class AnimatedSprite2D
     Example (C++), from ../Source/Samples/24_Urho2DSprite/Urho2DSprite.cpp:
     \snippet ../Source/Samples/24_Urho2DSprite/Urho2DSprite.cpp Example AnimatedSprite2D
+*/
+
+/**
+    \class ValueAnimation
+    Example (C++), from ../Source/Samples/31_MaterialAnimation/MaterialAnimation.cpp:
+    \snippet ../Source/Samples/31_MaterialAnimation/MaterialAnimation.cpp Example ValueAnimation
+*/
+
+/**
+    \class AnimationSet2D
+    Example (C++), from ../Source/Samples/33_Urho2DSpriterAnimation/Urho2DSpriterAnimation.cpp:
+    \snippet ../Source/Samples/33_Urho2DSpriterAnimation/Urho2DSpriterAnimation.cpp Example AnimationSet2D
 */
 
 /**
@@ -79,6 +313,18 @@ namespace Urho3D
 */
 
 /**
+    \class ValueAnimation
+    Example (Angelscript), from ../Bin/Data/Scripts/31_MaterialAnimation.as:
+    \snippet ../Bin/Data/Scripts/31_MaterialAnimation.as Example ValueAnimation
+*/
+
+/**
+    \class AnimationSet2D
+    Example (Angelscript), from ../Bin/Data/Scripts/33_Urho2DSpriterAnimation.as:
+    \snippet ../Bin/Data/Scripts/33_Urho2DSpriterAnimation.as Example AnimationSet2D
+*/
+
+/**
     \class ResourceCache
     Example (Angelscript), from ../Bin/Data/Scripts/38_SceneAndUILoad.as:
     \snippet ../Bin/Data/Scripts/38_SceneAndUILoad.as Example ResourceCache
@@ -112,6 +358,18 @@ namespace Urho3D
     \class AnimatedSprite2D
     Example (Lua), from ../Bin/Data/LuaScripts/24_Urho2DSprite.lua:
     \snippet ../Bin/Data/LuaScripts/24_Urho2DSprite.lua Example AnimatedSprite2D
+*/
+
+/**
+    \class ValueAnimation
+    Example (Lua), from ../Bin/Data/LuaScripts/31_MaterialAnimation.lua:
+    \snippet ../Bin/Data/LuaScripts/31_MaterialAnimation.lua Example ValueAnimation
+*/
+
+/**
+    \class AnimationSet2D
+    Example (Lua), from ../Bin/Data/LuaScripts/33_Urho2DSpriterAnimation.lua:
+    \snippet ../Bin/Data/LuaScripts/33_Urho2DSpriterAnimation.lua Example AnimationSet2D
 */
 
 /**

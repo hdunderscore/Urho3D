@@ -85,6 +85,7 @@ void AnimationController::OnSetEnabled()
     }
 }
 
+//! Begin [Example AnimationControl Usage] [Example AnimationState]
 void AnimationController::Update(float timeStep)
 {
     // Loop through animations
@@ -155,7 +156,9 @@ void AnimationController::Update(float timeStep)
     for (Vector<SharedPtr<AnimationState> >::Iterator i = nodeAnimationStates_.Begin(); i != nodeAnimationStates_.End(); ++i)
         (*i)->Apply();
 }
+//! End [Example AnimationControl Usage] [Example AnimationState]
 
+//! Begin [Example AnimationControl Initialization]
 bool AnimationController::Play(const String& name, unsigned char layer, bool looped, float fadeInTime)
 {
     // Get the animation resource first to be able to get the canonical resource name
@@ -193,6 +196,7 @@ bool AnimationController::Play(const String& name, unsigned char layer, bool loo
     MarkNetworkUpdate();
     return true;
 }
+//! End [Example AnimationControl Initialization]
 
 bool AnimationController::PlayExclusive(const String& name, unsigned char layer, bool looped, float fadeTime)
 {

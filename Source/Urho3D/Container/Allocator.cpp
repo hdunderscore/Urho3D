@@ -84,6 +84,7 @@ void AllocatorUninitialize(AllocatorBlock* allocator)
     }
 }
 
+//! Begin [Example AllocatorNode]
 void* AllocatorReserve(AllocatorBlock* allocator)
 {
     if (!allocator)
@@ -118,5 +119,6 @@ void AllocatorFree(AllocatorBlock* allocator, void* ptr)
     node->next_ = allocator->free_;
     allocator->free_ = node;
 }
+//! End [Example AllocatorNode]
 
 }

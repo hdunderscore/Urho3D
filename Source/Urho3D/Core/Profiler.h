@@ -255,10 +255,12 @@ private:
     Profiler* profiler_;
 };
 
+//! Begin [Example AutoProfileBlock]
 #ifdef URHO3D_PROFILING
 #define URHO3D_PROFILE(name) Urho3D::AutoProfileBlock profile_ ## name (GetSubsystem<Urho3D::Profiler>(), #name)
 #else
 #define URHO3D_PROFILE(name)
 #endif
+//! End [Example AutoProfileBlock]
 
 }

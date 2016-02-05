@@ -56,6 +56,8 @@ void CreateScene()
     // same material allows instancing to be used, if the GPU supports it. This reduces the amount of CPU work in rendering the
     // scene.
     Material@ mushroomMat = cache.GetResource("Material", "Materials/Mushroom.xml");
+
+    //! Begin [Example ValueAnimation]
     // Apply shader parameter animation to material
     ValueAnimation@ specColorAnimation = ValueAnimation();
     specColorAnimation.SetKeyFrame(0.0f, Variant(Color(0.1f, 0.1f, 0.1f, 16.0f)));
@@ -65,6 +67,7 @@ void CreateScene()
     // Optionally associate material with scene to make sure shader parameter animation respects scene time scale
     mushroomMat.scene = scene_;
     mushroomMat.SetShaderParameterAnimation("MatSpecColor", specColorAnimation);
+    //! End [Example ValueAnimation]
 
     const uint NUM_OBJECTS = 200;
     for (uint i = 0; i < NUM_OBJECTS; ++i)

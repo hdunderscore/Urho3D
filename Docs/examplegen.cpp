@@ -5,18 +5,19 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 
-const std::string pattern[3] { "//! Begin [Example ", // C++
-                               "//! Begin [Example ", // Angelscript
-                               "--! Begin [Example "}; // Lua
+const std::vector< std::string > pattern[3] { {"//! Begin [Example ", "/// Begin [Example ", "/** Begin [Example "}, // C++
+                                              {"//! Begin [Example ", "/// Begin [Example ", "/** Begin [Example " }, // Angelscript
+                                              {"--! Begin [Example ", "--- Begin [Example " } }; // Lua
 
-enum class Language : unsigned{
+enum class Language: unsigned {
     CPP = 0,
     AS,
     Lua
 };
 
-const char* languageStrings[3]{ "C++",
+const char* languageStrings[3] { "C++",
                                 "Angelscript",
                                 "Lua" };
 
@@ -42,39 +43,109 @@ void scanFile(std::fstream& out, std::fstream& fs, const char* filePath)
     }
 
     // Scan File:
-    unsigned p = 0;
+
+    const unsigned patternSize = pattern[(unsigned)lang].size();
+
+    // Pattern match counters
+    std::vector<unsigned> p;
+    p.resize(patternSize);
+    for (unsigned i = 0; i < patternSize; ++i)
+        p[i] = 0;
+
+    // The character being read
     char c;
+    // The class name being extracted.
     std::string className{ "" };
 
+    // Read through the file, one character at a time:
     while (fs.get(c))
     {
-        if (p == pattern[(unsigned)lang].length())
+        // Match multiple patterns at once:
+        for (unsigned i = 0; i < patternSize; ++i)
         {
-            if (c != ']')
-                className += c;
+            const std::string& patternString = pattern[(unsigned)lang][i];
+
+            if (p[i] == patternString.length())
+            {
+                // The beginning pattern matched, extract class name:
+                // Note, we allow the side effect of collecting 'class names' with spaces, which will allow
+                // multiple matches of the same class within the same document, with extra annotation, eg:
+                //! Begin [Example SomeClass Initialization] ... //! Begin [Example SomeClass Usage]
+                // This will be formatted as: \class SomeClass Usage, however doxygen will only consider
+                // the class without spaces.
+                if (c != ']')
+                    className += c;
+                else
+                {
+                    // Hit a ']', indicating end of class name.
+                    // Write output:
+                    std::cout << "Found snippet, class: " << className << ", in: " << filePath << std::endl;
+                    out <<
+                        "/**\n" <<
+                        "    \\class " << className << "\n" <<
+                        "    Example (" << languageStrings[(unsigned)lang] << "), from " << filePath << ":\n" <<
+                        "    \\snippet " << filePath << " Example " << className << "\n*/\n\n";
+
+                    // Reset the match counter to: '//! Begin'< , allowing matches to:
+                    //! Begin [Example Class1] [Example Class2]
+                    p[i] = 9;
+                    className = "";
+                }
+
+            }
             else
             {
-                std::cout << "Found snippet, class: " << className << ", in: " << filePath << std::endl;
-                out <<
-                    "/**\n" <<
-                    "    \\class " << className << "\n" <<
-                    "    Example (" << languageStrings[(unsigned)lang] << "), from " << filePath << ":\n" <<
-                    "    \\snippet " << filePath << " Example " << className << "\n*/\n\n";
-                p = 0;
-                className = "";
-            }
+                // Trying to match the beginning pattern:
+                const char patternChar = patternString[p[i]];
 
-        }
-        else
-        {
-            if (c != pattern[(unsigned)lang][p++])
-            {
-                p = 0;
-                continue;
+                // Ignore white spaces
+                
+                if (patternChar == ' ')
+                {
+                    const bool isWS = (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f');
+
+                    if (!isWS)
+                    {
+                        // Hit a non-whitespace character
+
+                        if (p[i] == patternString.length() - 1)
+                        {
+                            // End of the pattern
+                            ++p[i];
+
+                            // Capture the first character of the class:
+                            className = c;
+                        }
+                        else
+                        {
+                            // Check if next pattern character matches with c:
+                            const char patternCharNext = patternString[++p[i]];
+
+                            if (c != patternCharNext)
+                            {
+                                // Not a match - reset the pattern counter
+                                p[i] = c == patternString[0] ? 1 : 0;
+                            }
+                            else
+                            {
+                                // Increment past the already checked pattern character
+                                ++p[i];
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    ++p[i];
+                    if (c != patternChar)
+                    {
+                        // Not a match - reset the pattern counter
+                        p[i] = c == patternString[0] ? 1 : 0;
+                    }
+                }
             }
         }
     }
-
 }
 
 void scanPath(std::fstream& out, const char* path)
@@ -118,7 +189,7 @@ void scanPath(std::fstream& out, const char* path)
 
         dp = readdir(dir);
     }
-    
+
     closedir(dir);
 
     return;
@@ -144,7 +215,7 @@ int main(int argc, char** args)
         scanPath(out, args[i]);
     }
 
-    out << "}";
+    out << "}\n";
     out.close();
 
     return 0;
