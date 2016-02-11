@@ -54,7 +54,7 @@ void CreateUI()
     button = CreateButton(160, 80, 120, 40, "Stop Music");
     SubscribeToEvent(button, "Released", "HandleStopMusic");
 
-    //! Begin [Example Audio]
+    // Begin [Example Audio]
     // Create sliders for controlling sound and music master volume
     Slider@ slider = CreateSlider(20, 140, 200, 20, "Sound Volume");
     slider.value = audio.masterGain[SOUND_EFFECT];
@@ -63,7 +63,7 @@ void CreateUI()
     slider = CreateSlider(20, 200, 200, 20, "Music Volume");
     slider.value = audio.masterGain[SOUND_MUSIC];
     SubscribeToEvent(slider, "SliderChanged", "HandleMusicVolume");
-    //! End [Example Audio]
+    // End [Example Audio]
 }
 
 Button@ CreateButton(int x, int y, int xSize, int ySize, const String&in text)

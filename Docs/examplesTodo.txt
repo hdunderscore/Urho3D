@@ -15,3 +15,5 @@ AttributeTrait< bool >
 AttributeTrait< float >
 AttributeTrait< int >
 AttributeTrait< unsigned >
+BatchGroupKey
+BiasParameters

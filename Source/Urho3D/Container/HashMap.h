@@ -221,7 +221,7 @@ public:
         const KeyValue& operator *() const { return (static_cast<Node*>(ptr_))->pair_; }
     };
 
-    //! Begin [Example AllocatorBlock 1]
+    // Begin [Example AllocatorBlock 1]
     /// Construct empty.
     HashMap()
     {
@@ -247,7 +247,7 @@ public:
         AllocatorUninitialize(allocator_);
         delete[] ptrs_;
     }
-    //! End [Example AllocatorBlock 1]
+    // End [Example AllocatorBlock 1]
 
     /// Assign a hash map.
     HashMap& operator =(const HashMap<T, U>& rhs)
@@ -679,7 +679,7 @@ private:
         return next;
     }
 
-    //! Begin [Example AllocatorBlock 2]
+    // Begin [Example AllocatorBlock 2]
     /// Reserve a node.
     Node* ReserveNode()
     {
@@ -702,7 +702,7 @@ private:
         (node)->~Node();
         AllocatorFree(allocator_, node);
     }
-    //! End [Example AllocatorBlock 2]
+    // End [Example AllocatorBlock 2]
 
     /// Rehash the buckets.
     void Rehash()

@@ -39,6 +39,7 @@ function CreateScene()
     planeObject.model = cache:GetResource("Model", "Models/Plane.mdl")
     planeObject.material = cache:GetResource("Material", "Materials/StoneTiled.xml")
 
+    -- Begin [Example Animatable] [Example ValueAnimation]
     -- Create a point light to the world so that we can see something.
     local lightNode = scene_:CreateChild("DirectionalLight")
     local light = lightNode:CreateComponent("Light")
@@ -75,6 +76,7 @@ function CreateScene()
     positionAnimation:SetKeyFrame(3.0, Variant(Vector3(-30.0, 5.0,  30.0)))
     positionAnimation:SetKeyFrame(4.0, Variant(Vector3(-30.0, 5.0, -30.0)))
     lightNode:SetAttributeAnimation("Position", positionAnimation)
+    -- End [Example Animatable] [Example ValueAnimation]
 
     -- Create more StaticModel objects to the scene, randomly positioned, rotated and scaled. For rotation, we construct a
     -- quaternion from Euler angles where the Y angle (rotation about the Y axis) is randomized. The mushroom model contains

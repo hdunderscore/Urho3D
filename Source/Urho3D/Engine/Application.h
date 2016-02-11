@@ -68,7 +68,7 @@ protected:
     int exitCode_;
 };
 
-//! Begin [Example Application]
+// Begin [Example Application]
 // Macro for defining a main function which creates a Context and the application, then runs it
 #ifndef IOS
 #define URHO3D_DEFINE_APPLICATION_MAIN(className) \
@@ -90,5 +90,5 @@ int RunApplication() \
 } \
 URHO3D_DEFINE_MAIN(RunApplication());
 #endif
-//! End [Example Application]
+// End [Example Application]
 }

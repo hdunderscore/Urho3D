@@ -48,7 +48,7 @@ BackgroundLoader::~BackgroundLoader()
     backgroundLoadQueue_.Clear();
 }
 
-//! Begin [Example BackgroundLoadItem]
+// Begin [Example BackgroundLoadItem]
 void BackgroundLoader::ThreadFunction()
 {
     while (shouldRun_)
@@ -109,7 +109,7 @@ void BackgroundLoader::ThreadFunction()
         }
     }
 }
-//! End [Example BackgroundLoadItem]
+// End [Example BackgroundLoadItem]
 
 bool BackgroundLoader::QueueResource(StringHash type, const String& name, bool sendEventOnFailure, Resource* caller)
 {

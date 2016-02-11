@@ -88,7 +88,7 @@ AnimatedModel::~AnimatedModel()
     }
 }
 
-/** Begin [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait]
+/* Begin [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait]
           [Example EnumAttributeAccessorImpl] [Example AttributeTrait<bool>] [Example AttributeTrait<float>] 
           [Example AttributeTrait<int>] [Example AttributeTrait<unsigned>]*/
 void AnimatedModel::RegisterObject(Context* context)
@@ -115,7 +115,7 @@ void AnimatedModel::RegisterObject(Context* context)
     URHO3D_ACCESSOR_ATTRIBUTE("Morphs", GetMorphsAttr, SetMorphsAttr, PODVector<unsigned char>, Variant::emptyBuffer,
         AM_DEFAULT | AM_NOEDIT);
 }
-/** End [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait]
+/* End [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait]
         [Example EnumAttributeAccessorImpl] [Example AttributeTrait<bool>] [Example AttributeTrait<float>]
         [Example AttributeTrait<int>] [Example AttributeTrait<unsigned>]*/
 
@@ -424,7 +424,7 @@ void AnimatedModel::SetModel(Model* model, bool createBones)
     MarkNetworkUpdate();
 }
 
-//! Begin [Example AnimationState]
+// Begin [Example AnimationState]
 AnimationState* AnimatedModel::AddAnimationState(Animation* animation)
 {
     if (!isMaster_)
@@ -446,7 +446,7 @@ AnimationState* AnimatedModel::AddAnimationState(Animation* animation)
     MarkAnimationOrderDirty();
     return newState;
 }
-//! End [Example AnimationState]
+// End [Example AnimationState]
 
 void AnimatedModel::RemoveAnimationState(Animation* animation)
 {

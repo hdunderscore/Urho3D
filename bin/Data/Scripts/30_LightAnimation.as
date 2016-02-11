@@ -41,6 +41,7 @@ void CreateScene()
     planeObject.model = cache.GetResource("Model", "Models/Plane.mdl");
     planeObject.material = cache.GetResource("Material", "Materials/StoneTiled.xml");
 
+    // Begin [Example Animatable] [Example ValueAnimation]
     // Create a point light to the world so that we can see something.
     Node@ lightNode = scene_.CreateChild("DirectionalLight");
     Light@ light = lightNode.CreateComponent("Light");
@@ -77,6 +78,7 @@ void CreateScene()
     positionAnimation.SetKeyFrame(3.0f, Variant(Vector3(-30.0f, 5.0f,  30.0f)));
     positionAnimation.SetKeyFrame(4.0f, Variant(Vector3(-30.0f, 5.0f, -30.0f)));
     lightNode.SetAttributeAnimation("Position", positionAnimation);
+    // End [Example Animatable] [Example ValueAnimation]
 
     // Create more StaticModel objects to the scene, randomly positioned, rotated and scaled. For rotation, we construct a
     // quaternion from Euler angles where the Y angle (rotation about the Y axis) is randomized. The mushroom model contains

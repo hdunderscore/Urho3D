@@ -1119,7 +1119,7 @@ void View::GetLightBatches()
                         maxLightsDrawables_.Insert(drawable);
                 }
 
-                //! Begin [Example Batch Initialization]
+                // Begin [Example Batch Initialization]
                 // In deferred modes, store the light volume batch now
                 if (deferred_)
                 {
@@ -1138,7 +1138,7 @@ void View::GetLightBatches()
                         lightVolumeCommand_->pixelShaderDefines_);
                     lightQueue.volumeBatches_.Push(volumeBatch);
                 }
-                //! End [Example Batch Initialization]
+                // End [Example Batch Initialization]
             }
             // Per-vertex light
             else
@@ -2790,7 +2790,7 @@ void View::CheckMaterialForAuxView(Material* material)
     material->MarkForAuxView(frame_.frameNumber_);
 }
 
-//! Begin [Example Batch Usage] [Example BatchGroup] [Example BatchQueue]
+// Begin [Example Batch Usage] [Example BatchGroup] [Example BatchQueue]
 void View::AddBatchToQueue(BatchQueue& batchQueue, Batch& batch, Technique* tech, bool allowInstancing, bool allowShadows)
 {
     if (!batch.material_)
@@ -2842,12 +2842,12 @@ void View::AddBatchToQueue(BatchQueue& batchQueue, Batch& batch, Technique* tech
                 batchQueue.batches_.Push(batch);
                 ++batch.worldTransform_;
             }
-        }i
+        }
         else
             batchQueue.batches_.Push(batch);
     }
 }
-//! End [Example Batch Usage] [Example BatchGroup] [Example BatchQueue]
+// End [Example Batch Usage] [Example BatchGroup] [Example BatchQueue]
 
 void View::PrepareInstancingBuffer()
 {

@@ -66,7 +66,7 @@ function CreateScene()
     local bounds = BoundingBox(Vector3(-47.0, 0.0, -47.0), Vector3(47.0, 0.0, 47.0))
 
     for i = 1, NUM_MODELS do
-        --! Begin [Example Animation]
+        -- Begin [Example Animation]
         local modelNode = scene_:CreateChild("Jack")
         modelNode.position = Vector3(Random(90.0) - 45.0, 0.0, Random(90.0) - 45.0)
         modelNode.rotation = Quaternion(0.0, Random(360.0), 0.0)
@@ -84,7 +84,7 @@ function CreateScene()
         state.weight = 1.0
         state.looped = true
         state.time = Random(walkAnimation.length)
-        --! End [Example Animation]
+        -- End [Example Animation]
 
         -- Create our Mover script object that will move & animate the model during each frame's update.
 
@@ -214,12 +214,14 @@ function Mover:Update(timeStep)
         node:Yaw(self.rotationSpeed * timeStep)
     end
 
+    -- Begin [Example AnimationState]
     -- Get the model's first (only) animation state and advance its time
     local model = node:GetComponent("AnimatedModel")
     local state = model:GetAnimationState(0)
     if state ~= nil then
         state:AddTime(timeStep)
     end
+    -- End [Example AnimationState]
 end
 
 -- Create XML patch instructions for screen joystick layout specific to this sample app

@@ -2,386 +2,597 @@ namespace Urho3D
 {
 /**
     \class AutoProfileBlock
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Audio/Audio.cpp:
     \snippet ../Source/Urho3D/Audio/Audio.cpp Example AutoProfileBlock
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AllocatorNode
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Container/Allocator.cpp:
     \snippet ../Source/Urho3D/Container/Allocator.cpp Example AllocatorNode
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AllocatorBlock 1
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Container/HashMap.h:
     \snippet ../Source/Urho3D/Container/HashMap.h Example AllocatorBlock 1
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AllocatorBlock 2
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Container/HashMap.h:
     \snippet ../Source/Urho3D/Container/HashMap.h Example AllocatorBlock 2
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AutoProfileBlock
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Core/Profiler.h:
     \snippet ../Source/Urho3D/Core/Profiler.h Example AutoProfileBlock
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Application
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Engine/Application.h:
     \snippet ../Source/Urho3D/Engine/Application.h Example Application
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeAccessor
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeAccessor
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeAccessorImpl
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeAccessorImpl
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeInfo
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeInfo
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class EnumAttributeAccessorImpl
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example EnumAttributeAccessorImpl
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<bool>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<bool>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<float>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<float>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<int>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<int>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<unsigned>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AttributeTrait<unsigned>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationState
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimatedModel.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimatedModel.cpp Example AnimationState
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationControl Usage
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimationController.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimationController.cpp Example AnimationControl Usage
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationState
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimationController.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimationController.cpp Example AnimationState
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationControl Initialization
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/AnimationController.cpp:
     \snippet ../Source/Urho3D/Graphics/AnimationController.cpp Example AnimationControl Initialization
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Batch Draw
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/Batch.cpp:
     \snippet ../Source/Urho3D/Graphics/Batch.cpp Example Batch Draw
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class BatchGroup Draw
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/Batch.cpp:
     \snippet ../Source/Urho3D/Graphics/Batch.cpp Example BatchGroup Draw
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Batch Initialization
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
     \snippet ../Source/Urho3D/Graphics/View.cpp Example Batch Initialization
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Batch Usage
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
     \snippet ../Source/Urho3D/Graphics/View.cpp Example Batch Usage
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class BatchGroup
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
     \snippet ../Source/Urho3D/Graphics/View.cpp Example BatchGroup
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class BatchQueue
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Graphics/View.cpp:
     \snippet ../Source/Urho3D/Graphics/View.cpp Example BatchQueue
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class BackgroundLoadItem
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Resource/BackgroundLoader.cpp:
     \snippet ../Source/Urho3D/Resource/BackgroundLoader.cpp Example BackgroundLoadItem
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class BackgroundLoader Initialization
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Resource/ResourceCache.cpp:
     \snippet ../Source/Urho3D/Resource/ResourceCache.cpp Example BackgroundLoader Initialization
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class BackgroundLoader Queue
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Resource/ResourceCache.cpp:
     \snippet ../Source/Urho3D/Resource/ResourceCache.cpp Example BackgroundLoader Queue
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeAccessor
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeAccessor
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeAccessorImpl
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeAccessorImpl
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeInfo
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeInfo
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class EnumAttributeAccessorImpl
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example EnumAttributeAccessorImpl
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<bool>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<bool>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<float>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<float>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<int>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<int>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AttributeTrait<unsigned>
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/Scene/Serializable.h:
     \snippet ../Source/Urho3D/Scene/Serializable.h Example AttributeTrait<unsigned>
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AreaAllocator
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Urho3D/UI/FontFaceFreeType.cpp:
     \snippet ../Source/Urho3D/UI/FontFaceFreeType.cpp Example AreaAllocator
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Application
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/01_HelloWorld/HelloWorld.cpp:
     \snippet ../Source/Samples/01_HelloWorld/HelloWorld.cpp Example Application
-*/
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class AnimationState
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/06_SkeletalAnimation/Mover.cpp:
+    \snippet ../Source/Samples/06_SkeletalAnimation/Mover.cpp Example AnimationState
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Animation
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/06_SkeletalAnimation/SkeletalAnimation.cpp:
     \snippet ../Source/Samples/06_SkeletalAnimation/SkeletalAnimation.cpp Example Animation
-*/
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Billboard Setup
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/07_Billboards/Billboards.cpp:
+    \snippet ../Source/Samples/07_Billboards/Billboards.cpp Example Billboard Setup
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class BillboardSet Setup
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/07_Billboards/Billboards.cpp:
+    \snippet ../Source/Samples/07_Billboards/Billboards.cpp Example BillboardSet Setup
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Billboard Modification
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/07_Billboards/Billboards.cpp:
+    \snippet ../Source/Samples/07_Billboards/Billboards.cpp Example Billboard Modification
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class BillboardSet Modification
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/07_Billboards/Billboards.cpp:
+    \snippet ../Source/Samples/07_Billboards/Billboards.cpp Example BillboardSet Modification
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Audio
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/14_SoundEffects/SoundEffects.cpp:
     \snippet ../Source/Samples/14_SoundEffects/SoundEffects.cpp Example Audio
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimatedModel
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/18_CharacterDemo/CharacterDemo.cpp:
     \snippet ../Source/Samples/18_CharacterDemo/CharacterDemo.cpp Example AnimatedModel
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimatedSprite2D
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/24_Urho2DSprite/Urho2DSprite.cpp:
     \snippet ../Source/Samples/24_Urho2DSprite/Urho2DSprite.cpp Example AnimatedSprite2D
-*/
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Animatable
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/30_LightAnimation/LightAnimation.cpp:
+    \snippet ../Source/Samples/30_LightAnimation/LightAnimation.cpp Example Animatable
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class ObjectAnimation
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/30_LightAnimation/LightAnimation.cpp:
+    \snippet ../Source/Samples/30_LightAnimation/LightAnimation.cpp Example ObjectAnimation
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class ValueAnimation
-    Example (C++), from ../Source/Samples/31_MaterialAnimation/MaterialAnimation.cpp:
-    \snippet ../Source/Samples/31_MaterialAnimation/MaterialAnimation.cpp Example ValueAnimation
-*/
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
+    Example (C++), from ../Source/Samples/30_LightAnimation/LightAnimation.cpp:
+    \snippet ../Source/Samples/30_LightAnimation/LightAnimation.cpp Example ValueAnimation
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationSet2D
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/33_Urho2DSpriterAnimation/Urho2DSpriterAnimation.cpp:
     \snippet ../Source/Samples/33_Urho2DSpriterAnimation/Urho2DSpriterAnimation.cpp Example AnimationSet2D
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class ResourceCache
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/38_SceneAndUILoad/SceneAndUILoad.cpp:
     \snippet ../Source/Samples/38_SceneAndUILoad/SceneAndUILoad.cpp Example ResourceCache
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationController
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/39_CrowdNavigation/CrowdNavigation.cpp:
     \snippet ../Source/Samples/39_CrowdNavigation/CrowdNavigation.cpp Example AnimationController
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Application
+    \htmlonly <div class="examplecode C++"> \endhtmlonly
     Example (C++), from ../Source/Samples/Sample.inl:
     \snippet ../Source/Samples/Sample.inl Example Application
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Animation
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/06_SkeletalAnimation.as:
     \snippet ../Bin/Data/Scripts/06_SkeletalAnimation.as Example Animation
-*/
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class AnimationState
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
+    Example (Angelscript), from ../Bin/Data/Scripts/06_SkeletalAnimation.as:
+    \snippet ../Bin/Data/Scripts/06_SkeletalAnimation.as Example AnimationState
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Billboard Setup
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
+    Example (Angelscript), from ../Bin/Data/Scripts/07_Billboards.as:
+    \snippet ../Bin/Data/Scripts/07_Billboards.as Example Billboard Setup
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class BillboardSet Setup
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
+    Example (Angelscript), from ../Bin/Data/Scripts/07_Billboards.as:
+    \snippet ../Bin/Data/Scripts/07_Billboards.as Example BillboardSet Setup
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Billboard Modification
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
+    Example (Angelscript), from ../Bin/Data/Scripts/07_Billboards.as:
+    \snippet ../Bin/Data/Scripts/07_Billboards.as Example Billboard Modification
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class BillboardSet Modification
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
+    Example (Angelscript), from ../Bin/Data/Scripts/07_Billboards.as:
+    \snippet ../Bin/Data/Scripts/07_Billboards.as Example BillboardSet Modification
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Audio
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/14_SoundEffects.as:
     \snippet ../Bin/Data/Scripts/14_SoundEffects.as Example Audio
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimatedModel
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/18_CharacterDemo.as:
     \snippet ../Bin/Data/Scripts/18_CharacterDemo.as Example AnimatedModel
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimatedSprite2D
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/24_Urho2DSprite.as:
     \snippet ../Bin/Data/Scripts/24_Urho2DSprite.as Example AnimatedSprite2D
-*/
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Animatable
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
+    Example (Angelscript), from ../Bin/Data/Scripts/30_LightAnimation.as:
+    \snippet ../Bin/Data/Scripts/30_LightAnimation.as Example Animatable
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class ValueAnimation
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
+    Example (Angelscript), from ../Bin/Data/Scripts/30_LightAnimation.as:
+    \snippet ../Bin/Data/Scripts/30_LightAnimation.as Example ValueAnimation
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class ValueAnimation
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/31_MaterialAnimation.as:
     \snippet ../Bin/Data/Scripts/31_MaterialAnimation.as Example ValueAnimation
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationSet2D
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/33_Urho2DSpriterAnimation.as:
     \snippet ../Bin/Data/Scripts/33_Urho2DSpriterAnimation.as Example AnimationSet2D
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class ResourceCache
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/38_SceneAndUILoad.as:
     \snippet ../Bin/Data/Scripts/38_SceneAndUILoad.as Example ResourceCache
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationController
+    \htmlonly <div class="examplecode Angelscript"> \endhtmlonly
     Example (Angelscript), from ../Bin/Data/Scripts/39_CrowdNavigation.as:
     \snippet ../Bin/Data/Scripts/39_CrowdNavigation.as Example AnimationController
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Animation
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/06_SkeletalAnimation.lua:
     \snippet ../Bin/Data/LuaScripts/06_SkeletalAnimation.lua Example Animation
-*/
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class AnimationState
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
+    Example (Lua), from ../Bin/Data/LuaScripts/06_SkeletalAnimation.lua:
+    \snippet ../Bin/Data/LuaScripts/06_SkeletalAnimation.lua Example AnimationState
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Billboard Setup
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
+    Example (Lua), from ../Bin/Data/LuaScripts/07_Billboards.lua:
+    \snippet ../Bin/Data/LuaScripts/07_Billboards.lua Example Billboard Setup
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class BillboardSet Setup
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
+    Example (Lua), from ../Bin/Data/LuaScripts/07_Billboards.lua:
+    \snippet ../Bin/Data/LuaScripts/07_Billboards.lua Example BillboardSet Setup
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Billboard Modification
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
+    Example (Lua), from ../Bin/Data/LuaScripts/07_Billboards.lua:
+    \snippet ../Bin/Data/LuaScripts/07_Billboards.lua Example Billboard Modification
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class BillboardSet Modification
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
+    Example (Lua), from ../Bin/Data/LuaScripts/07_Billboards.lua:
+    \snippet ../Bin/Data/LuaScripts/07_Billboards.lua Example BillboardSet Modification
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class Audio
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/14_SoundEffects.lua:
     \snippet ../Bin/Data/LuaScripts/14_SoundEffects.lua Example Audio
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimatedModel
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/18_CharacterDemo.lua:
     \snippet ../Bin/Data/LuaScripts/18_CharacterDemo.lua Example AnimatedModel
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimatedSprite2D
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/24_Urho2DSprite.lua:
     \snippet ../Bin/Data/LuaScripts/24_Urho2DSprite.lua Example AnimatedSprite2D
-*/
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class Animatable
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
+    Example (Lua), from ../Bin/Data/LuaScripts/30_LightAnimation.lua:
+    \snippet ../Bin/Data/LuaScripts/30_LightAnimation.lua Example Animatable
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class ValueAnimation
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
+    Example (Lua), from ../Bin/Data/LuaScripts/30_LightAnimation.lua:
+    \snippet ../Bin/Data/LuaScripts/30_LightAnimation.lua Example ValueAnimation
+    \htmlonly </div> \endhtmlonly*/
+
+/**
+    \class ValueAnimation
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/31_MaterialAnimation.lua:
     \snippet ../Bin/Data/LuaScripts/31_MaterialAnimation.lua Example ValueAnimation
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationSet2D
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/33_Urho2DSpriterAnimation.lua:
     \snippet ../Bin/Data/LuaScripts/33_Urho2DSpriterAnimation.lua Example AnimationSet2D
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class ResourceCache
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/38_SceneAndUILoad.lua:
     \snippet ../Bin/Data/LuaScripts/38_SceneAndUILoad.lua Example ResourceCache
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 /**
     \class AnimationController
+    \htmlonly <div class="examplecode Lua"> \endhtmlonly
     Example (Lua), from ../Bin/Data/LuaScripts/39_CrowdNavigation.lua:
     \snippet ../Bin/Data/LuaScripts/39_CrowdNavigation.lua Example AnimationController
-*/
+    \htmlonly </div> \endhtmlonly*/
 
 }

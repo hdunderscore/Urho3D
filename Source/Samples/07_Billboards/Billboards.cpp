@@ -134,6 +134,7 @@ void Billboards::CreateScene()
         }
     }
 
+    // Begin [Example Billboard Setup] [Example BillboardSet Setup]
     // Create billboard sets (floating smoke)
     const unsigned NUM_BILLBOARDNODES = 25;
     const unsigned NUM_BILLBOARDS = 10;
@@ -160,6 +161,7 @@ void Billboards::CreateScene()
         // After modifying the billboards, they need to be "commited" so that the BillboardSet updates its internals
         billboardObject->Commit();
     }
+    // End [Example Billboard Setup] [Example BillboardSet Setup]
 
     // Create shadow casting spotlights
     const unsigned NUM_LIGHTS = 9;
@@ -283,6 +285,7 @@ void Billboards::MoveCamera(float timeStep)
         drawDebug_ = !drawDebug_;
 }
 
+// Begin [Example Billboard Modification] [Example BillboardSet Modification]
 void Billboards::AnimateScene(float timeStep)
 {
     // Get the light and billboard scene nodes
@@ -312,6 +315,7 @@ void Billboards::AnimateScene(float timeStep)
         billboardObject->Commit();
     }
 }
+// End [Example Billboard Modification] [Example BillboardSet Modification]
 
 void Billboards::HandleUpdate(StringHash eventType, VariantMap& eventData)
 {

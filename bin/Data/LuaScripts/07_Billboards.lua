@@ -83,6 +83,7 @@ function CreateScene()
         end
     end
 
+    -- Begin [Example Billboard Setup] [Example BillboardSet Setup]
     -- Create billboard sets (floating smoke)
     local NUM_BILLBOARDNODES = 25
     local NUM_BILLBOARDS = 10
@@ -109,6 +110,7 @@ function CreateScene()
 
         table.insert(billboardNodes, smokeNode)
     end
+    -- End [Example Billboard Setup] [Example BillboardSet Setup]
 
     -- Create shadow casting spotlights
     local NUM_LIGHTS = 9
@@ -227,6 +229,7 @@ function MoveCamera(timeStep)
     end
 end
 
+-- Begin [Example Billboard Modification] [Example BillboardSet Modification]
 function AnimateScene(timeStep)
     local LIGHT_ROTATION_SPEED = 20.0
     local BILLBOARD_ROTATION_SPEED = 50.0
@@ -248,6 +251,7 @@ function AnimateScene(timeStep)
         billboardObject:Commit()
     end
 end
+-- End [Example Billboard Modification] [Example BillboardSet Modification]
 
 function HandleUpdate(eventType, eventData)
     -- Take the frame time step, which is stored as a float

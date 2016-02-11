@@ -78,7 +78,7 @@ void CreateScene()
         spriteNodes.Push(spriteNode);
     }
 
-    //! Begin [Example AnimatedSprite2D]
+    // Begin [Example AnimatedSprite2D]
     AnimationSet2D@ animationSet = cache.GetResource("AnimationSet2D", "Urho2D/GoldIcon.scml");
     if (animationSet is null)
         return;
@@ -89,7 +89,7 @@ void CreateScene()
     // Set animation
     animatedSprite.animationSet = animationSet;
     animatedSprite.animation = "idle";
-    //! End [Example AnimatedSprite2D]
+    // End [Example AnimatedSprite2D]
 }
 
 void CreateInstructions()

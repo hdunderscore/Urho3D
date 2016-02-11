@@ -815,7 +815,7 @@ void BatchQueue::SetTransforms(void* lockedData, unsigned& freeIndex)
         i->second_.SetTransforms(lockedData, freeIndex);
 }
 
-//! Begin [Example Batch Draw] [Example BatchGroup Draw]
+// Begin [Example Batch Draw] [Example BatchGroup Draw]
 void BatchQueue::Draw(View* view, Camera* camera, bool markToStencil, bool usingLightOptimization, bool allowDepthWrite) const
 {
     Graphics* graphics = view->GetGraphics();
@@ -858,7 +858,7 @@ void BatchQueue::Draw(View* view, Camera* camera, bool markToStencil, bool using
         batch->Draw(view, camera, allowDepthWrite);
     }
 }
-//! End [Example Batch Draw] [Example BatchGroup Draw]
+// End [Example Batch Draw] [Example BatchGroup Draw]
 
 unsigned BatchQueue::GetNumInstances() const
 {

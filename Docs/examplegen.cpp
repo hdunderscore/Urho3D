@@ -7,9 +7,9 @@
 #include <string.h>
 #include <vector>
 
-const std::vector< std::string > pattern[3] { {"//! Begin [Example ", "/// Begin [Example ", "/** Begin [Example "}, // C++
-                                              {"//! Begin [Example ", "/// Begin [Example ", "/** Begin [Example " }, // Angelscript
-                                              {"--! Begin [Example ", "--- Begin [Example " } }; // Lua
+const std::vector< std::string > pattern[3] { {"// Begin [Example ", "/* Begin [Example "}, // C++
+                                              {"// Begin [Example ", "/* Begin [Example " }, // Angelscript
+                                              {"-- Begin [Example " } }; // Lua
 
 enum class Language: unsigned {
     CPP = 0,
@@ -70,7 +70,7 @@ void scanFile(std::fstream& out, std::fstream& fs, const char* filePath)
                 // The beginning pattern matched, extract class name:
                 // Note, we allow the side effect of collecting 'class names' with spaces, which will allow
                 // multiple matches of the same class within the same document, with extra annotation, eg:
-                //! Begin [Example SomeClass Initialization] ... //! Begin [Example SomeClass Usage]
+                // Begin [Example SomeClass Initialization] ... // Begin [Example SomeClass Usage]
                 // This will be formatted as: \class SomeClass Usage, however doxygen will only consider
                 // the class without spaces.
                 if (c != ']')
@@ -83,12 +83,15 @@ void scanFile(std::fstream& out, std::fstream& fs, const char* filePath)
                     out <<
                         "/**\n" <<
                         "    \\class " << className << "\n" <<
+                        "    \\htmlonly <div class=\"examplecode " << languageStrings[(unsigned)lang] << "\"> \\endhtmlonly\n"
                         "    Example (" << languageStrings[(unsigned)lang] << "), from " << filePath << ":\n" <<
-                        "    \\snippet " << filePath << " Example " << className << "\n*/\n\n";
+                        "    \\snippet " << filePath << " Example " << className << "\n" <<
+                        "    \\htmlonly </div> \\endhtmlonly" <<
+                        "*/\n\n";
 
-                    // Reset the match counter to: '//! Begin'< , allowing matches to:
-                    //! Begin [Example Class1] [Example Class2]
-                    p[i] = 9;
+                    // Reset the match counter to: '// Begin'< , allowing matches to:
+                    // Begin [Example Class1] [Example Class2]
+                    p[i] = 8;
                     className = "";
                 }
 

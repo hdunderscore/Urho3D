@@ -312,7 +312,7 @@ const FontGlyph* FontFaceFreeType::GetGlyph(unsigned c)
     return 0;
 }
 
-//! Begin [Example AreaAllocator]
+// Begin [Example AreaAllocator]
 bool FontFaceFreeType::CanLoadAllGlyphs(const PODVector<unsigned>& charCodes, int& textureWidth, int& textureHeight) const
 {
     FT_Face face = (FT_Face)face_;
@@ -341,7 +341,7 @@ bool FontFaceFreeType::CanLoadAllGlyphs(const PODVector<unsigned>& charCodes, in
     textureHeight = allocator.GetHeight();
     return true;
 }
-//! End [Example AreaAllocator]
+// End [Example AreaAllocator]
 
 bool FontFaceFreeType::SetupNextTexture(int textureWidth, int textureHeight)
 {

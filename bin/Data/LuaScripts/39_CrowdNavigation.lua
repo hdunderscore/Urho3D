@@ -407,7 +407,7 @@ function HandleCrowdAgentFailure(eventType, eventData)
     end
 end
 
---! Begin [Example AnimationController]
+-- Begin [Example AnimationController]
 function HandleCrowdAgentReposition(eventType, eventData)
     local WALKING_ANI = "Models/Jack_Walk.ani"
 
@@ -436,7 +436,7 @@ function HandleCrowdAgentReposition(eventType, eventData)
         end
     end
 end
---! End [Example AnimationController]
+-- End [Example AnimationController]
 
 function HandleCrowdAgentFormation(eventType, eventData)
     local index = eventData["Index"]:GetUInt()

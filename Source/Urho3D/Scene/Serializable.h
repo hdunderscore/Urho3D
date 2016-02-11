@@ -264,7 +264,7 @@ public:
     SetFunctionPtr setFunction_;
 };
 
-//! Begin [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait] [Example EnumAttributeAccessorImpl] [Example AttributeTrait<bool>] [Example AttributeTrait<float>] [Example AttributeTrait<int>] [Example AttributeTrait<unsigned>]
+// Begin [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait] [Example EnumAttributeAccessorImpl] [Example AttributeTrait<bool>] [Example AttributeTrait<float>] [Example AttributeTrait<int>] [Example AttributeTrait<unsigned>]
 // The following macros need to be used within a class member function such as ClassName::RegisterObject().
 // A variable called "context" needs to exist in the current scope and point to a valid Context object.
 
@@ -284,6 +284,6 @@ public:
 #define URHO3D_MIXED_ACCESSOR_ATTRIBUTE(name, getFunction, setFunction, typeName, defaultValue, mode) context->RegisterAttribute<ClassName>(Urho3D::AttributeInfo(GetVariantType<typeName >(), name, new Urho3D::AttributeAccessorImpl<ClassName, typeName, MixedAttributeTrait<typeName > >(&ClassName::getFunction, &ClassName::setFunction), defaultValue, mode))
 /// Update the default value of an already registered attribute.
 #define URHO3D_UPDATE_ATTRIBUTE_DEFAULT_VALUE(name, defaultValue) context->UpdateAttributeDefaultValue<ClassName>(name, defaultValue)
-//! End [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait] [Example EnumAttributeAccessorImpl] [Example AttributeTrait<bool>] [Example AttributeTrait<float>] [Example AttributeTrait<int>] [Example AttributeTrait<unsigned>]
+// End [Example AttributeAccessor] [Example AttributeAccessorImpl] [Example AttributeInfo] [Example AttributeTrait] [Example EnumAttributeAccessorImpl] [Example AttributeTrait<bool>] [Example AttributeTrait<float>] [Example AttributeTrait<int>] [Example AttributeTrait<unsigned>]
 
 }

@@ -113,7 +113,7 @@ void MaterialAnimation::CreateScene()
     // Optionally associate material with scene to make sure shader parameter animation respects scene time scale
     mushroomMat->SetScene(scene_);
     mushroomMat->SetShaderParameterAnimation("MatSpecColor", specColorAnimation);
-    //! End [Example ValeuAnimation]
+    // End [Example ValueAnimation]
 
     const unsigned NUM_OBJECTS = 200;
     for (unsigned i = 0; i < NUM_OBJECTS; ++i)

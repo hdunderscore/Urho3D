@@ -86,6 +86,7 @@ void CreateScene()
         }
     }
 
+    // Begin [Example Billboard Setup] [Example BillboardSet Setup]
     // Create billboard sets (floating smoke)
     const uint NUM_BILLBOARDNODES = 25;
     const uint NUM_BILLBOARDS = 10;
@@ -112,6 +113,7 @@ void CreateScene()
         // After modifying the billboards, they need to be "commited" so that the BillboardSet updates its internals
         billboardObject.Commit();
     }
+    // End [Example Billboard Setup] [Example BillboardSet Setup]
 
     // Create shadow casting spotlights
     const uint NUM_LIGHTS = 9;
@@ -227,6 +229,7 @@ void MoveCamera(float timeStep)
         drawDebug = !drawDebug;
 }
 
+// Begin [Example Billboard Modification] [Example BillboardSet Modification]
 void AnimateScene(float timeStep)
 {
     // Get the light and billboard scene nodes
@@ -254,6 +257,7 @@ void AnimateScene(float timeStep)
         billboardObject.Commit();
     }
 }
+// End [Example Billboard Modification] [Example BillboardSet Modification]
 
 void HandleUpdate(StringHash eventType, VariantMap& eventData)
 {

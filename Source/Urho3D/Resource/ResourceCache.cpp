@@ -67,7 +67,7 @@ static const char* checkDirs[] =
 
 static const SharedPtr<Resource> noResource;
 
-//! Begin [Example BackgroundLoader Initialization] 
+// Begin [Example BackgroundLoader Initialization] 
 ResourceCache::ResourceCache(Context* context) :
     Object(context),
     autoReloadResources_(false),
@@ -87,7 +87,7 @@ ResourceCache::ResourceCache(Context* context) :
     // Subscribe BeginFrame for handling directory watchers and background loaded resource finalization
     SubscribeToEvent(E_BEGINFRAME, URHO3D_HANDLER(ResourceCache, HandleBeginFrame));
 }
-//! End [Example BackgroundLoader Initialization] 
+// End [Example BackgroundLoader Initialization] 
 
 ResourceCache::~ResourceCache()
 {
@@ -637,7 +637,7 @@ Resource* ResourceCache::GetResource(StringHash type, const String& nameIn, bool
     return resource;
 }
 
-//! Begin [Example BackgroundLoader Queue] 
+// Begin [Example BackgroundLoader Queue] 
 bool ResourceCache::BackgroundLoadResource(StringHash type, const String& nameIn, bool sendEventOnFailure, Resource* caller)
 {
 #ifdef URHO3D_THREADING
@@ -657,7 +657,7 @@ bool ResourceCache::BackgroundLoadResource(StringHash type, const String& nameIn
     return GetResource(type, nameIn, sendEventOnFailure);
 #endif
 }
-//! End [Example BackgroundLoader Queue] 
+// End [Example BackgroundLoader Queue] 
 
 SharedPtr<Resource> ResourceCache::GetTempResource(StringHash type, const String& nameIn, bool sendEventOnFailure)
 {

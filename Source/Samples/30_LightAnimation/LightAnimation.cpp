@@ -88,6 +88,7 @@ void LightAnimation::CreateScene()
     planeObject->SetModel(cache->GetResource<Model>("Models/Plane.mdl"));
     planeObject->SetMaterial(cache->GetResource<Material>("Materials/StoneTiled.xml"));
 
+    // Begin [Example Animatable] [Example ObjectAnimation] [Example ValueAnimation]
     // Create a point light to the world so that we can see something.
     Node* lightNode = scene_->CreateChild("PointLight");
     Light* light = lightNode->CreateComponent<Light>();
@@ -132,6 +133,7 @@ void LightAnimation::CreateScene()
 
     // Apply light animation to light node
     lightNode->SetObjectAnimation(lightAnimation);
+    // End [Example Animatable] [Example ObjectAnimation] [Example ValueAnimation]
 
     // Create more StaticModel objects to the scene, randomly positioned, rotated and scaled. For rotation, we construct a
     // quaternion from Euler angles where the Y angle (rotation about the Y axis) is randomized. The mushroom model contains

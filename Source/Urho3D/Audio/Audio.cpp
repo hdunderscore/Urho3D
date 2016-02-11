@@ -139,7 +139,7 @@ bool Audio::SetMode(int bufferLengthMSec, int mixRate, bool stereo, bool interpo
     return Play();
 }
 
-//! Begin [Example AutoProfileBlock]
+// Begin [Example AutoProfileBlock]
 void Audio::Update(float timeStep)
 {
     URHO3D_PROFILE(UpdateAudio);
@@ -148,7 +148,7 @@ void Audio::Update(float timeStep)
     for (unsigned i = soundSources_.Size() - 1; i < soundSources_.Size(); --i)
         soundSources_[i]->Update(timeStep);
 }
-//! End [Example AutoProfileBlock]
+// End [Example AutoProfileBlock]
 
 bool Audio::Play()
 {

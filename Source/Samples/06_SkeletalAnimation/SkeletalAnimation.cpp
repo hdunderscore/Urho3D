@@ -118,7 +118,7 @@ void SkeletalAnimation::CreateScene()
 
     for (unsigned i = 0; i < NUM_MODELS; ++i)
     {
-        //! Begin [Example Animation]
+        // Begin [Example Animation]
         Node* modelNode = scene_->CreateChild("Jack");
         modelNode->SetPosition(Vector3(Random(90.0f) - 45.0f, 0.0f, Random(90.0f) - 45.0f));
         modelNode->SetRotation(Quaternion(0.0f, Random(360.0f), 0.0f));
@@ -140,7 +140,7 @@ void SkeletalAnimation::CreateScene()
             state->SetLooped(true);
             state->SetTime(Random(walkAnimation->GetLength()));
         }
-        //! End [Example Animation]
+        // End [Example Animation]
 
         // Create our custom Mover component that will move & animate the model during each frame's update
         Mover* mover = modelNode->CreateComponent<Mover>();
