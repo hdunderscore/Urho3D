@@ -30,6 +30,7 @@ include_directories (${URHO3D_INCLUDE_DIRS})
 # Urho3DPlayer target is rather special, although it is here, it is not a tool because it is built into target platform binary as opposed to host platform
 if (NOT WEB)
     add_subdirectory (Urho3DPlayer)
+    add_subdirectory (Urho3DLinter)
 endif ()
 
 # Build PackageTool using host compiler toolchain
