@@ -242,13 +242,13 @@ public:
     IntVector2 GetMousePosition() const;
 
     /// Return mouse movement since last frame.
-    const IntVector2& GetMouseMove() const { return mouseMove_; }
+    const IntVector2& GetMouseMove() const;
 
     /// Return horizontal mouse movement since last frame.
-    int GetMouseMoveX() const { return mouseMove_.x_; }
+    int GetMouseMoveX() const;
 
     /// Return vertical mouse movement since last frame.
-    int GetMouseMoveY() const { return mouseMove_.y_; }
+    int GetMouseMoveY() const;
 
     /// Return mouse wheel movement since last frame.
     int GetMouseMoveWheel() const { return mouseMoveWheel_; }
@@ -340,7 +340,9 @@ private:
     void HandleScreenJoystickTouch(StringHash eventType, VariantMap& eventData);
     /// Handle SDL event.
     void HandleSDLEvent(void* sdlEvent);
-
+    /// Suppress the next mouse movement.
+    void SuppressNextMouseMove();
+    void UnsuppressMouseMove();
     /// Graphics subsystem.
     WeakPtr<Graphics> graphics_;
     /// Key down state.
