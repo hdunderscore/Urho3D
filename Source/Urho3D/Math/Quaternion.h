@@ -31,7 +31,15 @@
 namespace Urho3D
 {
 
-/// Rotation represented as a four-dimensional normalized vector.
+/**
+ * Rotation represented as a four-dimensional normalized vector.
+ *
+ * General resources on quaternions and their applications:
+ *
+ *  - [Quaternions and spatial rotation (Wikipedia)](https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation)
+ *  - [Rotating Objects Using Quaternions (Gamasutra)](http://www.gamasutra.com/view/feature/131686/rotating_objects_using_quaternions.php)
+ *  - [Quaternion Algebra and Calculus (Geometric Tools)](http://www.geometrictools.com/Documentation/Quaternions.pdf)
+ */
 class URHO3D_API Quaternion
 {
 public:
