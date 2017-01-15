@@ -213,7 +213,7 @@ void Text::GetBatches(PODVector<UIBatch>& batches, PODVector<float>& vertexData,
             if (roundStroke_)
             {
                 // Samples should be even or glyph may be redrawn in wrong x y pos making stroke corners rough
-                // Adding to thickness helps with thickness of 1 not having enought samples for this formula
+                // Adding to thickness helps with thickness of 1 not having enough samples for this formula
                 // or certain fonts with reflex corners requiring more glyph samples for a smooth stroke when large
                 int thickness = Min(strokeThickness_, fontSize_);
                 int samples = thickness * thickness + (thickness % 2 == 0 ? 4 : 3);
@@ -396,6 +396,19 @@ void Text::ClearSelection()
 {
     selectionStart_ = 0;
     selectionLength_ = 0;
+}
+
+void Text::SetColors(const Vector<Color>& colors, const PODVector<unsigned> colorIndices, unsigned firstCharacter /*= 0*/)
+{
+    colors_ = colors;
+    unsigned newSize = firstCharacter + colorIndices.Size();
+    if (colorIndices_.Size() != newSize)
+        colorIndices_.Resize(newSize);
+
+    for (unsigned i = firstCharacter; i < colorIndices.Size(); ++i)
+    {
+        colorIndices_[firstCharacter + i] = colorIndices[i];
+    }
 }
 
 void Text::SetSelectionColor(const Color& color)
@@ -736,7 +749,7 @@ void Text::UpdateCharLocations()
             {
                 // Store glyph's location for rendering. Verify that glyph page is valid
                 if (glyph->page_ < pageGlyphLocations_.Size())
-                    pageGlyphLocations_[glyph->page_].Push(GlyphLocation(x, y, glyph));
+                    pageGlyphLocations_[glyph->page_].Push(GlyphLocation(i, x, y, glyph));
                 x += glyph->advanceX_;
                 if (i < printText_.Size() - 1)
                     x += face->GetKerning(c, printText_[i + 1]);
@@ -820,6 +833,10 @@ void Text::ConstructBatch(UIBatch& pageBatch, const PODVector<GlyphLocation>& pa
     {
         const GlyphLocation& glyphLocation = pageGlyphLocation[i];
         const FontGlyph& glyph = *glyphLocation.glyph_;
+
+        if (colorIndices_.Size() > 0)
+            pageBatch.SetColor(colors_[colorIndices_[glyphLocation.printTextIndex_]], true);
+
         pageBatch.AddQuad(dx + glyphLocation.x_ + glyph.offsetX_, dy + glyphLocation.y_ + glyph.offsetY_, glyph.width_,
             glyph.height_, glyph.x_, glyph.y_);
     }

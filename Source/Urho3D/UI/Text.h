@@ -54,13 +54,15 @@ struct CharLocation
 struct GlyphLocation
 {
     /// Construct.
-    GlyphLocation(int x, int y, const FontGlyph* glyph) :
+    GlyphLocation(unsigned printTextIndex, int x, int y, const FontGlyph* glyph) :
+        printTextIndex_(printTextIndex),
         x_(x),
         y_(y),
         glyph_(glyph)
     {
     }
-
+    /// Print text index.
+    unsigned printTextIndex_;
     /// X coordinate.
     int x_;
     /// Y coordinate.
@@ -113,6 +115,8 @@ public:
     void SetSelection(unsigned start, unsigned length = M_MAX_UNSIGNED);
     /// Clear selection.
     void ClearSelection();
+    /// Set the per character colors of the unselected printed text.
+    void SetColors(const Vector<Color>& colors, const PODVector<unsigned> colorIndices, unsigned firstCharacter = 0);
     /// Set selection background color. Color with 0 alpha (default) disables.
     void SetSelectionColor(const Color& color);
     /// Set hover background color. Color with 0 alpha (default) disables.
@@ -143,7 +147,7 @@ public:
     /// Return row spacing.
     float GetRowSpacing() const { return rowSpacing_; }
 
-    /// Return wordwrap mode.
+    /// Return word-wrap mode.
     bool GetWordwrap() const { return wordWrap_; }
 
     /// Return auto localizable mode.
@@ -154,6 +158,12 @@ public:
 
     /// Return selection length.
     unsigned GetSelectionLength() const { return selectionLength_; }
+
+    /// Return the colors being used in multi-colored text rendering.
+    const Vector<Color>& GetColors() const { return colors_; }
+
+    /// Return the color indices being used per printed character.
+    const PODVector<unsigned>& GetColorIndices() const { return colorIndices_; }
 
     /// Return selection background color.
     const Color& GetSelectionColor() const { return selectionColor_; }
@@ -218,7 +228,7 @@ protected:
     void ValidateSelection();
     /// Return row start X position.
     int GetRowStartPosition(unsigned rowIndex) const;
-    /// Contruct batch.
+    /// Construct batch.
     void ConstructBatch
         (UIBatch& pageBatch, const PODVector<GlyphLocation>& pageGlyphLocation, int dx = 0, int dy = 0, Color* color = 0,
             float depthBias = 0.0f);
@@ -235,7 +245,7 @@ protected:
     HorizontalAlignment textAlignment_;
     /// Row spacing.
     float rowSpacing_;
-    /// Wordwrap mode.
+    /// Word-wrap mode.
     bool wordWrap_;
     /// Char positions dirty flag.
     bool charLocationsDirty_;
@@ -247,6 +257,10 @@ protected:
     Color selectionColor_;
     /// Hover background color.
     Color hoverColor_;
+    /// List of colors to use in multi-colored text rendering.
+    Vector<Color> colors_;
+    /// Color index to use per character.
+    PODVector<unsigned> colorIndices_;
     /// Text effect.
     TextEffect textEffect_;
     /// Text effect shadow offset.

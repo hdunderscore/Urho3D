@@ -57,4 +57,7 @@ private:
     void SubscribeToEvents();
     /// Handle the logic update event.
     void HandleUpdate(StringHash eventType, VariantMap& eventData);
+    String ParseText(String text);
+    SharedPtr<Text> helloText;
+    float timeAccum_;
 };
