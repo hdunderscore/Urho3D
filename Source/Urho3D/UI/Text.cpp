@@ -398,16 +398,34 @@ void Text::ClearSelection()
     selectionLength_ = 0;
 }
 
-void Text::SetColors(const Vector<Color>& colors, const PODVector<unsigned> colorIndices, unsigned firstCharacter /*= 0*/)
+void Text::SetColors(const Vector<Color>& newColors, const PODVector<unsigned> newColorIndices, unsigned firstCharacter /*= 0*/)
 {
-    colors_ = colors;
-    unsigned newSize = firstCharacter + colorIndices.Size();
-    if (colorIndices_.Size() != newSize)
-        colorIndices_.Resize(newSize);
-
-    for (unsigned i = firstCharacter; i < colorIndices.Size(); ++i)
+    colors_ = newColors;
+    if (colors_.Size() == 0)
     {
-        colorIndices_[firstCharacter + i] = colorIndices[i];
+        colorIndices_.Clear();
+        return;
+    }
+
+    unsigned newSize = Max(printText_.Size(), firstCharacter + newColorIndices.Size());
+    if (colorIndices_.Size() != newSize)
+    {
+        colorIndices_.Resize(newSize);
+        for (unsigned i = 0; i < colorIndices_.Size(); ++i)
+        {
+            //colorIndices_[i] = 0;
+        }
+    }
+
+    for (unsigned i = 0; i < newColorIndices.Size() && (firstCharacter + i) < colorIndices_.Size(); ++i)
+    {
+        if (newColorIndices[i] >= newColors.Size())
+        {
+            URHO3D_LOGWARNING("Trying to set a color index of Text element out of bounds.");
+            colorIndices_[firstCharacter + i] = 0;
+        }
+        else
+            colorIndices_[firstCharacter + i] = newColorIndices[i];
     }
 }
 
@@ -709,6 +727,8 @@ void Text::UpdateText(bool onResize)
         if (parent && parent->GetLayoutMode() != LM_FREE)
             parent->UpdateLayout();
     }
+
+    colorIndices_.Resize(printText_.Size());
 }
 
 void Text::UpdateCharLocations()
@@ -834,7 +854,7 @@ void Text::ConstructBatch(UIBatch& pageBatch, const PODVector<GlyphLocation>& pa
         const GlyphLocation& glyphLocation = pageGlyphLocation[i];
         const FontGlyph& glyph = *glyphLocation.glyph_;
 
-        if (colorIndices_.Size() > 0)
+        if (colorIndices_.Size() > 0 && colors_.Size() > 0)
             pageBatch.SetColor(colors_[colorIndices_[glyphLocation.printTextIndex_]], true);
 
         pageBatch.AddQuad(dx + glyphLocation.x_ + glyph.offsetX_, dy + glyphLocation.y_ + glyph.offsetY_, glyph.width_,

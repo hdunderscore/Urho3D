@@ -66,7 +66,7 @@ void HelloWorld::CreateText()
     helloText = new Text(context_);
 
     // Set String to display
-    String parsedText = ParseText("Hello [color=C_RED]World[color=DEFAULT] from Urho3D!");
+    String parsedText = ParseText("Hello [color=C_RED]\\[color=C_RED]World\n[color=DEFAULT]\\[color=DEFAULT]\n from Urho3D!");
     helloText->SetText(parsedText);
 
     // Set font and text color
@@ -140,10 +140,11 @@ String HelloWorld::ParseText(String text)
     {
         if (text[i] == '\\')
         {
-            continue;//?
+            text.Erase(i, 1);
+            lowerText = text.ToLower();
+            //++i;
         }
-
-        if (text[i] == '[')
+        else if (text[i] == '[')
         {
             String colorMatch = GetMatch(text, lowerText, i, "color");
             if (colorMatch != "")
@@ -155,12 +156,16 @@ String HelloWorld::ParseText(String text)
                 }
                 else if (colorMatch == "default")
                 {
-                    URHO3D_LOGINFO("ASD");
                     colorIndex = 0;
                 }
+                continue;
             }
         }
 
+        char c = text[i];
+        char cl = lowerText[i];
+        
+        URHO3D_LOGINFO("Color index: " + String(colorIndex) + " char:" + String(c) + ":" + String(cl));
         colorIndices.Push(colorIndex);
     }
 
@@ -180,10 +185,15 @@ String GetMatch(String& text, String& lowerText, unsigned& i, String command)
     {
         if (!matched)
         {
-            if (lowerText[i] == command[match])
+            if (match == command.Length())
+            {
+                if (lowerText[i] == '=')
+                    matched = true;
+            }
+            else if (lowerText[i] == command[match])
                 match++;
-            if (match == command.Length() && lowerText[i] == '=')
-                matched = true;
+            else if ((lowerText[i] >= 'a' && lowerText[i] <= 'z') || (lowerText[i] >= '0' && lowerText[i] <= '9') || (lowerText[i] == '_'))
+                break;
         }
         else
         {
@@ -191,7 +201,7 @@ String GetMatch(String& text, String& lowerText, unsigned& i, String command)
             {
                 text.Erase(startI, i - startI + 1);
                 lowerText = text.ToLower();
-                i = startI;
+                i = startI - 1;
                 return argument;
             }
             if ((lowerText[i] >= 'a' && lowerText[i] <= 'z') || (lowerText[i] >= '0' && lowerText[i] <= '9') || (lowerText[i] == '_'))
