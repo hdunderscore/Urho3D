@@ -63,30 +63,44 @@ void HelloWorld::CreateText()
     ResourceCache* cache = GetSubsystem<ResourceCache>();
 
     // Construct new Text object
+    SharedPtr<Text> helloTextP(new Text(context_));
+
+    // Set String to display
+    String parsedText = ParseText("Hello [color=C_RED]\\[color=C_RED]World\n[color=DEFAULT]\\[color=DEFAULT]\n from Urho3D!", helloTextP);
+    helloTextP->SetText(parsedText);
+
+    // Set font and text color
+    helloTextP->SetFont(cache->GetResource<Font>("Fonts/Anonymous Pro.ttf"), 30);
+
+    // Align Text center-screen
+    helloTextP->SetHorizontalAlignment(HA_CENTER);
+    helloTextP->SetVerticalAlignment(VA_CENTER);
+    helloTextP->SetPivot(0.5f, 0.0f);
+
+    // Construct new Text object
     helloText = new Text(context_);
 
     // Set String to display
-    String parsedText = ParseText("Hello [color=C_RED]\\[color=C_RED]World\n[color=DEFAULT]\\[color=DEFAULT]\n from Urho3D!");
-    helloText->SetText(parsedText);
+    helloText->SetText("Hello World from Urho3D!");
 
     // Set font and text color
     helloText->SetFont(cache->GetResource<Font>("Fonts/Anonymous Pro.ttf"), 30);
-    helloText->SetColor(Color(0.0f, 1.0f, 0.0f));
 
     // Align Text center-screen
     helloText->SetHorizontalAlignment(HA_CENTER);
     helloText->SetVerticalAlignment(VA_CENTER);
+    helloText->SetPivot(0.5f, 1.0f);
 
     Vector<Color> colors;
 
     for (unsigned i = 0; i < helloText->GetText().Length() + 10; ++i)
     {
-        colors.Push(Color(0.0f, 0.0f, 0.0f, 1.0f - i / 10.0f));
+        colors.Push(Color(0.0f, 0.0f, 0.0f, 0.0f));
     }
 
-    for (unsigned i = 0; i < 20; ++i)
+    for (unsigned i = 0; i < helloText->GetText().Length(); ++i)
     {
-        colors.Push(Color(0.0f, 1.0f, 0.0f, 1.0f - i / 20.0f));
+        colors.Push(Color(0.0f, 1.0f, 0.0f, 1.0f - i / float(helloText->GetText().Length())));
     }
 
     PODVector<unsigned> colorIndices;
@@ -95,9 +109,11 @@ void HelloWorld::CreateText()
         colorIndices.Push(i % colors.Size());
     }
 
-    //helloText->SetColors(colors, colorIndices);
+    helloText->SetColors(colors, colorIndices);
+    timeAccum_ = 0.0f;
 
     // Add Text instance to the UI root element
+    GetSubsystem<UI>()->GetRoot()->AddChild(helloTextP);
     GetSubsystem<UI>()->GetRoot()->AddChild(helloText);
 }
 
@@ -123,10 +139,10 @@ void HelloWorld::HandleUpdate(StringHash eventType, VariantMap& eventData)
         colorIndices.Push((unsigned(timeAccum_) + i) % colors.Size());
     }
 
-    //helloText->SetColors(colors, colorIndices);
+    helloText->SetColors(colors, colorIndices);
 }
 
-String HelloWorld::ParseText(String text)
+Urho3D::String HelloWorld::ParseText(String text, SharedPtr<Text> textElement)
 {
     Vector<Color> colors;
     colors.Push(Color::WHITE);//TODO: default color
@@ -169,7 +185,7 @@ String HelloWorld::ParseText(String text)
         colorIndices.Push(colorIndex);
     }
 
-    helloText->SetColors(colors, colorIndices);
+    textElement->SetColors(colors, colorIndices);
 
     return text;
 }
